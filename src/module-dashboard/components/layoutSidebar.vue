@@ -1,7 +1,7 @@
 <template>
   <scroll-bar>
 
-    <div class="sidebarTop">
+    <div class="sidebarTop" v-if="!isCollapse">
       <p class="hai">嗨，你好~</p>
       <div class="headImg">
         <img src="../../assets/head.jpg" />
@@ -9,7 +9,7 @@
       <p class="userName">{{name}}</p>
     </div>
 
-    <el-menu mode="vertical" :default-active="$route.path" :collapse="isCollapse" text-color="#bfcbd9">
+    <el-menu mode="vertical" :default-active="$route.path" :collapse="isCollapse" text-color="#012989">
       <!-- <router-link to="/">
         <div class="sidebar-logo"><img src="../assets/logo.png" /></div>
         <div class="sidebar-logo-mini"><img src="../assets/logo.png" /></div>
@@ -40,7 +40,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .sidebarTop {
   margin-top: 20px;
-  height: 150px;
+  height: 180px;
   text-align: center;
   .headImg {
     width: 110px;
@@ -56,7 +56,7 @@ export default {
     font-weight: 500;
   }
   .userName {
-    margin-top: 5px;
+    margin-top: 10px;
     color: #012989;
     font-weight: 800;
   }

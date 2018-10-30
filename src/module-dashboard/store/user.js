@@ -72,10 +72,10 @@ const user = {
         profile().then(response => {
           const data = response.data
           commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.username)
+          commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.company)
-          commit('SET_APPROVALS', data.approvals)
+          commit('SET_INTRODUCTION', data.group)
+          // commit('SET_APPROVALS', data.approvals)
           resolve(response)
         }).catch(error => {
           reject(error)

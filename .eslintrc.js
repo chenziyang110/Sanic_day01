@@ -28,9 +28,11 @@ module.exports = {
     "no-trailing-spaces": 0,
     "padded-blocks": 0,
     "no-control-regex": 0,
+    "no-multiple-empty-lines": 0,
+    "eol-last": 0,
 
     // allow async-await
-    'generator-star-spacing': 'off',
+    'generator-star-spacing': 'off',  
 
     "indent": [0, 2],//缩进风格
     // "camelcase": [0, {"properties": "never"}], //强制驼峰命名规则
