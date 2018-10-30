@@ -1,16 +1,8 @@
 <template>
-    <el-table :data="formatData"  :row-class-name="rowClassStatus" v-loading="listLoading"  element-loading-text="给我一点时间" fit highlight-current-row
-      style="width: 100%">
-    <el-table-column v-for="(column, index) in columns" :key="column.prop" :width="column.width" :prop="column.prop"
-      :label="column.text">
+  <el-table border :data="formatData" :row-class-name="rowClassStatus" v-loading="listLoading" element-loading-text="给我一点时间" fit highlight-current-row style="width: 100%">
+    <el-table-column v-for="(column, index) in columns" :key="column.prop" :width="column.width" :prop="column.prop" :label="column.text">
       <template slot-scope="scope">
-        <expand
-          v-if="column.render"
-          :render="column.render"
-          :row="scope.row"
-          :index="index"
-          :column="column"
-        >
+        <expand v-if="column.render" :render="column.render" :row="scope.row" :index="index" :column="column">
         </expand>
         <span v-else>
           {{scope.row[column.value]}}
@@ -18,17 +10,11 @@
       </template>
     </el-table-column>
     <el-table-column label="操作" width="260" align="center">
-      <template  slot-scope="scope">
-        <el-button
-          size="mini"
-          type="primary"
-          @click="handleUpdate(scope.row)">
+      <template slot-scope="scope">
+        <el-button size="mini" type="text" @click="handleUpdate(scope.row)">
           修改
         </el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="handleDelete(scope.row.id)">
+        <el-button size="mini" type="text" @click="handleDelete(scope.row.id)">
           删除
         </el-button>
       </template>
@@ -41,7 +27,7 @@ import Utils from './utils/dataTranslate.js'
 import expand from './utils/expand'
 export default {
   name: 'treeTable',
-  components: { expand },
+  components: {expand},
   props: {
     // 该属性是确认父组件传过来的数据是否已经是树形结构了，如果是，则不需要进行树形格式化
     treeStructure: {

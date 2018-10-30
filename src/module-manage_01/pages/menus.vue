@@ -1,43 +1,54 @@
  <template>
   <div class="dashboard-container">
+    <!-- 搜索框 -->
+    <el-card shadow="never">
+      <el-button class="filter-item fr" size="small" style="margin: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">添加</el-button>
+    </el-card>
+    <!-- 搜索框 / -->
+    <!-- 正文 -->
     <div class="app-container">
       <el-card shadow="never">
-        <el-button class="filter-item fr" size="small" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button>
+        <!-- 数据 -->
         <tree-table 
-        border
-        :data="dataList" 
-        :columns="columns" 
-        :tree-structure="true"
-        :listLoading="listLoading" 
-        :rowClassStatus="rowClassStatus"
-        v-on:handleUpdate="handleUpdate"
-        v-on:removeUser='removeUser'
-        ></tree-table>
-      
-      <!-- 新增标签弹层 -->
-        <component v-bind:is="MenuAdd"
-            ref="editMenu" 
-            :text='text'
-            :pageTitle='pageTitle'
-            :PermissionGroupsList='PermissionGroupsList'
-            :notPointDataList='notPointDataList'
-            :parentDataList='parentDataList'
-            v-on:newDataes="handleLoadData" 
-            v-on:handleCloseModal="handleCloseModal">
+          :data="dataList" 
+          :columns="columns" 
+          :tree-structure="true" 
+          :listLoading="listLoading" 
+          :rowClassStatus="rowClassStatus" 
+          v-on:handleUpdate="handleUpdate" 
+          v-on:removeUser='removeUser'
+          >
+        </tree-table>
+        <!-- 数据 / -->
+
+        <!-- 新增标签弹层 -->
+        <component 
+          v-bind:is="MenuAdd" 
+          ref="editMenu" 
+          :text='text' 
+          :pageTitle='pageTitle' 
+          :PermissionGroupsList='PermissionGroupsList' 
+          :notPointDataList='notPointDataList' 
+          :parentDataList='parentDataList' 
+          v-on:newDataes="handleLoadData" 
+          v-on:handleCloseModal="handleCloseModal"
+          >
         </component>
+        <!-- 新增标签弹层 / -->
       </el-card>
     </div>
+    <!-- 正文 / -->
   </div>
 </template>
 
 <script>
 import treeTable from '@/components/TreeTable/index.vue'
 import MenuAdd from './../components/menu-add'
-import { list, remove, detail, update, add } from '@/api/base/menus'
+import {list, remove, detail, update, add} from '@/api/base/menus'
 let _this = []
 export default {
   name: 'treeTableDemo',
-  components: { treeTable, MenuAdd },
+  components: {treeTable, MenuAdd},
   data() {
     return {
       MenuAdd: 'menuAdd',
@@ -86,7 +97,7 @@ export default {
         var icon = 'ivu-icon-document'
         var makeNewItem = function(layer, oldItem) {
           var icon
-          
+
           if (!oldItem.is_point) {
             // TODO 判断是否权限点 fa fa-folder-open-o fa-fw文件夹    el-icon-view 眼睛  el-icon-document文件
             if (oldItem.childs && oldItem.childs.length > 0) {
@@ -94,7 +105,6 @@ export default {
             } else {
               icon = 'fa fa-file-o fa-fw'
             }
-            
           } else {
             icon = ' el-icon-view'
           }
@@ -183,7 +193,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          remove({ id: user })
+          remove({id: user})
             .then(response => {
               this.$message.success('成功删除了用户' + '!')
               this.dataList.splice(user, 1)
@@ -205,7 +215,6 @@ export default {
   // 创建完毕状态
   created() {
     _this = this
-
   },
   // 组件更新
   updated: function() {},
@@ -229,5 +238,7 @@ export default {
 .el-table th.is-leaf {
   border-bottom: 2px solid #e8e8e8;
 }
-.el-table__row i{ font-style:normal}
+.el-table__row i {
+  font-style: normal;
+}
 </style>

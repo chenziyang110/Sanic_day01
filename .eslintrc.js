@@ -30,6 +30,7 @@ module.exports = {
     "no-control-regex": 0,
     "no-multiple-empty-lines": 0,
     "eol-last": 0,
+    "missing-semicolon-after-character-reference": 0,
 
     // allow async-await
     'generator-star-spacing': 'off',  

@@ -3,7 +3,7 @@
  * @Description: 框架管理 
  * @Date: 2018-04-13 16:13:27 
  * @Last Modified by: hans.taozhiwei
- * @Last Modified time: 2018-10-30 10:53:46
+ * @Last Modified time: 2018-10-30 17:04:44
  */
 
 import Layout from '@/module-dashboard/pages/layout'
@@ -24,25 +24,25 @@ export default [
         path: 'users',
         component: _import('manage/pages/users'),
         name: 'base-users',
-        meta: {title: 'users'}
+        meta: {title: 'users', icon: 'documentation', noCache: true}
       },
       {
         path: 'menus',
         name: 'base-menus',
-        component: _import('manage/pages/users'),
-        meta: {title: 'menus'}
+        component: _import('manage/pages/menus'),
+        meta: {title: 'menus', icon: 'documentation', noCache: true}
       },
       {
         path: 'permissions',
         name: 'base-permissions',
         component: _import('manage/pages/users'),
-        meta: {title: 'permissions'}
+        meta: {title: 'permissions', icon: 'documentation', noCache: true}
       },
       {
         path: 'logs',
         name: 'base-logs',
         component: _import('manage/pages/users'),
-        meta: {title: 'logs'}
+        meta: {title: 'logs', icon: 'documentation', noCache: true}
       }
     ]
   }

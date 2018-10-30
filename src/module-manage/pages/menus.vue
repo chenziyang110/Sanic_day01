@@ -18,25 +18,19 @@
     <div class="app-container">
       <el-card shadow="never" v-loading="loading">
         <!-- 数据表格 -->
-        <el-table :data="items" border style="width: 100%; margin-top:10px;" @selection-change="handleSelectionChange">
-          <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-          <el-table-column prop="id" label="编号"></el-table-column>
-          <el-table-column prop="account" label="账号"></el-table-column>
-          <el-table-column prop="fullName" label="姓名"></el-table-column>
-          <el-table-column prop="mobile" label="联系电话" width="120"></el-table-column>
-          <el-table-column prop="permission_group_title" label="权限组名称"></el-table-column>
-          <el-table-column prop="email" label="邮件"></el-table-column>
-          <el-table-column prop="disabled" label="屏蔽" width="50">
+        <el-table :data="items" border style="width: 100%; margin-top:10px;">
+          <el-table-column prop="title" label="名称">
             <template slot-scope="scope">
-              <div class="text-center">
-                <i class="el-icon-success success" v-if="!scope.row.disabled"></i>
-                <i class="el-icon-error danger" v-if="scope.row.disabled"></i>
-              </div>
+              <span v-bind:style="{marginLeft: scope.row.layer * 20 + 'px'}"></span>
+              <i class="el-icon-caret-bottom" v-if="scope.row.childsCount > 0"></i>
+              <i class="el-icon-caret-right" v-if="scope.row.childsCount === 0 && !scope.row.isPoint"></i>
+              <i class="el-icon-view" v-if="scope.row.isPoint"></i>
+              <span>{{scope.row.title}}</span>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="160">
+          <el-table-column prop="code" label="代码"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
-              <el-button @click="handelPassword(scope.row)" type="text" size="small">重置密码</el-button>
               <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
               <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
             </template>
@@ -50,21 +44,7 @@
     <!-- 正文 / -->
     <!-- 弹出窗 -->
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" v-loading="dialogLoading">
-      <!-- 重置密码 -->
-      <template v-if="dialogType === 'password'">
-        <el-form :rules="rulesPassword" ref="dataForm" :model="formData" label-width="100px" label-position="right">
-          <el-form-item label="重置密码" prop="password">
-            <el-input v-model="formData.password" placeholder="重置密码"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="handleSave(false)">取 消</el-button>
-          <el-button type="primary" @click="handelPasswordSave(true)">确 定</el-button>
-        </span>
-      </template>
-      <!-- 重置密码 / -->
-      <!-- 用户 -->
-      <el-form v-if="dialogType === 'user'" :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
+      <el-form :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
         <el-form-item label="账号" prop="account">
           <el-input v-model="formData.account" placeholder="账号"></el-input>
         </el-form-item>
@@ -91,19 +71,16 @@
         <el-button @click="handleSave(false)">取 消</el-button>
         <el-button type="primary" @click="handleSave(true)">确 定</el-button>
       </span>
-      <!-- 用户 / -->
     </el-dialog>
     <!-- 弹出窗 / -->
   </div>
 </template>
 
 <script>
-import {list, add, update, remove, detail, password} from '@/api/base/users'
-import {simple as permissionsList} from '@/api/base/permissions'
-import shajs from 'sha.js'
+import {list, add, update, remove, detail} from '@/api/base/menus'
 
 export default {
-  name: 'manage-users-index',
+  name: 'manage-menus-index',
   data() {
     return {
       // 工具栏
@@ -127,7 +104,6 @@ export default {
       // 弹出窗口
       permissions: [], // 权限列表
       dialogTitle: '',
-      dialogType: '', // user , password
       dialogLoading: false,
       formData: [],
       rules: {
@@ -141,12 +117,6 @@ export default {
         ],
         permission_group_id: [
           {required: true, message: '请选择权限组', trigger: 'change'}
-        ]
-      },
-      rulesPassword: {
-        password: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 6, max: 40, message: '长度在 4 到 40 个字符', trigger: 'blur'}
         ]
       }
     }
@@ -170,12 +140,39 @@ export default {
       })
       this.loading = false
     },
-    // 初始数据
-    async setupData() {
-      await permissionsList({}).then(res => {
-        this.permissions = res.data.items
-      })
-      await this.doQuery()
+    // 读取数据
+    async reloadData() {
+      let items = await list({}).then(res => res.data)
+      let dataTable = []
+      let layer = 0
+      this.toTable(items, dataTable, layer, false)
+      console.log(dataTable)
+      this.items = dataTable
+    },
+    toTable(dataList, dataTable, layer, isPoint) {
+      for (let it of dataList) {
+        console.log(
+          `layer: ${layer} , title: ${it.title} , isPoint: ${isPoint}`
+        )
+        dataTable.push({
+          id: it.id,
+          pid: it.pid,
+          code: it.code,
+          title: it.title,
+          childsCount: it.childs !== undefined ? it.childs.length : 0,
+          layer,
+          isPoint
+        })
+        if (it.childs !== undefined) {
+          layer++
+          this.toTable(it.childs, dataTable, layer, false)
+          layer--
+        } else if (it.points !== undefined) {
+          layer++
+          this.toTable(it.points, dataTable, layer, true)
+          layer--
+        }
+      }
     },
     // UI方法
     // 搜索
@@ -194,44 +191,8 @@ export default {
     handleCurrentChange(val) {
       this.doQuery(val, this.pagination.pageSize)
     },
-    // 修改密码
-    handelPassword(item) {
-      this.dialogType = 'password'
-      this.dialogTitle = '新建'
-      this.formData = {
-        id: item.id,
-        password: ''
-      }
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    handelPasswordSave() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          this.dialogLoading = true
-          password({
-            id: this.formData.id,
-            password: shajs('sha256')
-              .update(this.formData.password)
-              .digest('hex')
-          }).then(res => {
-            this.dialogLoading = false
-            this.dialogVisible = false
-            this.$message({
-              message: '重置密码成功',
-              type: 'success'
-            })
-          })
-        } else {
-          return false
-        }
-      })
-    },
     // 新建
     handleNew() {
-      this.dialogType = 'user'
       this.dialogTitle = '新建'
       this.formData = {
         account: '',
@@ -249,9 +210,8 @@ export default {
     },
     // 修改
     async handleEdit(item) {
-      this.dialogType = 'user'
-      this.dialogTitle = '修改'
       this.dialogLoading = true
+      this.dialogTitle = '修改'
       await detail({id: item.id}).then(res => {
         this.formData = res.data
       })
@@ -307,7 +267,7 @@ export default {
     }
   },
   created() {
-    this.setupData()
+    this.reloadData()
   }
 }
 </script>
