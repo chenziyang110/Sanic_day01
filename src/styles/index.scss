@@ -6,6 +6,26 @@
 @import './sidebar.scss';
 @import './btn.scss';
 
+// 颜色
+.master {
+  color: #409EFF;
+}
+.success {
+  color: #67C23A;
+}
+.warning {
+  color: #E6A23C;
+}
+.danger {
+  color: #F56C6C;
+}
+.info {
+  color: #909399;
+}
+
+// 对齐
+
+
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;

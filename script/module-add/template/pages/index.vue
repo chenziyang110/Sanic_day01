@@ -1,109 +1,74 @@
 <template>
   <div class="dashboard-container">
+    <!-- 搜索框 -->
+    <el-card shadow="never">
+      <el-form :inline="true" :model="formSearch">
+        <el-form-item label="姓名、账号">
+          <el-input placeholder="请输入" style="width: 200px;" class="filter-item" v-model="formSearch.keyword">
+          </el-input>
+        </el-form-item>
+        <el-button class="filter-item" size="small" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        <el-button class="filter-item fr" size="small" @click="handleNew" type="primary" icon="el-icon-plus">新增用户</el-button>
+        <!-- 提示条 -->
+        <el-alert v-if="barSearch.alertText !== ''" :title="barSearch.alertText" type="info" class="alert" :closable='false' show-icon></el-alert>
+      </el-form>
+    </el-card>
+    <!-- 搜索框 / -->
+    <!-- 正文 -->
     <div class="app-container">
       <el-card shadow="never" v-loading="loading">
-        <!-- 搜索栏 -->
-        <el-form :inline="true" :model="formSearch">
-          <el-form-item label="审批人">
-            <el-input v-model="formSearch.user" placeholder="审批人"></el-input>
-          </el-form-item>
-          <el-form-item label="活动区域">
-            <el-select v-model="formSearch.region" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="活动时间" v-if="barSearch.expandInputs">
-            <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" v-model="formSearch.date1" style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line" :span="2">-</el-col>
-            <el-col :span="11">
-              <el-time-picker type="fixed-time" placeholder="选择时间" v-model="formSearch.date2" style="width: 100%;"></el-time-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="即时配送" v-if="barSearch.expandInputs">
-            <el-switch v-model="formSearch.delivery"></el-switch>
-          </el-form-item>
-          <el-form-item label="活动状态" v-if="barSearch.expandInputs">
-            <el-select v-model="formSearch.state" placeholder="活动状态">
-              <el-option label="开启" value="1"></el-option>
-              <el-option label="关闭" value="0"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button @click="handleRest">重置</el-button>
-            <el-button type="text" @click="handleExpand">{{barSearch.expandBtnText}}</el-button>
-          </el-form-item>
-        </el-form>
-        <el-button type="primary" icon="el-icon-plus" @click="handleNew">新建</el-button>
-        <el-alert 
-          v-if="barSearch.alertText !== ''" 
-          :title="barSearch.alertText" 
-          type="info" 
-          class="alert" 
-          :closable='false' 
-          show-icon>
-        </el-alert>
-        <!-- 搜索栏 / -->
         <!-- 数据表格 -->
-        <el-table 
-          :data="items" 
-          border 
-          style="width: 100%; margin-top:10px;" 
-          @selection-change="handleSelectionChange"
-          >
+        <el-table :data="items" border style="width: 100%; margin-top:10px;" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="title" label="标题" ></el-table-column>
-          <el-table-column prop="type" label="类型" width="60"></el-table-column>
-          <el-table-column prop="author" label="作者" width="80"></el-table-column>
-          <el-table-column prop="reviewer" label="审核" width="80"></el-table-column>
-          <el-table-column prop="pageviews" label="浏览" width="80"></el-table-column>
-          <el-table-column prop="display_time" label="日期" width="160"></el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="100">
+          <el-table-column prop="account" label="账号"></el-table-column>
+          <el-table-column prop="fullName" label="姓名"></el-table-column>
+          <el-table-column prop="mobile" label="联系电话" width="120"></el-table-column>
+          <el-table-column prop="permission_group_title" label="权限组名称"></el-table-column>
+          <el-table-column prop="email" label="邮件"></el-table-column>
+          <el-table-column prop="disabled" label="屏蔽" width="80">
+            <template slot-scope="scope">
+              <div class="text-center">
+                <i class="el-icon-success success" v-if="!scope.row.disabled"></i>
+                <i class="el-icon-error danger" v-if="scope.row.disabled"></i>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
               <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination 
-          class="pagination"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pagination.currentPage"
-          :page-sizes="pagination.pageSizes"
-          :page-size="pagination.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pagination.total">
+        <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="pagination.pageSizes" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
         </el-pagination>
         <!-- 数据表格 / -->
       </el-card>
     </div>
+    <!-- 正文 / -->
     <!-- 弹出窗 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose">
-      <el-form :rules="rules" ref="dataForm" :model="formData" label-width="50px" label-position="right">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="formData.title" placeholder="标题"></el-input>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" v-loading="dialogLoading">
+      <el-form :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
+        <el-form-item label="账号" prop="account">
+          <el-input v-model="formData.account" placeholder="账号"></el-input>
         </el-form-item>
-        <el-form-item label="作者" prop="author">
-          <el-input v-model="formData.author" placeholder="作者"></el-input>
+        <el-form-item label="姓名" prop="fullName">
+          <el-input v-model="formData.fullName" placeholder="姓名"></el-input>
         </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="formData.type" placeholder="类型">
-            <el-option label="CN" value="CN"></el-option>
-            <el-option label="US" value="US"></el-option>
-            <el-option label="JP" value="JP"></el-option>
-            <el-option label="EU" value="EU"></el-option>
+        <el-form-item label="联系电话" prop="mobile">
+          <el-input v-model="formData.mobile" placeholder="联系电话"></el-input>
+        </el-form-item>
+        <el-form-item label="权限组" prop="permission_group_id">
+          <el-select v-model="formData.permission_group_id" placeholder="权限组">
+            <el-option v-for="item in permissions" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="邮件" prop="email">
+          <el-input v-model="formData.email" placeholder="邮件"></el-input>
+        </el-form-item>
+        <el-form-item label="屏蔽" prop="disabled">
+          <el-switch v-model="formData.disabled" active-color={true} inactive-color={false}>
+          </el-switch>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -116,28 +81,21 @@
 </template>
 
 <script>
-import {list} from '@/api/example/table'
+import {list, add, update, remove, detail} from '@/api/base/users'
+import {simple as permissionsList} from '@/api/base/permissions'
 
 export default {
-  name: '{{name}}-table-index',
+  name: 'manage-users-index',
   data() {
     return {
+      // 工具栏
       formSearch: {
-        user: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-        state: ''
+        keyword: ''
       },
       barSearch: {
-        expandInputs: false,
-        expandBtnText: '',
         alertText: ''
       },
+      // 数据表
       items: [],
       pagination: {
         total: 0,
@@ -146,115 +104,126 @@ export default {
         currentPage: 1
       },
       loading: false,
-      multipleSelection: [],
+      multipleSelection: [], // 多行选择
       dialogVisible: false,
+      // 弹出窗口
+      permissions: [], // 权限列表
+      dialogTitle: '',
+      dialogLoading: false,
       formData: [],
       rules: {
-        title: [
-          {required: true, message: '请输入标题', trigger: 'blur'},
-          {min: 5, max: 45, message: '长度在 5 到 45 个字符', trigger: 'blur'}
+        account: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+          {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'}
         ],
-        author: [
-          {required: true, message: '请输入作者', trigger: 'blur'},
+        fullName: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
           {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
         ],
-        type: [{required: true, message: '请选择类型', trigger: 'change'}]
+        permission_group_id: [
+          {required: true, message: '请选择权限组', trigger: 'change'}
+        ]
       }
     }
   },
   methods: {
     // 业务方法
-    doQuery(page = 1, limit = 20) {
+    async doQuery(page = 1, limit = 20) {
       this.pagination.currentPage = page
       this.pagination.pageSize = limit
       this.loading = true
       this.barSearch.alertText = ''
       this.items = []
-      list({page, limit})
-        .then(res => {
-          console.log(res.data)
-          this.items = res.data.items
-          this.pagination.total = res.data.total
-          this.barSearch.alertText = `共 ${this.pagination.total} 条记录`
-          this.loading = false
-        })
-        .catch(err => {
-          console.log(err)
-          this.loading = false
-        })
+      await list({
+        ...this.formSearch,
+        page,
+        limit
+      }).then(res => {
+        this.items = res.data.items
+        this.pagination.total = res.data.counts
+        this.barSearch.alertText = `共 ${this.pagination.total} 条记录`
+      })
+      this.loading = false
+    },
+    // 初始数据
+    async setupData() {
+      await permissionsList({}).then(res => {
+        this.permissions = res.data.items
+      })
+      await this.doQuery()
     },
     // UI方法
-    handleRest() {
-      this.formSearch = {
-        user: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-        state: ''
-      }
-    },
-    handleExpand() {
-      this.barSearch.expandInputs = !this.barSearch.expandInputs
-      this.barSearch.expandBtnText = this.barSearch.expandInputs
-        ? '收起▲'
-        : '展开▼'
-    },
+    // 搜索
     handleSearch() {
       this.doQuery()
     },
+    // 行选择
     handleSelectionChange(val) {
       this.multipleSelection = val
-      console.log(val, this.multipleSelection)
     },
+    // 也尺寸
     handleSizeChange(val) {
       this.doQuery(1, val)
     },
+    // 页码切换
     handleCurrentChange(val) {
       this.doQuery(val, this.pagination.pageSize)
     },
-    handleClose() {
-      this.$confirm('确认关闭？')
-        .then(ret => {
-          console.log(ret)
-          this.dialogVisible = false
-        })
-        .catch(ret => {
-          console.log(ret)
-        })
-    },
+    // 新建
     handleNew() {
+      this.dialogTitle = '新建'
       this.formData = {
-        title: '',
-        author: '',
-        type: ''
+        account: '',
+        fullName: '',
+        mobile: '',
+        permission_group_id: null,
+        avatar: '',
+        email: '',
+        disabled: false
       }
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleEdit(item) {
-      this.formData = {
-        ...item
-      }
+    // 修改
+    async handleEdit(item) {
+      this.dialogLoading = true
+      this.dialogTitle = '修改'
+      await detail({id: item.id}).then(res => {
+        this.formData = res.data
+      })
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
+      this.dialogLoading = false
     },
+    // 保存
     handleSave(isSave) {
       if (isSave) {
         this.$refs['dataForm'].validate(valid => {
           if (valid) {
-            this.dialogVisible = false
-            this.$message({
-              message: '保存成功',
-              type: 'success'
-            })
+            this.dialogLoading = true
+            if (this.formData.id === undefined) {
+              add(this.formData).then(res => {
+                this.dialogLoading = false
+                this.dialogVisible = false
+                this.$message({
+                  message: '新增成功',
+                  type: 'success'
+                })
+              })
+            } else {
+              update(this.formData).then(res => {
+                this.dialogLoading = false
+                this.dialogVisible = false
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+              })
+            }
           } else {
             return false
           }
@@ -263,23 +232,20 @@ export default {
         this.dialogVisible = false
       }
     },
+    // 删除
     handleDelete(item) {
-      this.$confirm('确认删除？')
-        .then(ret => {
+      this.$confirm('确认删除？').then(ret => {
+        remove({id: item.id}).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
           })
-          console.log(ret)
         })
-        .catch(ret => {
-          console.log(ret)
-        })
+      })
     }
   },
   created() {
-    this.barSearch.expandInputs = false
-    this.barSearch.expandBtnText = '展开▼'
+    this.setupData()
   }
 }
 </script>

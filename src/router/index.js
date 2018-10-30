@@ -38,11 +38,11 @@ export const constantRouterMap = [
     component: _import('dashboard/pages/login'),
     hidden: true
   },
-  {
-    path: '/reg',
-    component: _import('dashboard/pages/reg'),
-    hidden: true
-  },
+  // {
+  //   path: '/reg',
+  //   component: _import('dashboard/pages/reg'),
+  //   hidden: true
+  // },
   {
     path: '/authredirect',
     component: _import('dashboard/pages/authredirect'),

@@ -1,3 +1,3 @@
 import {createAPI} from '@/utils/request'
 
-export const list = data => createAPI('/base/logs/', 'get', data)
+export const list = data => createAPI('/logs/', 'get', data)

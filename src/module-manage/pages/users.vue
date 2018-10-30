@@ -1,334 +1,261 @@
 <template>
   <div class="dashboard-container">
+    <!-- 搜索框 -->
+    <el-card shadow="never">
+      <el-form :inline="true" :model="formSearch">
+        <el-form-item label="姓名、账号">
+          <el-input placeholder="请输入" style="width: 200px;" class="filter-item" v-model="formSearch.keyword">
+          </el-input>
+        </el-form-item>
+        <el-button class="filter-item" size="small" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        <el-button class="filter-item fr" size="small" @click="handleNew" type="primary" icon="el-icon-plus">新增用户</el-button>
+        <!-- 提示条 -->
+        <el-alert v-if="barSearch.alertText !== ''" :title="barSearch.alertText" type="info" class="alert" :closable='false' show-icon></el-alert>
+      </el-form>
+    </el-card>
+    <!-- 搜索框 / -->
+    <!-- 正文 -->
     <div class="app-container">
-      <el-card shadow="never">
-       <!-- 搜索 -->
-       <el-form :model="requestParameters" ref="requestParameters">
-          <div class="filter-container">
-            <el-form-item>
-              <el-input @keyup.enter="handleFilter" style="width: 200px;" :placeholder="$t('table.search')" class="filter-item" v-model="requestParameters.username">
-              </el-input>
-              <el-button class="filter-item" size="small" type="primary" icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
-              <el-button class="filter-item" size="small" type="primary" @click="resetForm">重置</el-button>
-            </el-form-item>
-              <el-button class="filter-item fr" size="small" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.addUser')}}</el-button>
-          </div>
-        </el-form>
-        <el-alert v-if="alertText !== ''" :title="alertText" type="info" class="alert" :closable='false' show-icon></el-alert>
-        <!-- end -->
-        <!-- 数据 -->
-        <el-table :key='tableKey' :data="dataList" :row-class-name="rowClassStatus" v-loading="listLoading"  element-loading-text="给我一点时间" fit highlight-current-row
-        style="width: 100%" border>
-          <el-table-column align="center" :label="$t('table.id')">
+      <el-card shadow="never" v-loading="loading">
+        <!-- 数据表格 -->
+        <el-table :data="items" border style="width: 100%; margin-top:10px;" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column prop="account" label="账号"></el-table-column>
+          <el-table-column prop="fullName" label="姓名"></el-table-column>
+          <el-table-column prop="mobile" label="联系电话" width="120"></el-table-column>
+          <el-table-column prop="permission_group_title" label="权限组名称"></el-table-column>
+          <el-table-column prop="email" label="邮件"></el-table-column>
+          <el-table-column prop="disabled" label="屏蔽" width="80">
             <template slot-scope="scope">
-              <span>{{scope.row.id}}</span>
+              <div class="text-center">
+                <i class="el-icon-success success" v-if="!scope.row.disabled"></i>
+                <i class="el-icon-error danger" v-if="scope.row.disabled"></i>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column align="center" :label="$t('table.email')">
+          <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
-              <span>{{scope.row.email}}</span>
+              <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
             </template>
-          </el-table-column>
-          <el-table-column :label="$t('table.phone')">
-            <template slot-scope="scope">
-              <span>{{scope.row.phone}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" :label="$t('table.username')">
-            <template slot-scope="scope">
-              <span>{{scope.row.username}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" :label="$t('table.permissionUser')">
-            <template slot-scope="scope">
-              <span>{{scope.row.permission_group_title}}</span>
-            </template>
-          </el-table-column>
-          <!-- 头像 -->
-          <!-- <el-table-column align="center" :label="$t('table.avatar')">
-            <template slot-scope="scope">
-              <img :src="scope.row.avatar" style="width:50px;height:50px;">
-            </template>
-          </el-table-column> -->
-          <el-table-column align="center" width="350px" :label="$t('table.introduction')">
-            <template slot-scope="scope">
-              <span>{{scope.row.introduction}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" :label="$t('table.actions')" class-name="small-padding fixed-width">
-            <template slot-scope="scope" v-show="deletedDate">
-              <el-button type="primary" size="mini" @click="handleUpdate(scope.row.id)">{{$t('table.edit')}}</el-button>
-              <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="removeUser(scope.row.id)">{{$t('table.delete')}}
-              </el-button>
-            </template>
-            <!-- <template slot-scope="scope" v-show="showDate">
-              <el-button type="primary" size="mini">{{$t('table.edit')}}</el-button>
-              <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger">{{$t('table.delete')}}
-              </el-button>
-            </template> -->
           </el-table-column>
         </el-table>
-        <!-- end -->
-        <!-- 分页 -->
-        <div class="pagination">
-          <PageTool :paginationPage="requestParameters.page" :paginationPagesize="requestParameters.pagesize" :total="total" @pageChange="handleCurrentChange" @pageSizeChange="handleSizeChange">
-        </PageTool>
-        </div>
-        <!-- end -->
-        <!-- 新增标签弹层 -->
-        <component v-bind:is="UserAdd"
-            ref="editUser" 
-            :formData.sync='requestParameters'
-            :text='text'
-            :pageTitle='pageTitle'
-            :formBase='formData'
-            :ruleInline='ruleInline'
-            :PermissionGroupsList='PermissionGroupsList'
-            v-on:newDataes="handleLoadDataList" 
-            v-on:handleCloseModal="handleCloseModal">
-        </component>
+        <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="pagination.pageSizes" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
+        </el-pagination>
+        <!-- 数据表格 / -->
       </el-card>
-     </div>
+    </div>
+    <!-- 正文 / -->
+    <!-- 弹出窗 -->
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" v-loading="dialogLoading">
+      <el-form :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
+        <el-form-item label="账号" prop="account">
+          <el-input v-model="formData.account" placeholder="账号"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="fullName">
+          <el-input v-model="formData.fullName" placeholder="姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话" prop="mobile">
+          <el-input v-model="formData.mobile" placeholder="联系电话"></el-input>
+        </el-form-item>
+        <el-form-item label="权限组" prop="permission_group_id">
+          <el-select v-model="formData.permission_group_id" placeholder="权限组">
+            <el-option v-for="item in permissions" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="邮件" prop="email">
+          <el-input v-model="formData.email" placeholder="邮件"></el-input>
+        </el-form-item>
+        <el-form-item label="屏蔽" prop="disabled">
+          <el-switch v-model="formData.disabled" active-color={true} inactive-color={false}>
+          </el-switch>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleSave(false)">取 消</el-button>
+        <el-button type="primary" @click="handleSave(true)">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 弹出窗 / -->
   </div>
 </template>
-<style rel="stylesheet/scss" lang="scss" scoped>
-.alert {
-  margin: 10px 0px;
-}
-.pagination {
-  margin-top: 10px;
-  // text-align: right;
-}
-</style>
 
-<style>
-.el-table th {
-  background-color: #fafafa;
-}
-.el-table th.is-leaf {
-  border-bottom: 2px solid #e8e8e8;
-}
-/* .el-form-item {
-  margin-bottom: 0;
-} */
-.disabled td {
-  background-color: #f9f9f9;
-  color: #c1c1c1;
-}
-.disabled .el-button--primary,
-.disabled .el-button--danger {
-  background-color: #dbdada;
-  border: 1px solid #dbdada;
-  color: #999;
-   cursor:not-allowed;
-}
-</style>
 <script>
-import { simple } from '@/api/base/permissions'
-import { list, remove, detail, update, add } from '@/api/base/users'
-import PageTool from './../components/page-tool'
-import UserAdd from './../components/user-add'
+import {list, add, update, remove, detail} from '@/api/base/users'
+import {simple as permissionsList} from '@/api/base/permissions'
+
 export default {
-  name: 'base-users',
-  components: {
-    UserAdd,
-    PageTool
-  },
+  name: 'manage-users-index',
   data() {
     return {
-      UserAdd: 'userAdd',
-      pageTitle: '用户', // 页面标题
-      text: '', // 新增、编辑文本
-      tableKey: 0,
-      deletedDate: false,
-      showDate: true,
-      dataList: [],
-      PermissionGroupsList: [], // 权限组加载
-      total: null,
-      listLoading: true,
-      dialogStatus: '',
-      alertText: '',
-      requestParameters: {
-        page: 1,
-        pagesize: 10,
-        username: this.username
+      // 工具栏
+      formSearch: {
+        keyword: ''
       },
-      formData: {
-        email: '',
-        phone: '',
-        username: '',
-        password: '',
-        permission_group_id: '',
-        permission_group_title: '',
-        avatar: '',
-        introduction: ''
+      barSearch: {
+        alertText: ''
       },
-      ruleInline: {
-        // 表单验证
-        username: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' }
+      // 数据表
+      items: [],
+      pagination: {
+        total: 0,
+        pageSize: 20,
+        pageSizes: [20, 50, 80, 120],
+        currentPage: 1
+      },
+      loading: false,
+      multipleSelection: [], // 多行选择
+      dialogVisible: false,
+      // 弹出窗口
+      permissions: [], // 权限列表
+      dialogTitle: '',
+      dialogLoading: false,
+      formData: [],
+      rules: {
+        account: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+          {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'}
         ],
-        email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
-        password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+        fullName: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
+          {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
         ],
         permission_group_id: [
-          {
-            type: 'number',
-            required: true,
-            message: '权限组名称不能为空',
-            trigger: 'blur'
-          }
+          {required: true, message: '请选择权限组', trigger: 'change'}
         ]
       }
     }
   },
-  computed: {},
   methods: {
-    // 获取列表数据
-    getList(params) {
-      this.listLoading = true
-      list(this.requestParameters)
-        .then(data => {
-          this.dataList = data.data.list
-          this.total = data.data.counts
-          this.alertText = `共 ${this.total} 条记录`
-          this.listLoading = false
-        })
-        .catch(e => {
-          this.$message.e('错了哦，这是一条错误消息')
-        })
-    },
-    // 权限列表
-    setupData() {
-      simple().then(data => {
-        this.PermissionGroupsList = data.data
+    // 业务方法
+    async doQuery(page = 1, limit = 20) {
+      this.pagination.currentPage = page
+      this.pagination.pageSize = limit
+      this.loading = true
+      this.barSearch.alertText = ''
+      this.items = []
+      await list({
+        ...this.formSearch,
+        page,
+        limit
+      }).then(res => {
+        this.items = res.data.items
+        this.pagination.total = res.data.counts
+        this.barSearch.alertText = `共 ${this.pagination.total} 条记录`
       })
+      this.loading = false
     },
-    // 重置
-    resetForm() {
-      this.$refs['requestParameters'].resetFields()
+    // 初始数据
+    async setupData() {
+      await permissionsList({}).then(res => {
+        this.permissions = res.data.items
+      })
+      await this.doQuery()
     },
-    // 搜索信息
-    handleFilter() {
-      this.requestParameters.page = 1
-      this.getList(this.requestParameters)
+    // UI方法
+    // 搜索
+    handleSearch() {
+      this.doQuery()
     },
-    // 每页显示信息条数
+    // 行选择
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    // 也尺寸
     handleSizeChange(val) {
-      this.requestParameters.pagesize = val
-      if (this.requestParameters.page === 1) {
-        this.getList(this.requestParameters)
-      }
+      this.doQuery(1, val)
     },
-    // 进入某一页
+    // 页码切换
     handleCurrentChange(val) {
-      this.requestParameters.page = val
-      this.getList()
+      this.doQuery(val, this.pagination.pageSize)
     },
-    // 新增用户刷新列表
-    handleLoadDataList() {
-      this.getList()
-    },
-    // 数据删除后显示样式
-    rowClassStatus(row) {
-      if (row.row.is_deleted === 1) {
-        this.deletedDate = true
-        this.showDate = false
-        return 'disabled'
-      } else {
-        return ''
-      }
-    },
-    // **********************************
-    // 搜索的项目
-    query() {
+    // 新建
+    handleNew() {
+      this.dialogTitle = '新建'
       this.formData = {
-        email: '',
-        phone: '',
-        username: '',
-        password: '',
-        permission_group_id: '',
+        account: '',
+        fullName: '',
+        mobile: '',
+        permission_group_id: null,
         avatar: '',
-        introduction: ''
+        email: '',
+        disabled: false
       }
-    },
-    // 新增用户
-    handleCreate() {
-      this.query()
-      this.text = '创建'
-      this.$refs.editUser.dialogFormV()
-      this.setupData()
-    },
-    // 窗口操作**********************************
-    // 弹框关闭
-    handleCloseModal() {
-      this.$refs.editUser.dialogFormH()
-    },
-    // 编辑
-    // 表单详情数据加载
-    hanldeEditForm(objeditId) {
-      this.formData.id = objeditId
-      this.setupData()
-      detail({ id: objeditId }).then((data, err) => {
-        var datalist = data.data
-        if (err) {
-          return err
-        }
-        this.formData.id = datalist.id
-        this.formData.email = datalist.email
-        this.formData.phone = datalist.phone
-        this.formData.username = datalist.username
-        this.formData.password = datalist.password
-        this.formData.avatar = datalist.avatar
-        this.formData.introduction = datalist.introduction
-        this.formData.permission_group_id = datalist.permission_group_id
-        this.formData.permission_group_title = datalist.permission_group_title
+      this.dialogVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
       })
     },
-    handleUpdate(objeditId) {
-      this.query()
-      var _this = this
-      this.text = '编辑'
-      this.$refs.editUser.dialogFormV()
-      _this.hanldeEditForm(objeditId)
+    // 修改
+    async handleEdit(item) {
+      this.dialogLoading = true
+      this.dialogTitle = '修改'
+      await detail({id: item.id}).then(res => {
+        this.formData = res.data
+      })
+      this.dialogVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+      this.dialogLoading = false
+    },
+    // 保存
+    handleSave(isSave) {
+      if (isSave) {
+        this.$refs['dataForm'].validate(valid => {
+          if (valid) {
+            this.dialogLoading = true
+            if (this.formData.id === undefined) {
+              add(this.formData).then(res => {
+                this.dialogLoading = false
+                this.dialogVisible = false
+                this.$message({
+                  message: '新增成功',
+                  type: 'success'
+                })
+              })
+            } else {
+              update(this.formData).then(res => {
+                this.dialogLoading = false
+                this.dialogVisible = false
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+              })
+            }
+          } else {
+            return false
+          }
+        })
+      } else {
+        this.dialogVisible = false
+      }
     },
     // 删除
-    removeUser(user) {
-      this.$confirm('此操作将永久删除用户 ' + ', 是否继续?', '提示', {
-        type: 'warning'
+    handleDelete(item) {
+      this.$confirm('确认删除？').then(ret => {
+        remove({id: item.id}).then(res => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        })
       })
-        .then(() => {
-          remove({ id: user })
-            .then(response => {
-              this.$message.success('成功删除了用户' + '!')
-              this.dataList.splice(user, 1)
-              this.getList(this.requestParameters)
-            })
-            .catch(response => {
-              this.$message.error('删除失败!')
-            })
-        })
-        .catch(() => {
-          this.$message.info('已取消操作!')
-        })
     }
   },
-  // 挂载结束
-  mounted: function() {},
-  // 创建完毕状态
   created() {
-    this.getList()
-    // 键盘enter操作
-    var lett = this
-    document.onkeydown = function(e) {
-      var key = window.event.keyCode
-      if (key === 13) {
-        lett.handleFilter(this.requestParameters)
-      }
-    }
-  },
-  // 组件更新
-  updated: function() {}
+    this.setupData()
+  }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+.alert {
+  margin: 10px 0px 0px 0px;
+}
+.pagination {
+  margin-top: 10px;
+  text-align: right;
+}
+</style>
