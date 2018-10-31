@@ -3,14 +3,8 @@
     <!-- 搜索框 -->
     <el-card shadow="never">
       <el-form :inline="true" :model="formSearch">
-        <el-form-item label="姓名、账号">
-          <el-input placeholder="请输入" style="width: 200px;" class="filter-item" v-model="formSearch.keyword">
-          </el-input>
-        </el-form-item>
-        <el-button class="filter-item" size="small" icon="el-icon-search" @click="handleSearch">查询</el-button>
-        <el-button class="filter-item fr" size="small" @click="handleNew" type="primary" icon="el-icon-plus">新增用户</el-button>
-        <!-- 提示条 -->
-        <el-alert v-if="barSearch.alertText !== ''" :title="barSearch.alertText" type="info" class="alert" :closable='false' show-icon></el-alert>
+        <el-form-item label=""></el-form-item>
+        <el-button class="filter-item fr" size="small" @click="handleNew" type="primary" icon="el-icon-plus">新增</el-button>
       </el-form>
     </el-card>
     <!-- 搜索框 / -->
@@ -23,7 +17,7 @@
             <template slot-scope="scope">
               <span v-bind:style="{marginLeft: scope.row.layer * 20 + 'px'}"></span>
               <i class="el-icon-caret-bottom" v-if="scope.row.childsCount > 0"></i>
-              <i class="el-icon-caret-right" v-if="scope.row.childsCount === 0 && !scope.row.isPoint"></i>
+              <i class="el-icon-document" v-if="scope.row.childsCount === 0 && !scope.row.isPoint"></i>
               <i class="el-icon-view" v-if="scope.row.isPoint"></i>
               <span>{{scope.row.title}}</span>
             </template>
@@ -36,35 +30,38 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="pagination.pageSizes" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
-        </el-pagination>
         <!-- 数据表格 / -->
       </el-card>
     </div>
     <!-- 正文 / -->
     <!-- 弹出窗 -->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" v-loading="dialogLoading">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="50%" v-loading="dialogLoading">
       <el-form :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="formData.account" placeholder="账号"></el-input>
+        <el-form-item label="类型" prop="isPoint">
+          <el-radio-group v-model="formData.isPoint">
+            <el-radio :label="false">菜单</el-radio>
+            <el-radio :label="true">权限点</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="姓名" prop="fullName">
-          <el-input v-model="formData.fullName" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model="formData.mobile" placeholder="联系电话"></el-input>
-        </el-form-item>
-        <el-form-item label="权限组" prop="permission_group_id">
-          <el-select v-model="formData.permission_group_id" placeholder="权限组">
-            <el-option v-for="item in permissions" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-form-item label="父级菜单" prop="pid">
+          <!-- <el-cascader :options="menusTree" v-model="formData.pid" :show-all-levels="false">
+          </el-cascader> -->
+          <el-select v-model="formData.pid" placeholder="父级">
+            <el-option v-for="item in items" :key="item.id" :label="item.title" :value="item.id" v-if="!item.isPoint" :disabled="item.childsCount > 0">
+              <template slot-scope="scope">
+                <span v-bind:style="{marginLeft: item.layer * 20 + 'px'}"></span>
+                <i class="el-icon-caret-bottom" v-if="item.childsCount > 0"></i>
+                <i class="el-icon-document" v-if="item.childsCount === 0 && !item.isPoint"></i>
+                <span>{{item.title}}</span>
+              </template>
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮件" prop="email">
-          <el-input v-model="formData.email" placeholder="邮件"></el-input>
+        <el-form-item label="代码" prop="code">
+          <el-input v-model="formData.code" placeholder="代码"></el-input>
         </el-form-item>
-        <el-form-item label="屏蔽" prop="disabled">
-          <el-switch v-model="formData.disabled" active-color={true} inactive-color={false}>
-          </el-switch>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="formData.title" placeholder="标题"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -84,76 +81,48 @@ export default {
   data() {
     return {
       // 工具栏
-      formSearch: {
-        keyword: ''
-      },
-      barSearch: {
-        alertText: ''
-      },
+      formSearch: {},
       // 数据表
       items: [],
-      pagination: {
-        total: 0,
-        pageSize: 20,
-        pageSizes: [20, 50, 80, 120],
-        currentPage: 1
-      },
       loading: false,
-      multipleSelection: [], // 多行选择
       dialogVisible: false,
       // 弹出窗口
-      permissions: [], // 权限列表
+      menusTree: [], // 菜单列表
       dialogTitle: '',
       dialogLoading: false,
       formData: [],
       rules: {
-        account: [
-          {required: true, message: '请输入账号', trigger: 'blur'},
+        code: [
+          {required: true, message: '请输入代码', trigger: 'blur'},
           {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'}
         ],
-        fullName: [
-          {required: true, message: '请输入姓名', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
+        title: [
+          {required: true, message: '请输入标题', trigger: 'blur'},
+          {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'}
         ],
-        permission_group_id: [
-          {required: true, message: '请选择权限组', trigger: 'change'}
-        ]
+        pid: [{required: true, message: '请选择父级菜单', trigger: 'change'}],
+        isPoint: [{required: true, message: '请选择类型', trigger: 'change'}]
       }
     }
   },
   methods: {
-    // 业务方法
-    async doQuery(page = 1, limit = 20) {
-      this.pagination.currentPage = page
-      this.pagination.pageSize = limit
-      this.loading = true
-      this.barSearch.alertText = ''
-      this.items = []
-      await list({
-        ...this.formSearch,
-        page,
-        limit
-      }).then(res => {
-        this.items = res.data.items
-        this.pagination.total = res.data.counts
-        this.barSearch.alertText = `共 ${this.pagination.total} 条记录`
-      })
-      this.loading = false
-    },
     // 读取数据
     async reloadData() {
       let items = await list({}).then(res => res.data)
       let dataTable = []
+      let dataTree = []
       let layer = 0
       this.toTable(items, dataTable, layer, false)
-      console.log(dataTable)
+      // this.toTree(items, dataTree)
       this.items = dataTable
+      // this.menusTree = dataTree
+      // console.log(dataTable, dataTree)
     },
     toTable(dataList, dataTable, layer, isPoint) {
       for (let it of dataList) {
-        console.log(
-          `layer: ${layer} , title: ${it.title} , isPoint: ${isPoint}`
-        )
+        // console.log(
+        //   `layer: ${layer} , title: ${it.title} , isPoint: ${isPoint}`
+        // )
         dataTable.push({
           id: it.id,
           pid: it.pid,
@@ -174,34 +143,28 @@ export default {
         }
       }
     },
+    toTree(dataList, dataTree) {
+      for (let it of dataList) {
+        let navNode = {
+          value: it.id,
+          label: it.title
+        }
+        if (it.childs !== undefined && it.childs.length > 0) {
+          navNode.children = []
+          this.toTree(it.childs, navNode.children)
+        }
+        dataTree.push(navNode)
+      }
+    },
     // UI方法
-    // 搜索
-    handleSearch() {
-      this.doQuery()
-    },
-    // 行选择
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    // 也尺寸
-    handleSizeChange(val) {
-      this.doQuery(1, val)
-    },
-    // 页码切换
-    handleCurrentChange(val) {
-      this.doQuery(val, this.pagination.pageSize)
-    },
     // 新建
     handleNew() {
       this.dialogTitle = '新建'
       this.formData = {
-        account: '',
-        fullName: '',
-        mobile: '',
-        permission_group_id: null,
-        avatar: '',
-        email: '',
-        disabled: false
+        isPoint: false,
+        pid: null,
+        code: '',
+        title: ''
       }
       this.dialogVisible = true
       this.$nextTick(() => {
@@ -271,13 +234,3 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-.alert {
-  margin: 10px 0px 0px 0px;
-}
-.pagination {
-  margin-top: 10px;
-  text-align: right;
-}
-</style>

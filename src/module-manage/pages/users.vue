@@ -49,7 +49,7 @@
     </div>
     <!-- 正文 / -->
     <!-- 弹出窗 -->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" v-loading="dialogLoading">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="50%" v-loading="dialogLoading">
       <!-- 重置密码 -->
       <template v-if="dialogType === 'password'">
         <el-form :rules="rulesPassword" ref="dataForm" :model="formData" label-width="100px" label-position="right">

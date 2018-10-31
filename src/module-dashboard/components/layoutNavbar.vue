@@ -77,7 +77,7 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
-import { search } from '@/api/base/menus'
+// import { search } from '@/api/base/menus'
 
 export default {
   name: 'layoutNavBar',
@@ -144,7 +144,7 @@ export default {
     }
   },
   mounted() {
-    this.restaurants = search()
+    // this.restaurants = search()
   }
 }
 </script>

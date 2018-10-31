@@ -3,7 +3,7 @@
     <!-- 搜索框 -->
     <el-card shadow="never">
       <el-form :inline="true" :model="formSearch">
-        <el-form-item label="姓名、账号">
+        <el-form-item label="权限组名称">
           <el-input placeholder="请输入" style="width: 200px;" class="filter-item" v-model="formSearch.keyword">
           </el-input>
         </el-form-item>
@@ -18,21 +18,10 @@
     <div class="app-container">
       <el-card shadow="never" v-loading="loading">
         <!-- 数据表格 -->
-        <el-table :data="items" border style="width: 100%; margin-top:10px;" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="account" label="账号"></el-table-column>
-          <el-table-column prop="fullName" label="姓名"></el-table-column>
-          <el-table-column prop="mobile" label="联系电话" width="120"></el-table-column>
-          <el-table-column prop="permission_group_title" label="权限组名称"></el-table-column>
-          <el-table-column prop="email" label="邮件"></el-table-column>
-          <el-table-column prop="disabled" label="屏蔽" width="80">
-            <template slot-scope="scope">
-              <div class="text-center">
-                <i class="el-icon-success success" v-if="!scope.row.disabled"></i>
-                <i class="el-icon-error danger" v-if="scope.row.disabled"></i>
-              </div>
-            </template>
-          </el-table-column>
+        <el-table :data="items" border style="width: 100%; margin-top:10px;">
+          <el-table-column prop="id" label="编号" width="100"></el-table-column>
+          <el-table-column prop="title" label="名称"></el-table-column>
+          <el-table-column prop="create_date" label="创建时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
@@ -47,28 +36,14 @@
     </div>
     <!-- 正文 / -->
     <!-- 弹出窗 -->
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" v-loading="dialogLoading">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="50%" v-loading="dialogLoading">
       <el-form :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="formData.account" placeholder="账号"></el-input>
+        <el-form-item label="名称" prop="title">
+          <el-input v-model="formData.title" placeholder="名称"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="fullName">
-          <el-input v-model="formData.fullName" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model="formData.mobile" placeholder="联系电话"></el-input>
-        </el-form-item>
-        <el-form-item label="权限组" prop="permission_group_id">
-          <el-select v-model="formData.permission_group_id" placeholder="权限组">
-            <el-option v-for="item in permissions" :key="item.id" :label="item.title" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="邮件" prop="email">
-          <el-input v-model="formData.email" placeholder="邮件"></el-input>
-        </el-form-item>
-        <el-form-item label="屏蔽" prop="disabled">
-          <el-switch v-model="formData.disabled" active-color={true} inactive-color={false}>
-          </el-switch>
+        <el-form-item label="权限分配">
+          <el-tree :data="dataTree" show-checkbox="" default-expand-all="" node-key="id" ref="tree" highlight-current>
+          </el-tree>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -81,11 +56,11 @@
 </template>
 
 <script>
-import {list, add, update, remove, detail} from '@/api/base/users'
-import {simple as permissionsList} from '@/api/base/permissions'
+import {list, add, update, remove, detail} from '@/api/base/permissions'
+import {list as menuList} from '@/api/base/menus'
 
 export default {
-  name: 'manage-users-index',
+  name: 'manage-permissions-index',
   data() {
     return {
       // 工具栏
@@ -107,21 +82,14 @@ export default {
       multipleSelection: [], // 多行选择
       dialogVisible: false,
       // 弹出窗口
-      permissions: [], // 权限列表
+      dataTree: [], // 菜单列表
       dialogTitle: '',
       dialogLoading: false,
       formData: [],
       rules: {
-        account: [
-          {required: true, message: '请输入账号', trigger: 'blur'},
+        title: [
+          {required: true, message: '请输入名称', trigger: 'blur'},
           {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'}
-        ],
-        fullName: [
-          {required: true, message: '请输入姓名', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
-        ],
-        permission_group_id: [
-          {required: true, message: '请选择权限组', trigger: 'change'}
         ]
       }
     }
@@ -147,19 +115,35 @@ export default {
     },
     // 初始数据
     async setupData() {
-      await permissionsList({}).then(res => {
-        this.permissions = res.data.items
-      })
+      let items = await menuList({}).then(res => res.data)
+      let dataTree = []
+      this.toTree(items, dataTree, false)
       await this.doQuery()
+      this.dataTree = dataTree
+      // console.log(dataTree)
+    },
+    // 转显示树
+    toTree(dataList, dataTree, isPoint) {
+      for (let it of dataList) {
+        let navNode = {
+          id: it.id,
+          label: isPoint ? '☝' + it.title : '' + it.title,
+          isPoint
+        }
+        if (it.childs !== undefined && it.childs.length > 0) {
+          navNode.children = []
+          this.toTree(it.childs, navNode.children, false)
+        } else if (it.points !== undefined && it.points.length > 0) {
+          navNode.children = []
+          this.toTree(it.points, navNode.children, true)
+        }
+        dataTree.push(navNode)
+      }
     },
     // UI方法
     // 搜索
     handleSearch() {
       this.doQuery()
-    },
-    // 行选择
-    handleSelectionChange(val) {
-      this.multipleSelection = val
     },
     // 也尺寸
     handleSizeChange(val) {
@@ -173,17 +157,13 @@ export default {
     handleNew() {
       this.dialogTitle = '新建'
       this.formData = {
-        account: '',
-        fullName: '',
-        mobile: '',
-        permission_group_id: null,
-        avatar: '',
-        email: '',
-        disabled: false
+        title: '',
+        permissions: []
       }
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
+        this.$refs.tree.setCheckedKeys([])
       })
     },
     // 修改
@@ -196,6 +176,7 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
+        this.$refs.tree.setCheckedKeys(this.formData.permissions)
       })
       this.dialogLoading = false
     },
@@ -204,6 +185,7 @@ export default {
       if (isSave) {
         this.$refs['dataForm'].validate(valid => {
           if (valid) {
+            this.formData.permissions = this.$refs.tree.getCheckedKeys()
             this.dialogLoading = true
             if (this.formData.id === undefined) {
               add(this.formData).then(res => {
