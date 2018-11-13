@@ -5,7 +5,7 @@
 ### 1. 安装 nodejs
 
 https://nodejs.org/en/
-
+yarn 
 ### 2. 安装包依赖
 
 ```sh

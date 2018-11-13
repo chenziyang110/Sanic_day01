@@ -17,7 +17,7 @@ export default {
       store.registerModule('app', app)
       store.registerModule('errorLog', errorLog)
       store.registerModule('permission', permission)
-      store.registerModule('tagsView', tagsView)
+      store.registerModule('tagsView', tagsView) 
       store.registerModule('user', user)
     }
   }

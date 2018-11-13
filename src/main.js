@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import 'normalize.css/normalize.css'// A modern alternative to CSS resets
 import Element from 'element-ui'
+import echarts from 'echarts'
 // import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/element-theme/index.css'
 import '@/styles/index.scss' // global css
@@ -20,15 +21,23 @@ import dashboard from '@/module-dashboard/' // 面板
 import base from '@/module-manage/' // 用户管理
 // import form from '@/module-form/' // 表单页
 // import details from '@/module-details/' // 表单页
+// import example from '@/module-example/'
+import flowanalyze from '@/module-flowanalyze/'
+import source from '@/module-source/'
 
 import tools from './utils/common.js'
 Vue.prototype.$tools = tools
+Vue.prototype.$echarts = echarts
 
+Vue.use(echarts)
 Vue.use(tools)
 Vue.use(dashboard, store)
 Vue.use(base, store)
 // Vue.use(form, store)
 // Vue.use(details, store)
+// Vue.use(example, store)
+Vue.use(flowanalyze, store)
+Vue.use(source, store)
 
 /*
 * 注册 - 组件
