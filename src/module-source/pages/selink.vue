@@ -1,53 +1,64 @@
 <template>
     <div class="dashboard-container">
-    <el-card class="card-head">
-        <h2 class="title">趋势分析（{{defaultdate}}）</h2>
-        <!-- 工具栏 -->
-        <SelectRegion v-on:handleTotalData = 'handleTotalData'/>
-    </el-card>
-    <!-- 总计栏 -->
-    <TotalData :totalList = 'totaldata'/>
+        <el-card class="card-head">
+            <h2 class="title">外部链接({{defaultdate}}）</h2>
+            <!-- 工具栏 -->
+            <SelectRegion v-on:handleTotalData = 'handleTotalData'/>
+        </el-card>
+        <!-- 总计栏 -->
+        <TotalData :totalList = 'totaldata'/>
 
-    <el-card shadow="never" v-loading="loading"  class="chart">
-        <!-- 下拉框 -->
-        <SelectMenu v-on:handleSelect = "handleSelect"/>
-        <!-- 图表 -->
-        <!-- <ChartGroup :chartList = 'chartdata'/> -->
-        <div id="chart" style="width: 100%;min-height: 400px;"></div>
-    </el-card>
-    <!-- 自定义指标 -->
-    <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
-    <!-- 表格数据列表 -->
-    <el-card shadow="never" v-loading="loading" class="card-item">
-        <div class="tablestyle">
-            <el-table :data="targetData.items">
-              <el-table-column prop="datetime" label="日期"></el-table-column>
-              <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-              <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-              <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-              <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-              <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-              <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-              <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-              <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-              <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-              <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-              
-            </el-table>
-          </div>
-    </el-card>
+        <el-card shadow="never" v-loading="loading"  class="chart">
+            <!-- 下拉框 -->
+            <SelectMenu v-on:handleSelect = "handleSelect"/>
+            <!-- 图表 -->
+            <ChartGroup :chartList = 'chartdata'/>
+        </el-card>
+        <!-- 自定义指标 -->
+        <!-- <CustomTagForm v-on:handleTagForm = 'handleTagForm'/> -->
+        <!-- 表格数据列表 -->
+        <el-card shadow="never" v-loading="loading" class="card-item card-table">
+            <div class="tablestyle">
+                <el-table :data="targetData.items">
+                <el-table-column prop="datetime" label="日期">
+                    <template slot-scope="scope">
+                            <span class="datelink" @click="handleSourceLink(scope.$index, scope.row.sourceID)">{{scope.row.datetime}}</span>
+                    </template>
+                </el-table-column>
+                <!-- <el-table-column prop="source" label="来源类型" >
+                    <template slot-scope="scope">
+                        <span>{{scope.row.source}}</span>
+                        <i class="el-icon-document"></i>
+                    </template>
+                </el-table-column> -->
+                <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
+                <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
+                <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
+                <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
+                <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
+                <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
+                <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
+                <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
+                <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
+                <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
+                
+                </el-table>
+            </div>
+        </el-card>
 
   </div>
 </template>
 <script>
-import {total, chart, targetdata} from '@/api/base/source'
+import {total, chart, targetdata, keywordstarget, keywordsse, domainchart, domaintargetdata, domainranklist} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
+import ChartGroup from './../components/ChartGroup'
 
 export default {
-    components: { SelectRegion, TotalData, SelectMenu, CustomTagForm },
+    // name: 'seLink',
+    components: { SelectRegion, TotalData, ChartGroup, SelectMenu, CustomTagForm },
     data() {
         return {
             loading: false,
@@ -60,7 +71,8 @@ export default {
             totaldata: {},
             chartdata: {},
             targetData: {},
-            showColumes: [true, false, false, true, false, false, true, true, true, true]
+            showColumes: [true, false, false, true, false, false, true, true, true, true],
+            sourceID: ''
         }
     },
     methods: {
@@ -72,7 +84,6 @@ export default {
                 range, side, visitor, date
             }).then(res => {
                 this.totaldata = res.data
-                
             })
             this.loading = false
         },
@@ -84,75 +95,15 @@ export default {
                 range, side, visitor, date, target
             }).then(res => {
                 this.chartdata = res.data
-                // 图表模型
-            // x轴数据整理
-            
-            let xdata = []
-            let getxdata = this.chartdata.xAxis
-            for (let xitem of getxdata) {
-              xdata.push(xitem.data)
-            }
-            // series数据整理
-            let seriesdata1 = []
-            let getseriesdata1 = this.chartdata.series[0].items
-            let chartname1 = this.chartdata.series[0].name
-
-            for (let seriesitem1 of getseriesdata1) {
-              seriesdata1.push(seriesitem1.data)
-            }
-            let seriesdata2 = []
-            let getseriesdata2 = this.chartdata.series[0].items
-            let chartname2 = this.chartdata.series[1].name
-
-
-            for (let seriesitem2 of getseriesdata2) {
-              seriesdata2.push(seriesitem2.data)
-            }
-
-            // option定义
-            let option = {
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{b} <br/>{a} : {c}'
-                },
-                legend: {
-                    bottom: 'bottom',
-                    data: [chartname1, chartname2]
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: xdata
-                },
-                yAxis: {
-                    type: 'value',
-                    axisLabel: {
-                    formatter: function(value, index) {
-                        return value / 10000 + '万'
-                    }
-                    }
-                },
-                series: [{
-                    name: chartname1,
-                    data: seriesdata1,
-                    type: 'line'
-                }, {
-                    name: chartname2,
-                    data: seriesdata2,
-                    type: 'line'
-                }]
-            }
-            this.echartCreate(option)
-
             })
             this.loading = false
         },
         // 业务请求：表格数据
-        async doQueryTargetData(range, side, visitor, date, tages) {
+        async doQueryTargetData(range, side, visitor, date, tages, sourceID) {
             this.loading = true
             this.targetData = {}
             await targetdata({
-                range, side, visitor, date, tages
+                range, side, visitor, date, tages, sourceID
             }).then(res => {
                 this.targetData = res.data
             })
@@ -183,23 +134,18 @@ export default {
             this.target = currenttarget
             this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
         },
-        // echart
-        echartCreate(data) {
-            let echartView = this.$echarts.init(document.getElementById('chart'))     
-            echartView.setOption(data)
-        },
         handleTagForm(currenttages) {
             this.tages = currenttages
             if (this.tages.length > 6) {
 
             }
-            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.tages)
+            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.tages, this.sourceID)
             for (let i = 0; i < this.showColumes.length; i++) {
                 // debugger
                 let numArray = this.tages.map((value) => {
                     return parseInt(value)
                 })
-                if (!this.ArrayContains(numArray, i + 1)) {
+                if (!this.ArrayContains(this.tages, i + 1)) {
                     this.showColumes[i] = false
                 } else {
                     this.showColumes[i] = true
@@ -213,13 +159,27 @@ export default {
                 }
             }
             return false
+        },
+        // 来源链接
+        handleSourceLink(index, sourceID) {
+            this.$router.push({
+                path: '/selink',
+                name: 'source-selink',
+                params: { 
+                    id: 'id',
+                    dataObj: sourceID
+                }
+            })
         }
+        
     },
+    
     // 创建完毕状态
     created() {
         this.setuptotalData()
         this.setupchartData()
         this.setuptargetData()
+        this.sourceID = this.$route.params.dataObj
     }
 }
 </script>
@@ -237,6 +197,18 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
         border-radius: 0;   
+    }
+    .el-icon-document {
+        float: right;
+        line-height: 26px;
+        margin-right: 15px;
+        font-size: 16px;
+        color: #f75426;
+        cursor: pointer;
+    }
+    .datelink {
+        cursor: pointer;
+        color: #012989
     }
     // child style
     

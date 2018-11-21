@@ -381,6 +381,12 @@ code {
       box-shadow: 0 6px 5px -3px #f0f2f5;
   }
 }
+// tableList
+.card-table {
+  .el-card__body {
+    // padding: 0
+  }
+}
 // tool 
 .radios {
   .el-radio-button {
@@ -440,4 +446,69 @@ code {
     font-weight: bold;
     font-size: 16px;
   }
+}
+// tab
+.keywordstab .el-tabs__nav-wrap::after {
+  content: none
+}
+.keywordstab .el-tabs__nav-scroll {
+  padding-left: 15px;
+  margin: 7px 0 0;
+}
+.keywordstab .el-tabs__item {
+  font-size: 16px;
+}
+.keywordstab .el-tabs__header {
+  margin-bottom: 0
+}
+.rank .el-button:hover {
+  background: #fff;
+}
+.order {
+  margin-right: 15px;
+  cursor: pointer;
+}
+.allbtn {
+  padding: 3px 8px;
+  border: 1px solid #b5b3b3;
+  color: #f75426;
+  cursor: pointer;
+}
+.card-table {
+  margin-bottom: 30px;
+}
+.card-table .el-card__body {
+  padding: 0
+}
+.hiddentablehead .el-table__header-wrapper {
+  display: none
+}
+.el-table__expanded-cell[class*=cell] {
+  padding: 0
+}
+.el-table.innertable thead, .othertable thead {
+  display: none
+}
+// domain
+.sourcetype .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+  border: 1px solid #ccc9c8;
+}
+.sourcetype .el-radio-button__inner {
+  border: 1px solid transparent
+}
+.pagetype .el-card__header {
+  padding: 0
+}
+.pagetype .el-card__body {
+  padding: 0
+}
+.pagefrom .el-radio-button__inner {
+  line-height: 2;
+  border-top: 3px solid transparent;
+  border-bottom: 0;
+}
+.pagefrom .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+  border-top: 3px solid #f75426;
+  border-bottom: 0;
+  background: #fff;
 }

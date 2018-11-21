@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard-container">
     <el-card class="card-head">
-        <h2 class="title">搜索引擎（{{defaultdate}}）</h2>
+        <h2 class="title">来源域名（{{defaultdate}}）</h2>
         <!-- 工具栏 -->
         <SelectRegion v-on:handleTotalData = 'handleTotalData'/>
     </el-card>
@@ -10,41 +10,87 @@
 
     <el-card shadow="never" v-loading="loading"  class="chart">
         <!-- 下拉框 -->
-        <SelectMenu v-on:handleSelect = "handleSelect"/>
+        <el-select v-model="defaultvalue" placeholder="选择指示" @change="handleSelect">
+            <el-option
+                v-for="item in targetitems"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            >
+            <el-radio :label='1'>{{ item.label }}</el-radio>
+            </el-option>
+        </el-select>
         <!-- 图表 -->
         <ChartGroup :chartList = 'chartdata'/>
     </el-card>
+    <!-- 限制栏 -->
+    <div class="card-item">
+        <el-row :gutter="20">
+            <el-col :span="10">
+                <el-form ref="searchform" :model="formSearch">
+                    <el-input  placeholder="请输入" v-model="formSearch.keyword" style="width: 300px;"></el-input>
+                    <el-button type="warning" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
+                    <el-button type="warning" class="filter-item" size="medium">自定义指标</el-button>
+                </el-form>
+            </el-col>
+            <el-col :span="9" :offset="5">
+                <span class="sub-title">设备：</span>
+                <el-radio-group v-model="sourcetype" class="sourcetype" @change="handleSourceType">
+                    <el-radio-button label="0">全部</el-radio-button>
+                    <el-radio-button label="1">搜索引擎</el-radio-button>
+                    <el-radio-button label="2">网站导航</el-radio-button>
+                    <el-radio-button label="3">外部链接</el-radio-button>
+                </el-radio-group>
+            </el-col>
+        </el-row>
+    </div>
+    
     <!-- 自定义指标 -->
     <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
-    <!-- 表格数据列表 -->
-    <el-card shadow="never" v-loading="loading" class="card-item card-table">
-        <div class="tablestyle">
-            <el-table :data="targetData.items">
-              <el-table-column prop="source" label="来源类型">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.source}}</span>
-                    <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
-                </template>
-              </el-table-column>
-              <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-              <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-              <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-              <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-              <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-              <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-              <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-              <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-              <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-              <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-              
-            </el-table>
-          </div>
+    
+    <!-- 来源分类 -->
+    <el-card shadow="never" v-loading="loading" class="card-item pagetype">
+        <div slot="header" class="clearfix">
+            <el-radio-group v-model="pagetype" class="pagefrom">
+                    <el-radio-button label="0">来源域名</el-radio-button>
+                    <el-radio-button label="1">来源页面</el-radio-button>
+                </el-radio-group>
+        </div>
+        <div class="card-body">
+            <!-- 表格数据列表 -->
+            <el-card shadow="never" v-loading="loading" class="card-item card-table">
+                <div class="tablestyle">
+                    <el-table :data="targetData.items">
+                    <el-table-column prop="source" label="来源类型">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.source}}</span>
+                            <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
+                    <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
+                    <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
+                    <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
+                    <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
+                    <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
+                    <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
+                    <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
+                    <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
+                    <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
+                    
+                    </el-table>
+                </div>
+            </el-card>
+        </div>
     </el-card>
+
+
+    
 
   </div>
 </template>
 <script>
-import {total, chart, targetdata, keywordstarget, keywordsse, domainchart, domaintargetdata, domainranklist} from '@/api/base/source'
+import {total, domainchart, domaintargetdata, domainranklist} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
@@ -66,7 +112,24 @@ export default {
             totaldata: {},
             chartdata: {},
             targetData: {},
-            showColumes: [true, false, false, true, false, false, true, true, true, true]
+            showColumes: [true, false, false, true, false, false, true, true, true, true],
+            defaultvalue: '',
+            sourcetype: 0,
+            pagetype: 0,
+            targets: ['1', '4', '7', '8', '9', '10'],
+            formSearch: {
+                keyword: ''
+            },
+            targetitems: [{
+                value: '1',
+                label: '浏览次数'
+            }, {
+                value: '2',
+                label: '访客次数'
+            }, {
+                value: '3',
+                label: 'IP'
+            }]
         }
     },
     methods: {
@@ -85,7 +148,7 @@ export default {
         async doQueryChart(range, side, visitor, date, target) {
             this.loading = true
             this.chartdata = {}
-            await chart({
+            await domainchart({
                 range, side, visitor, date, target
             }).then(res => {
                 this.chartdata = res.data
@@ -93,11 +156,18 @@ export default {
             this.loading = false
         },
         // 业务请求：表格数据
-        async doQueryTargetData(range, side, visitor, date, tages) {
+        async doQueryTargetData(range, side, visitor, date, targets, sourceID, sourceType) {
             this.loading = true
             this.targetData = {}
-            await targetdata({
-                range, side, visitor, date, tages
+            await domaintargetdata({
+                 range, 
+                ...this.formSearch,
+                side, 
+                visitor, 
+                date,
+                targets, 
+                sourceID, 
+                sourceType
             }).then(res => {
                 this.targetData = res.data
             })
@@ -108,8 +178,8 @@ export default {
             await this.doQueryTotal()
         },
         // 初始chart数据
-        async setupchartData() {
-            await this.doQueryChart()
+        async setupchartData(range, side, visitor, date, targets, sourceID, sourceType) {
+            await this.doQueryChart(this.range, this.side, this.visitor, this.date, this.targets, this.sourceID, this.sourceType)
         },
          // 初始target数据
         async setuptargetData() {
@@ -117,6 +187,15 @@ export default {
         },
 
         // 交互操作
+        // 点击搜索
+        handleSearch() {
+            this.doQueryTargetData()
+        },
+        // 点击选择来源类型
+        handleSourceType(sourceType) {
+            console.log(sourceType)
+            this.doQueryTargetData()
+        },
         handleTotalData (currentrange, currentside, currentvisitor, currentdate) {
             this.range = currentrange
             this.side = currentside 
@@ -129,10 +208,8 @@ export default {
             this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
         },
         handleTagForm(currenttages) {
-            this.tages = currenttages
-            if (this.tages.length > 6) {
-
-            }
+            this.targets = currenttages
+            
             this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.tages)
             for (let i = 0; i < this.showColumes.length; i++) {
                 // debugger
@@ -196,6 +273,14 @@ export default {
         font-size: 16px;
         color: #f75426;
         cursor: pointer;
+    }
+    .sub-title {
+        font-size: 18px;
+        line-height: 20px;
+    }
+    .pageytype .card-body .card-item {
+        margin-left: 0;
+        margin-right: 0;
     }
     // child style
     

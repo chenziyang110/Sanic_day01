@@ -108,6 +108,7 @@
 
 <script>
 import {list, type, trend} from '@/api/base/home'
+
 export default {
   name: 'dashboard',
   components: {},

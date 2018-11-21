@@ -33,15 +33,21 @@ export default [
         meta: {title: '搜索引擎', icon: 'documentation', noCache: true}
       },
       {
+        path: 'sedetail',
+        name: 'source-sedetail',
+        component: _import('source/pages/sedetail'),
+        meta: {title: '搜索引擎详情页', icon: 'documentation', noCache: true}
+      },
+      {
         path: 'keywords',
         name: 'source-keywords',
         component: _import('source/pages/keywords'),
         meta: {title: '搜索词', icon: 'documentation', noCache: true}
       },
       {
-        path: 'com',
-        name: 'source-com',
-        component: _import('source/pages/com'),
+        path: 'domain',
+        name: 'source-domain',
+        component: _import('source/pages/domain'),
         meta: {title: '来源域名', icon: 'documentation', noCache: true}
       },
       {

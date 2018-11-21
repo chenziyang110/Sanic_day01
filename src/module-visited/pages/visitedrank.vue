@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard-container rank">
         <el-card class="card-head">
-            <h2 class="title">来源升降榜</h2>
+            <h2 class="title">受访升降榜</h2>
             <!-- 工具栏 -->
             <el-form :inline="true" >
                 <el-form-item class="subtitle" label="时间：">
@@ -14,7 +14,7 @@
                         value-format="yyyy-MM-dd"
                         placeholder="选择日期">
                     </el-date-picker>                           
-                    <el-checkbox v-model="checked">对比</el-checkbox>
+                    <el-checkbox v-model="checked" disabled>对比</el-checkbox>
                     <el-date-picker
                         v-model="date2"
                         @change="handleRank"
@@ -73,7 +73,7 @@
     </div>
 </template>
 <script>
-import { domainranklist } from '@/api/base/source'
+import { visitedranklist } from '@/api/base/visited'
 export default {
     data() {
         return {
@@ -96,10 +96,10 @@ export default {
         async doQueryRankList(date1, date2, targetID, order) {
             this.loading = true
             this.rankListData = {}
-            await domainranklist({
+            await visitedranklist({
                 date1, date2, targetID, order
             }).then(res => {
-                this.rankListtotal = res.data.totals
+                this.rankListtotal = res.data.total
                 this.rankListItems = res.data.items
             })
             this.loading = false
