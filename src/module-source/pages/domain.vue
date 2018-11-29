@@ -60,27 +60,54 @@
             <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
                 <div class="tablestyle">
-                    <el-table :data="targetData.items">
-                    <el-table-column prop="source" label="来源类型">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.source}}</span>
-                            <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                    <el-table  :data="domainsdata" :row-class-name="setClassName">
+                        <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <el-table
+                                    :data="props.row.items"
+                                    class="innertable"
+                                    style="width: 100%">
+                                    <el-table-column label="来源类型" prop="source" >
+                                        <template slot-scope="scope">
+                                            <span style="margin-left: 10px">{{scope.row.source}}</span>
+                                            <i class="el-icon-document" @click="handleGoSeDetail(scope.$index, scope.row.sourceID)"></i>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="浏览次数"  prop="timesOfBrowsing" v-if="showColumes[0]"> </el-table-column>
+                                    <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
+                                    <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
+                                    <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
+                                    <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
+                                    <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
+                                    <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
+                                    <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
+                                    <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
+                                    <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
+                                </el-table>
                         </template>
-                    </el-table-column>
-                    <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-                    <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                    <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                    <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                    <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                    <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                    <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-                    <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                    <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                    <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
+                            </el-table-column>
+                        <el-table-column prop="source" label="来源类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.source}}</span>
+                                <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
+                        <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
+                        <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
+                        <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
+                        <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
+                        <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
+                        <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
+                        <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
+                        <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
+                        <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
                     
                     </el-table>
                 </div>
             </el-card>
+            <!-- table2 -->
+           
         </div>
     </el-card>
 
@@ -129,7 +156,11 @@ export default {
             }, {
                 value: '3',
                 label: 'IP'
-            }]
+            }],
+            directaccessdata: {},
+            domainsdata: [],
+            internalaccessdata: {},
+            totalsdata: {}
         }
     },
     methods: {
@@ -170,6 +201,21 @@ export default {
                 sourceType
             }).then(res => {
                 this.targetData = res.data
+
+                this.directaccessdata = res.data.directAccess // 直接输入网址或书签
+                this.domainsdata = res.data.domains// 域名列表
+                this.internalaccessdata = res.data.internalAccess// 站内来源
+                this.totalsdata = res.data.totals // 全部总计
+
+                this.totalsdata.source = '全部总计'
+                
+                this.domainsdata.splice(0, 0, this.totalsdata)
+
+                this.directaccessdata.source = '直接输入网址或书签'
+                this.domainsdata.splice(1, 0, this.directaccessdata)
+
+                this.internalaccessdata.source = '站内来源'
+                this.domainsdata.splice(2, 0, this.internalaccessdata)
             })
             this.loading = false
         },
@@ -185,7 +231,10 @@ export default {
         async setuptargetData() {
             await this.doQueryTargetData()
         },
-
+        setClassName({row, index}) {
+            // 通过自己的逻辑返回一个class或者空
+            return row.expand ? 'expand' : 'hiddencell'
+        },
         // 交互操作
         // 点击搜索
         handleSearch() {
@@ -193,8 +242,9 @@ export default {
         },
         // 点击选择来源类型
         handleSourceType(sourceType) {
+            this.sourcetype = sourceType
             console.log(sourceType)
-            this.doQueryTargetData()
+            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets, this.sourceID, this.sourcetype)
         },
         handleTotalData (currentrange, currentside, currentvisitor, currentdate) {
             this.range = currentrange
@@ -207,13 +257,15 @@ export default {
             this.target = currenttarget
             this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
         },
+
         handleTagForm(currenttages) {
+            console.log(currenttages)
             this.targets = currenttages
             
-            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.tages)
+            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets)
             for (let i = 0; i < this.showColumes.length; i++) {
                 // debugger
-                let numArray = this.tages.map((value) => {
+                let numArray = this.targets.map((value) => {
                     return parseInt(value)
                 })
                 if (!this.ArrayContains(numArray, i + 1)) {

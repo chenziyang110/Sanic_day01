@@ -198,7 +198,13 @@ export default {
             })
             }
             
+        },
+        // 下拉选择
+        handleOption(target) {
+            console.log(target)
+        },
+        testclick() {
+            console.log(123344)
         }
-       
 }
 </script>

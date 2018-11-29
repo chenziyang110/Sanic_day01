@@ -25,13 +25,8 @@ export default [
         component: _import('flowanalyze/pages/trend'),
         name: 'flowanalyze-trend',
         meta: {title: '趋势分析', icon: 'documentation', noCache: true}
-      },
-      {
-        path: 'visit',
-        name: 'flowanalyze-visit',
-        component: _import('flowanalyze/pages/visit'),
-        meta: {title: '访问分析', icon: 'documentation', noCache: true}
       }
+      
     ]
   }
 ]

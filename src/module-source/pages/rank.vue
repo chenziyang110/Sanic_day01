@@ -36,8 +36,8 @@
             </el-form>
         </el-card>
         <div class="total">
-            <el-row>
-                <el-col :span="5" class="target">
+            <el-row  >
+                <el-col :span="5" class="target" >
                     <h2 class="targetname">{{rankListtotal.targerName}}</h2>
                 </el-col>
                 <el-col :span="6" class="target">
@@ -213,6 +213,11 @@ export default {
             background: transparent;
             color: #555;
         }
+    }
+    .card-item {
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
     }
     .total {
         margin-top: 15px;

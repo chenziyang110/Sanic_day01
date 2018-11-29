@@ -38,20 +38,6 @@
     </el-card>
 </template>
 <script>
-// const websitetargetsOption = [
-//     { label: '1', value: '浏览次数' },
-//     { label: '2', value: '浏览量占比' },
-//     { label: '3', value: '访问次数' },
-//     { label: '4', value: '访客数' },
-//     { label: '5', value: '新访客数' },
-//     { label: '6', value: '新访客比率' },
-//     { label: '7', value: 'IP数' }
-// ]
-// const flowtargetsOption = [
-//     { label: '8', value: '跳出率' },
-//     { label: '9', value: '平均访问时长' },
-//     { label: '10', value: '平均访问深度' }
-// ]
 export default {
     name: 'CustomTagForm',
     data() {

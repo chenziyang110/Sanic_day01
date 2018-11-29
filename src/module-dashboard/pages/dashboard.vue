@@ -31,22 +31,25 @@
      <el-card shadow="never" v-loading="loading"  class="trend">
        <div slot="header" class="clearfix">
           <span>趋势图</span>
-          <el-button style="float: right; padding: 3px 0" type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+           <router-link to='/flowanalyze/trend'>
+              <el-button class="golink"  type="text" ><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+           </router-link>
         </div>
         <!-- 趋势图表 -->
         <div>
-           <el-select v-model="defaultvalue" placeholder="选择指示" @change="handleOption">
+           <el-select class="selectdropdown" v-model="defaultvalue" placeholder="选择指示" @change="handleOption">
               <el-option
                 v-for="item in targets"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
+                 class="selectoption"
                 >
                 <el-radio :label="1">{{ item.label }}</el-radio>
               </el-option>
             </el-select>
 
-             <div id="trend" style="width: 100%;min-height:400px;"></div>
+             <div id="trendchart" style="width: 100%;min-height:400px;"></div>
 
         </div>
      </el-card>
@@ -56,7 +59,9 @@
         <el-card shadow="always" class="card">
           <div slot="header" class="clearfix">
             <span>新老访客</span>
-            <el-button style="float: right; padding: 3px 0" type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+             <router-link to='/visitor/oldnewvisitor'>
+            <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+            </router-link>
           </div>
           <div class="tablestyle">
             <!-- 访客表格 -->
@@ -72,12 +77,20 @@
         <el-card shadow="always"  class="card">
           <div slot="header" class="clearfix">
             <span>TOP10搜索词</span>
-            <el-button style="float: right; padding: 3px 0" type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+             <router-link to='/source/keywords'>
+            <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+            </router-link>
           </div>
           <div class="tablestyle">
             <!-- 搜索词表格 -->
             <el-table :data="searchterm">
-              <el-table-column prop="searchTerm" label="搜索词"></el-table-column>
+              
+              <el-table-column prop="searchTerm" label="搜索词">
+                <template slot-scope="scope">
+                  <i v-bind:class="(scope.$index == 0) || (scope.$index == 1) ||(scope.$index == 2)  ? 'top' : 'tableindex'">{{scope.$index+1}}</i>
+                  <span style="margin-left: 10px">{{ scope.row.searchTerm }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
               <el-table-column prop="occupationRatio" label="占比"></el-table-column>
             </el-table>
@@ -88,7 +101,9 @@
         <el-card shadow="always"  class="card">
           <div slot="header" class="clearfix">
             <span>TOP10受访界面</span>
-            <el-button style="float: right; padding: 3px 0" type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+             <router-link to='/visited/visitedpage'>
+            <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+            </router-link>
           </div>
           <div class="tablestyle">
             <!-- 受访表格 -->
@@ -108,6 +123,10 @@
 
 <script>
 import {list, type, trend} from '@/api/base/home'
+import echarts from 'echarts'
+import resize from './../../components/Charts/mixins/resize'
+
+
 
 export default {
   name: 'dashboard',
@@ -145,7 +164,8 @@ export default {
       }],
       defaultvalue: '浏览次数',
       trenddata: {},
-      currentrange: 0 
+      currentrange: 0,
+      chart: null
     }
   },
   computed: {},
@@ -206,13 +226,12 @@ export default {
         }
         let chartname = this.trenddata.series.name
 
-       
-        // option定义
-        let option = {
+        this.chart = echarts.init(document.getElementById('trendchart'))
+        this.chart.setOption({
           tooltip: {
             trigger: 'item',
             formatter: '{b} <br/>{a} : {c}'
-        },
+          },
           legend: {
              bottom: 'bottom',
              data: [chartname]
@@ -223,20 +242,19 @@ export default {
             data: xdata
           },
           yAxis: {
-            type: 'value',
-            axisLabel: {
-              formatter: function(value, index) {
-                return value / 10000 + '万'
-              }
-            }
+            type: 'value'
+            // axisLabel: {
+            //   formatter: function(value, index) {
+            //     return value / 10000 + '万'
+            //   }
+            // }
           },
           series: [{
             name: chartname,
             data: seriesdata,
             type: 'line'
           }]
-        }
-        this.echartCreate(option)
+        })
       })
     },
     // option选择
@@ -246,17 +264,17 @@ export default {
     // 初始option分类数据
     async setupoptionData() {
       await this.redoQuery()
-    },
+    }
   
     // echart
-    echartCreate(data) {
-      let echartView = this.$echarts.init(document.getElementById('trend'))     
-      echartView.setOption(data)
-    }
+    // echartCreate(data) {
+    //   let echartView = this.$echarts.init(document.getElementById('trend'))     
+    //   echartView.setOption(data)
+    // }
   },
   // 挂载结束
   mounted: function() {
-    this.echartCreate()
+    // this.echartCreate()
   },
   // 创建完毕状态
   created: function() {
@@ -296,6 +314,34 @@ export default {
   }
   .el-table th {
     background-color: #fbfbfb
-  } 
+  }
+  .tableindex {
+    background: #e1e1e1;
+    font-style: normal;
+    padding: 2px 5px;
+    color: #fff;
+  }
+  .top {
+    background: red;
+    font-style: normal;
+    padding: 2px 5px;
+    color: #fff;
+  }
+  .golink {
+    float: right; 
+    padding: 3px 0;
+    &:hover {
+      span {
+        i {
+          background: #f75426
+        }
+      }
+    }
+  }
+  .tableindex:first-child {
+    // background: red
+  }
+
+
 }
 </style>

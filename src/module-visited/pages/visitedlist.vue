@@ -126,6 +126,11 @@ export default {
 </script>
 <style lang="scss"  scoped>
 .dashboard-container {
+    .card-item {
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+    }
     .title {
         font-size: 20px;
         color: #012989;

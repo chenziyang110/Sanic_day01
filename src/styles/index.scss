@@ -299,6 +299,7 @@ code {
   .tablestyle {
     .el-table th.is-leaf {
       border-bottom: 1px solid #ebeef5;
+      font-size: 16px;
     }
     .el-table th {
       padding-left: 15px;
@@ -363,6 +364,9 @@ code {
 .el-popper[x-placement^=bottom] .popper__arrow {
   left: 46% !important;
   border-bottom-color: #bbb;
+}
+.selectoption .el-radio__input {
+  display: none
 }
 // fa-more
 .fa-ellipsis-h {
@@ -486,6 +490,9 @@ code {
 .el-table__expanded-cell[class*=cell] {
   padding: 0
 }
+.el-table.innertable {
+  padding-left: 42px;
+}
 .el-table.innertable thead, .othertable thead {
   display: none
 }
@@ -511,4 +518,34 @@ code {
   border-top: 3px solid #f75426;
   border-bottom: 0;
   background: #fff;
+}
+.hiddencell:first-child {
+  background-color: #5784e7;
+  color: #fff;
+}
+.el-table td, .el-table th.is-leaf {
+  border-top: 1px solid transparent
+}
+.sourcetype .hiddencell:first-child  .undefined .cell {
+  display: none;
+}
+// .undefined {
+//   display: none;
+// }
+// .hiddencell:first-child .undefined .cell,
+// .hiddencell:nth-child(2) .undefined .cell,
+// .hiddencell:nth-child(3) .undefined .cell
+//  {
+//   display: none;
+// }
+// 有搜索框的指标
+.targets .el-card__header {
+  display: none
+}
+.targets .el-card__body {
+  padding: 0;
+  padding-bottom: 20px;
+}
+.targets .card-item {
+  margin-left: 0 !important;
 }

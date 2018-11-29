@@ -25,6 +25,7 @@ import base from '@/module-manage/' // 用户管理
 import flowanalyze from '@/module-flowanalyze/'
 import source from '@/module-source/'
 import visited from '@/module-visited/'
+import visitor from '@/module-visitor/'
 
 import tools from './utils/common.js'
 Vue.prototype.$tools = tools
@@ -40,6 +41,7 @@ Vue.use(base, store)
 Vue.use(flowanalyze, store)
 Vue.use(source, store)
 Vue.use(visited, store)
+Vue.use(visitor, store)
 
 /*
 * 注册 - 组件

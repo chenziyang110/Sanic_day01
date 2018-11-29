@@ -3,7 +3,7 @@
     <el-card class="card-head">
         <h2 class="title">趋势分析（{{defaultdate}}）</h2>
         <!-- 工具栏 -->
-        <SelectRegion v-on:handleTotalData = 'handleTotalData'/>
+        <SelectRegionCompare v-on:handleToolData = 'handleToolData' v-on:handleCompareData = 'handleCompareData'/>
     </el-card>
     <!-- 总计栏 -->
     <TotalData :totalList = 'totaldata'/>
@@ -40,21 +40,22 @@
   </div>
 </template>
 <script>
-import {total, chart, targetdata} from '@/api/base/source'
-import SelectRegion from '@/components/SelectRegion'
+import {total, chart, targetdata} from '@/api/base/flowanalyze'
+import SelectRegionCompare from '@/components/SelectRegionCompare'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
 
 export default {
-    components: { SelectRegion, TotalData, SelectMenu, CustomTagForm },
+    components: { SelectRegionCompare, TotalData, SelectMenu, CustomTagForm },
     data() {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            range: '0',
-            side: '0',
-            visitor: '0',
+            currentdate2: '',
+            range: '1',
+            side: '',
+            visitor: '',
             date: '',
             target: '',
             totaldata: {},
@@ -65,7 +66,7 @@ export default {
     },
     methods: {
         // 业务请求：合计
-        async doQueryTotal(range, side, visitor, date) {
+        async doQueryTotal(range = 1, side, visitor, date = this.defaultdate) {
             this.loading = true
             this.totaldata = {}
             await total({
@@ -77,11 +78,11 @@ export default {
             this.loading = false
         },
         // 业务请求：图表
-        async doQueryChart(range, side, visitor, date, target) {
+        async doQueryChart(range = 1, side, visitor, date1 = this.defaultdate, date2, target = 1) {
             this.loading = true
             this.chartdata = {}
             await chart({
-                range, side, visitor, date, target
+                range, side, visitor, date1, date2, target
             }).then(res => {
                 this.chartdata = res.data
                 // 图表模型
@@ -100,10 +101,11 @@ export default {
             for (let seriesitem1 of getseriesdata1) {
               seriesdata1.push(seriesitem1.data)
             }
-            let seriesdata2 = []
-            let getseriesdata2 = this.chartdata.series[0].items
-            let chartname2 = this.chartdata.series[1].name
 
+
+            let seriesdata2 = []
+            let getseriesdata2 = this.chartdata.series[1].items
+            let chartname2 = this.chartdata.series[1].name
 
             for (let seriesitem2 of getseriesdata2) {
               seriesdata2.push(seriesitem2.data)
@@ -159,8 +161,8 @@ export default {
             this.loading = false
         },
         // 初始total数据
-        async setuptotalData() {
-            await this.doQueryTotal()
+        async setuptotalData(range = 1, side, visitor, date = this.defaultdate) {
+            await this.doQueryTotal(range, side, visitor, date)
         },
         // 初始chart数据
         async setupchartData() {
@@ -172,16 +174,15 @@ export default {
         },
 
         // 交互操作
-        handleTotalData (currentrange, currentside, currentvisitor, currentdate) {
-            this.range = currentrange
-            this.side = currentside 
-            this.visitor = currentvisitor
-            this.date = currentdate
-            this.doQueryTotal(this.range, this.side, this.visitor, this.date)  
+        handleToolData (range, side, visitor, date) {
+            this.doQueryTotal(range, side, visitor, date)         
         },
-        handleSelect(currenttarget) {
-            this.target = currenttarget
-            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
+        handleCompareData(range, side, visitor, date1, date2, target) {
+            this.doQueryChart(range, side, visitor, date1, date2, target) 
+        },
+        handleSelect(target) {
+            this.target = target
+            this.doQueryChart(this.range, this.side, this.visitor, this.date1, this.date2, this.target)
         },
         // echart
         echartCreate(data) {

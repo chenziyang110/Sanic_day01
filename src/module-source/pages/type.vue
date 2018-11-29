@@ -18,48 +18,9 @@
     <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
     <!-- 表格数据列表 -->
     <el-card shadow="never" v-loading="loading" class="card-item card-table">
-        <div class="tablestyle">
-           <!-- <el-table
-                :data="newSearchEngineData"
-                style="width: 100%">
-                <el-table-column type="expand">
-                <template >
-                    <el-table
-                        :data="searchEngineData"
-                            class="innertable"
-                        style="width: 100%">
-                        <el-table-column label="来源类型" prop="source"></el-table-column>
-                        <el-table-column label="浏览次数"  prop="timesOfBrowsing" v-if="showColumes[0]"> </el-table-column>
-                        <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                        <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                        <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                        <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                        <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                        <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-                        <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                        <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                        <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-                    </el-table>
-                </template>
-                </el-table-column>
-                <el-table-column label="来源类型"  prop="name1">
-                    <template slot-scope="scope">
-                        <span style="margin-left: 10px">{{ scope.row.name1 }}</span>
-                         <i class="el-icon-document" @click="handleGoSe"></i>
-                    </template>
-                </el-table-column>
-                <el-table-column label="浏览次数"  prop="TimeBrowseTotal" v-if="showColumes[0]"> </el-table-column>
-                <el-table-column prop="browsingVolumeTotal" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                <el-table-column prop="timesOfVisiteTotal" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                <el-table-column prop="independentVisitorsTotal" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                <el-table-column prop="independentNewVisitorsTotal" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                <el-table-column prop="independentNewVisitorsRateTotal" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                <el-table-column prop="IPTotal" label="IP" v-if="showColumes[6]"></el-table-column>
-                <el-table-column prop="bounceRateTotal" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                <el-table-column prop="averageAccessDepthTotal" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                <el-table-column prop="averageAccessTimeTotal" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-            </el-table> -->
-            <el-table
+        <div class="tablestyle sourcetype">
+            <foldTable :tableList = 'tabledata'></foldTable>
+            <!-- <el-table
                 :data="newExternalLinksData"
                 class="innertable"
                 style="width: 100%">
@@ -104,7 +65,7 @@
                 <el-table-column prop="bounceRateTotal" label="跳出率" v-if="showColumes[7]"></el-table-column>
                 <el-table-column prop="averageAccessDepthTotal" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
                 <el-table-column prop="averageAccessTimeTotal" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-            </el-table>
+            </el-table> -->
         </div>
     </el-card>
 
@@ -115,22 +76,24 @@
 import {total, chart, targetdata} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
+import foldTable from '@/components/foldTable'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
 import ChartGroup from './../components/ChartGroup'
 
 export default {
-    components: { SelectRegion, TotalData, ChartGroup, SelectMenu, CustomTagForm },
+    components: { SelectRegion, TotalData, foldTable, ChartGroup, SelectMenu, CustomTagForm },
     data() {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            range: '0',
-            side: '0',
-            visitor: '0',
+            range: '1',
+            side: '',
+            visitor: '',
             date: '',
             target: '',
-            totaldata: {},
+            tabledata: [],
+            totalsData: {},
             chartdata: {},
             targetData: {},
             showColumes: [true, false, false, true, false, false, true, true, true, true],
@@ -144,22 +107,22 @@ export default {
     },
     methods: {
         // 业务请求：合计
-        async doQueryTotal(range, side, visitor, date) {
+        async doQueryTotal(range = 1, side, visitor, date, sourceID) {
             this.loading = true
             this.totaldata = {}
             await total({
-                range, side, visitor, date
+                range, side, visitor, date, sourceID
             }).then(res => {
                 this.totaldata = res.data
             })
             this.loading = false
         },
         // 业务请求：图表
-        async doQueryChart(range, side, visitor, date, target) {
+        async doQueryChart(range, side, visitor, date, sourceID, target = 1) {
             this.loading = true
             this.chartdata = {}
             await chart({
-                range, side, visitor, date, target
+                range, side, visitor, date, sourceID, target
             }).then(res => {
                 this.chartdata = res.data
             })
@@ -167,52 +130,68 @@ export default {
         },
         // 业务请求：表格数据
         async doQueryTargetData(range, side, visitor, date, tages) {
-            console.log(tages)
             this.loading = true
             this.targetData = {}
             await targetdata({
                 range, side, visitor, date, tages
             }).then(res => {
                 this.targetData = res.data
-                this.totalsData = res.data.totals // 全部总计数据
-                this.directAccessData = res.data.directAccess // 直接访问数据
-        
-                // this.searchEngineData = res.data.domains // 搜索引擎数据
-                this.externalLinksData = res.data.externalLinks // 外部链接数据
 
-                let searchEngine = this.searchEngineData
-                let externalLinks = this.externalLinksData
+                this.totalsData = res.data.totals // 全部总计
+                this.tabledata = res.data.domains // 域名列表
+                this.directAccessData = res.data.directAccess // 直接访问
+                this.externalLinksData = res.data.externalLinks // 外部链接
+
+                this.totalsData.source = '全部总计'
+                this.tabledata.splice(0, 0, this.totalsData)
+
+                console.log(this.tabledata)
+
+                // let searchEngine = this.searchEngineData
+                // let externalLinks = this.externalLinksData
                
 
-                let searchEngineModule = this.ArrayTotal(searchEngine)
-                let externalLinksModule = this.ArrayTotal(externalLinks)
+                // let searchEngineModule = this.ArrayTotal(searchEngine)
+                // let externalLinksModule = this.ArrayTotal(externalLinks)
 
-                let name1 = '搜索引擎'
-                let name2 = '外部链接'
+                // let name1 = '搜索引擎'
+                // let name2 = '外部链接'
                 
-                let searchEngineObject = {
-                    name1, 
-                    TimeBrowseTotal: searchEngineModule.TimeBrowseTotal,
-                    independentVisitorsTotal: searchEngineModule.independentVisitorsTotal,
-                    IPTotal: searchEngineModule.IPTotal,
-                    averageAccessDepthTotal: searchEngineModule.averageAccessDepthTotal,
-                    averageAccessTimeTotal: searchEngineModule.averageAccessTimeTotal,
-                    bounceRateTotal: searchEngineModule.bounceRateTotal
-                }
-                let externalLinksObject = {
-                    name2, 
-                    TimeBrowseTotal: externalLinksModule.TimeBrowseTotal,
-                    independentVisitorsTotal: externalLinksModule.independentVisitorsTotal,
-                    IPTotal: externalLinksModule.IPTotal,
-                    averageAccessDepthTotal: externalLinksModule.averageAccessDepthTotal,
-                    averageAccessTimeTotal: externalLinksModule.averageAccessTimeTotal,
-                    bounceRateTotal: externalLinksModule.bounceRateTotal
-                }            
-                this.newSearchEngineData = [searchEngineObject]
-                this.newExternalLinksData = [externalLinksObject]          
+                // let searchEngineObject = {
+                //     name1, 
+                //     TimeBrowseTotal: searchEngineModule.TimeBrowseTotal,
+                //     independentVisitorsTotal: searchEngineModule.independentVisitorsTotal,
+                //     IPTotal: searchEngineModule.IPTotal,
+                //     averageAccessDepthTotal: searchEngineModule.averageAccessDepthTotal,
+                //     averageAccessTimeTotal: searchEngineModule.averageAccessTimeTotal,
+                //     bounceRateTotal: searchEngineModule.bounceRateTotal
+                // }
+                // let externalLinksObject = {
+                //     name2, 
+                //     TimeBrowseTotal: externalLinksModule.TimeBrowseTotal,
+                //     independentVisitorsTotal: externalLinksModule.independentVisitorsTotal,
+                //     IPTotal: externalLinksModule.IPTotal,
+                //     averageAccessDepthTotal: externalLinksModule.averageAccessDepthTotal,
+                //     averageAccessTimeTotal: externalLinksModule.averageAccessTimeTotal,
+                //     bounceRateTotal: externalLinksModule.bounceRateTotal
+                // }            
+                // this.newSearchEngineData = [searchEngineObject]
+                // this.newExternalLinksData = [externalLinksObject]          
             })
 
             this.loading = false
+        },
+        // 初始total数据
+        async setuptotalData() {
+            await this.doQueryTotal()
+        },
+        // 初始chart数据
+        async setupchartData() {
+            await this.doQueryChart()
+        },
+         // 初始target数据
+        async setuptargetData() {
+            await this.doQueryTargetData()
         },
         // 获取数组total
         ArrayTotal(array) {
@@ -250,29 +229,14 @@ export default {
         
             return s
         },
-        // 初始total数据
-        async setuptotalData() {
-            await this.doQueryTotal()
-        },
-        // 初始chart数据
-        async setupchartData() {
-            await this.doQueryChart()
-        },
-         // 初始target数据
-        async setuptargetData() {
-            await this.doQueryTargetData()
-        },
         // 交互操作
-        handleTotalData (currentrange, currentside, currentvisitor, currentdate) {
-            this.range = currentrange
-            this.side = currentside 
-            this.visitor = currentvisitor
-            this.date = currentdate
-            this.doQueryTotal(this.range, this.side, this.visitor, this.date)  
+        handleTotalData (range, side, visitor, date, sourceID, target) {
+            this.doQueryTotal(range, side, visitor, date)
+            this.doQueryChart(range, side, visitor, date, sourceID, this.target)
         },
-        handleSelect(currenttarget) {
-            this.target = currenttarget
-            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
+        handleSelect(target) {
+            this.target = target
+            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.sourceID, this.target)
         },
         handleTagForm(currenttages) {
             this.tages = currenttages

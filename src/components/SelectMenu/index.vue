@@ -1,10 +1,11 @@
 <template>
-    <el-select v-model="defaultvalue" placeholder="选择指示" @change="handleSelectOption">
+    <el-select  class="selectdropdown" v-model="defaultvalue" placeholder="选择指示" @change="handleSelectOption">
             <el-option
             v-for="item in targets"
             :key="item.value"
             :label="item.label"
             :value="item.value"
+            class="selectoption"
             >
             <el-radio :label='1'>{{ item.label }}</el-radio>
             </el-option>
@@ -15,7 +16,7 @@ export default {
     name: 'SelectMenu',
     data() {
         return {
-             defaultvalue: '',
+             defaultvalue: '浏览次数',
              targets: [{
                 value: '1',
                 label: '浏览次数'
@@ -41,8 +42,8 @@ export default {
         }
     },
     methods: {
-        handleSelectOption(currenttarget) {
-            this.$emit('handleSelect', currenttarget)
+        handleSelectOption(target) {
+            this.$emit('handleSelect', target)
         }
     }
 }
