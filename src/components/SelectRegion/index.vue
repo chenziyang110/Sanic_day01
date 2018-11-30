@@ -51,7 +51,7 @@ export default {
   name: 'SelectRegion',
   data() {
     return {
-        currentrange: '1',
+        currentrange: '0',
         currentside: '',
         currentvisitor: '',
         currentdate: '',

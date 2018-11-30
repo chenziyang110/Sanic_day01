@@ -10,7 +10,7 @@
                         <el-table-column label="来源类型" prop="source" >
                             <template slot-scope="scope">
                                 <span style="margin-left: 10px">{{scope.row.source}}</span>
-                                <i class="el-icon-document" @click="handleGoSeDetail(scope.$index, scope.row.sourceID)"></i>
+                                <i class="el-icon-document iconlink" @click="handleGoSeDetail(scope.$index, scope.row.sourceID)"></i>
                             </template>
                         </el-table-column>
                         <el-table-column label="浏览次数"  prop="timesOfBrowsing" v-if="showColumes[0]"> </el-table-column>
@@ -48,18 +48,40 @@
 <script>
 export default {
   name: 'foldTable',
-  props: ['tableList'],
+  props: ['tableList', 'showColumes'],
   data() {
     return {
-        showColumes: [true, false, false, true, false, false, true, true, true, true]
+        // showColumes: [true, false, false, true, false, false, true, true, true, true]
     }
   },
   methods: {
-      setClassName({row, index}) {
+        setClassName({row, index}) {
             // 通过自己的逻辑返回一个class或者空
             return row.expand ? 'expand' : 'hiddencell'
+        },
+        handleGoSeDetail(index, sourceID) {
+            this.$router.push({
+                path: '/source/sedetail:id',
+                name: 'source-sedetail',
+                params: { 
+                    id: 'id',
+                    dataObj: sourceID
+                }
+            })
+        },
+        handleSourceLink() {
+
         }
   }
 }
 </script>
+<style lang="scss" scoped>
+.iconlink {
+    float: right;
+    line-height: 1.6;
+    cursor: pointer;
+    color: #5784e7;
+}
+</style>
+
 

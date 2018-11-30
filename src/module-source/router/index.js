@@ -24,13 +24,13 @@ export default [
         path: 'type',
         component: _import('source/pages/type'),
         name: 'source-type',
-        meta: {title: '来源分类', icon: 'documentation', noCache: true}
+        meta: { title: '来源分类', icon: 'documentation', noCache: true }
       },
       {
         path: 'se',
         name: 'source-se',
         component: _import('source/pages/se'),
-        meta: {title: '搜索引擎', icon: 'documentation', noCache: true}
+        meta: { title: '搜索引擎', icon: 'documentation', noCache: true }
       },
       {
         path: 'sedetail',
@@ -42,27 +42,27 @@ export default [
         path: 'keywords',
         name: 'source-keywords',
         component: _import('source/pages/keywords'),
-        meta: {title: '搜索词', icon: 'documentation', noCache: true}
+        meta: { title: '搜索词', icon: 'documentation', noCache: true }
       },
       {
         path: 'domain',
         name: 'source-domain',
         component: _import('source/pages/domain'),
-        meta: {title: '来源域名', icon: 'documentation', noCache: true}
+        meta: { title: '来源域名', icon: 'documentation', noCache: true }
       },
       {
         path: 'page',
         name: 'source-page',
         component: _import('source/pages/page'),
-        meta: {title: '来源页面', icon: 'documentation', noCache: true}
+        meta: { title: '来源页面', icon: 'documentation', noCache: true }
       },
       {
         path: 'rank',
         name: 'source-rank',
         component: _import('source/pages/rank'),
-        meta: {title: '来源升降榜', icon: 'documentation', noCache: true}
+        meta: { title: '来源升降榜', icon: 'documentation', noCache: true }
       }
-      
+
     ]
   }
 ]

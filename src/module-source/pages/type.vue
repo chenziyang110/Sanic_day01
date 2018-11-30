@@ -19,57 +19,9 @@
     <!-- 表格数据列表 -->
     <el-card shadow="never" v-loading="loading" class="card-item card-table">
         <div class="tablestyle sourcetype">
-            <foldTable :tableList = 'tabledata'></foldTable>
-            <!-- <el-table
-                :data="newExternalLinksData"
-                class="innertable"
-                style="width: 100%">
-                <el-table-column type="expand">
-                    <template >
-                        <el-table
-                            :data="externalLinksData"
-                                class="innertable"
-                            style="width: 100%">
-                            <el-table-column label="来源类型" prop="source" >
-                                <template slot-scope="scope">
-                                    <span style="margin-left: 10px">{{scope.row.source}}</span>
-                                    <i class="el-icon-document" @click="handleGoSeDetail(scope.$index, scope.row.sourceID)"></i>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="浏览次数"  prop="timesOfBrowsing" v-if="showColumes[0]"> </el-table-column>
-                            <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                            <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                            <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                            <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                            <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                            <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-                            <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                            <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                            <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-                        </el-table>
-                    </template>
-                </el-table-column>
-                <el-table-column label="来源类型"  prop="name2">
-                    <template slot-scope="scope">
-                        <span style="margin-left: 10px">{{scope.row.name2}}</span>
-                         <i class="el-icon-document" @click="handleGoSelink"></i>
-                    </template>
-                </el-table-column>
-                <el-table-column label="浏览次数"  prop="TimeBrowseTotal" v-if="showColumes[0]"> </el-table-column>
-                <el-table-column prop="browsingVolumeTotal" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                <el-table-column prop="timesOfVisiteTotal" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                <el-table-column prop="independentVisitorsTotal" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                <el-table-column prop="independentNewVisitorsTotal" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                <el-table-column prop="independentNewVisitorsRateTotal" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                <el-table-column prop="IPTotal" label="IP" v-if="showColumes[6]"></el-table-column>
-                <el-table-column prop="bounceRateTotal" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                <el-table-column prop="averageAccessDepthTotal" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                <el-table-column prop="averageAccessTimeTotal" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-            </el-table> -->
+            <foldTable :tableList = 'tabledata' :showColumes = 'showColumes'></foldTable>
         </div>
     </el-card>
-
-
   </div>
 </template>
 <script>
@@ -145,7 +97,6 @@ export default {
                 this.totalsData.source = '全部总计'
                 this.tabledata.splice(0, 0, this.totalsData)
 
-                console.log(this.tabledata)
 
                 // let searchEngine = this.searchEngineData
                 // let externalLinks = this.externalLinksData
@@ -241,9 +192,8 @@ export default {
         handleTagForm(currenttages) {
             this.tages = currenttages
             this.showRowNum = currenttages.length
-            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.tages)
+            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.sourceID, this.tages)
             for (let i = 0; i < this.showColumes.length; i++) {
-                // debugger
                 let numArray = this.tages.map((value) => {
                     return parseInt(value)
                 })
@@ -265,7 +215,6 @@ export default {
         },
         // 路由：去搜索引擎详情页
         handleGoSeDetail(index, sourceID) {
-            console.log(sourceID)
             this.$router.push({
                 path: '/source/sedetail:id',
                 name: 'source-sedetail',

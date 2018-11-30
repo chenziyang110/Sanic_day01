@@ -159,7 +159,7 @@ export default {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             range: '0',
-            date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+            date: '',
             side: '0',
             totalData: [],
             tableData: [],

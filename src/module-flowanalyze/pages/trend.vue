@@ -53,7 +53,7 @@ export default {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             currentdate2: '',
-            range: '1',
+            range: '0',
             side: '',
             visitor: '',
             date: '',
@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         // 业务请求：合计
-        async doQueryTotal(range = 1, side, visitor, date = this.defaultdate) {
+        async doQueryTotal(range = 0, side, visitor, date = this.defaultdate) {
             this.loading = true
             this.totaldata = {}
             await total({
@@ -78,7 +78,7 @@ export default {
             this.loading = false
         },
         // 业务请求：图表
-        async doQueryChart(range = 1, side, visitor, date1 = this.defaultdate, date2, target = 1) {
+        async doQueryChart(range = 0, side, visitor, date1 = this.defaultdate, date2, target = 1) {
             this.loading = true
             this.chartdata = {}
             await chart({
@@ -161,7 +161,7 @@ export default {
             this.loading = false
         },
         // 初始total数据
-        async setuptotalData(range = 1, side, visitor, date = this.defaultdate) {
+        async setuptotalData(range = 0, side, visitor, date = this.defaultdate) {
             await this.doQueryTotal(range, side, visitor, date)
         },
         // 初始chart数据

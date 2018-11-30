@@ -42,18 +42,21 @@
             <el-row :gutter="20">
                 <el-col :span="8">
                     <h3>性别比例</h3>
-                    <div class="card-chart">
+                    <div class="card-chart sexpercent" style="min-height: 400px; width: 99%">
                         <ul>
+                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
                             <li><i class="fa fa-child" aria-hidden="true"></i></li>
                             <li><i class="fa fa-child" aria-hidden="true"></i></li>
                             <li><i class="fa fa-child" aria-hidden="true"></i></li>
                             <li><i class="fa fa-child" aria-hidden="true"></i></li>
                         </ul>
                         <p class="percent"><span class="man">{{manpercent}}</span><span class="woman">{{womanpercent}}</span></p>
-                        <h3>男：{{genderData.man}}</h3>
-                        <h3>女：{{genderData.woman}}</h3>
-                        <h3>男生占比：{{manpercent}}</h3>
-                        <h3>女生占比：{{womanpercent}}</h3>
+                        
                     </div>
                     <!-- <div  id="sexchart" style="min-height: 400px; width: 99%"></div> -->
                 </el-col>
@@ -101,7 +104,7 @@ export default {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             currentrange: '0',
-            currentdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+            currentdate: '',
             currentvisitor: '0',
             ageData: {},
             educationData: {},
@@ -109,7 +112,9 @@ export default {
             interestData: {},
             jobData: {},
             manpercent: '',
+            womanpercent: '',
             chart: null,
+            ageachart: null,
             sexchart: null,
             jobchart: null,
             aihaochart: null
@@ -143,8 +148,35 @@ export default {
                     obj.name = item.title
                     newedudata.push(obj)
                 }
-                // job-Chart
 
+                // age-Chart
+                let xData = []
+                for (let item of this.ageData.items) {
+                    xData.push(item.title)
+                }
+                let seriesData = []
+                for (let item of this.ageData.items) {
+                    seriesData.push(item.data)
+                }
+                this.agechart = echarts.init(document.getElementById('agechart'))
+                this.agechart.setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: xData
+                    },
+                    grid: {
+                        left: '15%'
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: seriesData,
+                        type: 'bar'
+                    }]
+                })
+
+                // job-Chart
                 let jobmax = 0
                 for (var n = 0; n < this.jobData.length; n++) {
                     if (this.jobData[n].data > jobmax) {
@@ -160,7 +192,6 @@ export default {
                     jobData[0][m][2] = this.jobData[m].data
                     jobData[0][m][3] = this.jobData[m].title
                 }
-                console.log(jobData)
                 this.jobchart = echarts.init(document.getElementById('jobchart'))
                 this.jobchart.setOption({
                     xAxis: {
@@ -224,7 +255,6 @@ export default {
                     intrestdata[0][i][3] = this.interestData[i].title
                 }
 
-                console.log(intrestdata)
                 this.aihaochart = echarts.init(document.getElementById('aihaochart'))
                 this.aihaochart.setOption({
                     xAxis: {
@@ -321,23 +351,11 @@ export default {
         async setuppropertiesData() {
             await this.doQueryProperties()
         },
-        handleData() {},
-        //  图表
-        ageChart() {
-            this.chart = echarts.init(document.getElementById('agechart'))
-            this.chart.setOption({
-                 xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [120, 200, 150, 80, 70, 110, 130],
-                    type: 'bar'
-                }]
-            })
+        handleData(range, visitor, date) {
+            range = this.currentrange
+            visitor = this.currentvisitor
+            date = this.currentdate
+            this.doQueryProperties(range, visitor, date)
         }
     },
     created() {
@@ -345,7 +363,7 @@ export default {
         
     },
     mounted() {
-        this.ageChart()
+        // this.ageChart()
        // this.educationChart()
     }
 }
@@ -367,12 +385,24 @@ export default {
         background: #fbfbfb;
         border: 1px solid #ebeff5;
         border-radius: 5px;
+        &.sexpercent {padding-top: 3em;}
+        
         .percent {
             padding: 20px;
-            font-size: 32px;
+            font-size: 3em;
             font-weight: bold;
             .man { color: #38d2ff; }
-            .woman { text-align: right; color: #f4663f }
+            .woman { float: right; color: #f4663f }
+        }
+        ul {
+            padding:20px 20px 0; 
+        }
+        li {
+            display: inline-block;
+            margin-left: -5px;
+            .fa-child {
+                font-size: 5em;
+            }
         }
     }
 }

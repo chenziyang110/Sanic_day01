@@ -532,12 +532,12 @@ code {
 // .undefined {
 //   display: none;
 // }
-// .hiddencell:first-child .undefined .cell,
-// .hiddencell:nth-child(2) .undefined .cell,
-// .hiddencell:nth-child(3) .undefined .cell
-//  {
-//   display: none;
-// }
+.sourcedomain .hiddencell:first-child .undefined .cell,
+.sourcedomain .hiddencell:nth-child(2) .undefined .cell,
+.sourcedomain .hiddencell:nth-child(3) .undefined .cell
+ {
+  display: none;
+}
 // 有搜索框的指标
 .targets .el-card__header {
   display: none

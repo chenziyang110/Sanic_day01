@@ -40,7 +40,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .total {
         margin-top: 15px;
-        padding: 20px 0 6em;
+        padding: 0 0 3em;
         background: #012989;
         color: #fff;
         .target {

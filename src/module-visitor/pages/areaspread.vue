@@ -167,7 +167,7 @@ export default {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             range: '0',
-            date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+            date: '',
             visitor: '0',
             totalData: {},
             tableData: [],
@@ -341,23 +341,6 @@ export default {
         },
         async setuptableData() {
             await this.doQueryTable()
-        },
-        // 图表
-        newOldsChart() {
-            this.chart = echarts.init(document.getElementById('chart'))
-            this.chart.setOption({
-                 xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [120, 200, 150, 80, 70, 110, 130],
-                    type: 'bar'
-                }]
-            })
         },
         // 交互操作
         handleToolData(range, visitor, date, sourceType) {

@@ -63,10 +63,10 @@ export default {
   name: 'SelectRegionCompare',
   data() {
     return {
-        range: '1',
+        range: '0',
         side: '',
         visitor: '',
-        date1: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+        date1: '',
         date2: '',
         ifdisabled: true,
         disflag: true,

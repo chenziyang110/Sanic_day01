@@ -124,7 +124,7 @@ export default {
             await keywordstarget({
                 range, side, visitor, date
             }).then(res => {
-                this.targettotal = res.data.total
+                this.targettotal = res.data.totals
                 this.targetlist = res.data.items
             })
             this.loading = false
@@ -136,7 +136,7 @@ export default {
             await keywordsse({
                 range, side, visitor, date
             }).then(res => {
-                this.setotal = res.data.total
+                this.setotal = res.data.totals
                 this.selist = res.data.items
             })
             this.loading = false

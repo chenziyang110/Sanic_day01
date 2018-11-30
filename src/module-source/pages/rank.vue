@@ -14,7 +14,7 @@
                         value-format="yyyy-MM-dd"
                         placeholder="选择日期">
                     </el-date-picker>                           
-                    <el-checkbox v-model="checked">对比</el-checkbox>
+                    <el-checkbox v-model="checked" disabled>对比</el-checkbox>
                     <el-date-picker
                         v-model="date2"
                         @change="handleRank"

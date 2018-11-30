@@ -52,58 +52,15 @@
     <el-card shadow="never" v-loading="loading" class="card-item pagetype">
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
-                    <el-radio-button label="0">来源域名</el-radio-button>
-                    <el-radio-button label="1">来源页面</el-radio-button>
-                </el-radio-group>
+                <el-radio-button label="0">来源域名</el-radio-button>
+                <router-link to="/source/page"><el-radio-button label="1">来源页面</el-radio-button></router-link>
+            </el-radio-group>
         </div>
         <div class="card-body">
             <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
-                <div class="tablestyle">
-                    <el-table  :data="domainsdata" :row-class-name="setClassName">
-                        <el-table-column type="expand">
-                            <template slot-scope="props">
-                                <el-table
-                                    :data="props.row.items"
-                                    class="innertable"
-                                    style="width: 100%">
-                                    <el-table-column label="来源类型" prop="source" >
-                                        <template slot-scope="scope">
-                                            <span style="margin-left: 10px">{{scope.row.source}}</span>
-                                            <i class="el-icon-document" @click="handleGoSeDetail(scope.$index, scope.row.sourceID)"></i>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="浏览次数"  prop="timesOfBrowsing" v-if="showColumes[0]"> </el-table-column>
-                                    <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                                    <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                                    <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                                    <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                                    <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                                    <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-                                    <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                                    <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                                    <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-                                </el-table>
-                        </template>
-                            </el-table-column>
-                        <el-table-column prop="source" label="来源类型">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.source}}</span>
-                                <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-                        <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                        <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                        <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                        <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                        <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                        <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-                        <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                        <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                        <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-                    
-                    </el-table>
+                <div class="tablestyle sourcedomain">
+                    <foldTable :tableList = 'tabledata' :showColumes = 'showColumes'></foldTable>
                 </div>
             </el-card>
             <!-- table2 -->
@@ -111,21 +68,19 @@
         </div>
     </el-card>
 
-
-    
-
   </div>
 </template>
 <script>
 import {total, domainchart, domaintargetdata, domainranklist} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
+import foldTable from '@/components/foldTable'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
 import ChartGroup from './../components/ChartGroup'
 
 export default {
-    components: { SelectRegion, TotalData, ChartGroup, SelectMenu, CustomTagForm },
+    components: { SelectRegion, TotalData, ChartGroup, foldTable, SelectMenu, CustomTagForm },
     name: 'source-se',
     data() {
         return {
@@ -139,7 +94,9 @@ export default {
             totaldata: {},
             chartdata: {},
             targetData: {},
+            tabledata: [],
             showColumes: [true, false, false, true, false, false, true, true, true, true],
+            showRowNum: 6,
             defaultvalue: '',
             sourcetype: 0,
             pagetype: 0,
@@ -202,20 +159,21 @@ export default {
             }).then(res => {
                 this.targetData = res.data
 
-                this.directaccessdata = res.data.directAccess // 直接输入网址或书签
-                this.domainsdata = res.data.domains// 域名列表
-                this.internalaccessdata = res.data.internalAccess// 站内来源
                 this.totalsdata = res.data.totals // 全部总计
+                this.directaccessdata = res.data.directAccess // 直接输入网址或书签
+                this.tabledata = res.data.domains// 域名列表
+                this.internalaccessdata = res.data.internalAccess// 站内来源
+                
 
                 this.totalsdata.source = '全部总计'
                 
-                this.domainsdata.splice(0, 0, this.totalsdata)
+                this.tabledata.splice(0, 0, this.totalsdata)
 
                 this.directaccessdata.source = '直接输入网址或书签'
-                this.domainsdata.splice(1, 0, this.directaccessdata)
+                this.tabledata.splice(1, 0, this.directaccessdata)
 
                 this.internalaccessdata.source = '站内来源'
-                this.domainsdata.splice(2, 0, this.internalaccessdata)
+                this.tabledata.splice(2, 0, this.internalaccessdata)
             })
             this.loading = false
         },
