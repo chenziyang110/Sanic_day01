@@ -182,8 +182,11 @@ export default {
         },
         // 交互操作
         handleTotalData (range, side, visitor, date, sourceID, target) {
-            this.doQueryTotal(range, side, visitor, date)
-            this.doQueryChart(range, side, visitor, date, sourceID, this.target)
+            if (range !== '') {
+                this.date = ''
+            }
+            this.doQueryTotal(range, side, visitor, this.date)
+            this.doQueryChart(range, side, visitor, this.date, sourceID, this.target)
         },
         handleSelect(target) {
             this.target = target

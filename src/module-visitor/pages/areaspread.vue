@@ -64,6 +64,7 @@
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
+                    class="selectoption"
                 >
                 <el-radio :label='1'>{{ item.label }}</el-radio>
                 </el-option>
@@ -186,7 +187,7 @@ export default {
                     value: '3',
                     label: '外部链接'
                 }],
-            target: '',
+            target: '浏览次数',
             targetitems: [{
                 value: '1',
                 label: '浏览次数'

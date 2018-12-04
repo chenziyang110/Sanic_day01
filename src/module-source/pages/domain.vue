@@ -16,6 +16,7 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
+                class="selectoption"
             >
             <el-radio :label='1'>{{ item.label }}</el-radio>
             </el-option>
@@ -86,17 +87,17 @@ export default {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             range: '0',
-            side: '0',
-            visitor: '0',
+            side: '',
+            visitor: '',
             date: '',
-            target: '',
+            target: '1',
             totaldata: {},
             chartdata: {},
             targetData: {},
             tabledata: [],
             showColumes: [true, false, false, true, false, false, true, true, true, true],
             showRowNum: 6,
-            defaultvalue: '',
+            defaultvalue: '浏览次数',
             sourcetype: 0,
             pagetype: 0,
             targets: ['1', '4', '7', '8', '9', '10'],
@@ -181,8 +182,8 @@ export default {
             await this.doQueryTotal()
         },
         // 初始chart数据
-        async setupchartData(range, side, visitor, date, targets, sourceID, sourceType) {
-            await this.doQueryChart(this.range, this.side, this.visitor, this.date, this.targets, this.sourceID, this.sourceType)
+        async setupchartData(range, side, visitor, date, target = 1) {
+            await this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
         },
          // 初始target数据
         async setuptargetData() {
