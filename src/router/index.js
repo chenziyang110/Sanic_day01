@@ -38,6 +38,13 @@ export const constantRouterMap = [
     component: _import('dashboard/pages/login'),
     hidden: true
   },
+
+  // {
+  //   path: 'sedetail/:id',
+  //   name: 'source-sedetail',
+  //   component: _import('source/pages/sedetail'),
+  //   meta: {title: '搜索引擎详情页', icon: 'documentation', noCache: true}
+  // },
   // {
   //   path: '/reg',
   //   component: _import('dashboard/pages/reg'),
@@ -60,6 +67,36 @@ export const constantRouterMap = [
         component: _import('dashboard/pages/dashboard'),
         name: 'dashboard',
         meta: {title: 'dashboard', icon: 'dashboard', noCache: true}
+      },
+      {
+        path: 'se',
+        name: 'source-se',
+        component: _import('source/pages/se'),
+        meta: { title: '搜索引擎', icon: 'documentation', noCache: true }
+      },
+      {
+        path: 'sedetail/:id',
+        name: 'source-sedetail',
+        component: _import('source/pages/sedetail'),
+        meta: {title: '搜索引擎详情页', icon: 'documentation', noCache: true}
+      },
+      {
+        path: 'page',
+        name: 'source-page',
+        component: _import('source/pages/page'),
+        meta: { title: '来源页面', icon: 'documentation', noCache: true }
+      },
+      {
+        path: 'visitedpage',
+        name: 'visited-page',
+        component: _import('visited/pages/visitedpage'),
+        meta: {title: '受访页面', icon: 'documentation', noCache: true}
+      },
+      {
+        path: 'visitedhotmap',
+        name: 'visited-hotmap',
+        component: _import('visited/pages/visitedhotmap'),
+        meta: {title: '热力图', icon: 'documentation', noCache: true}
       }
     ]
   }

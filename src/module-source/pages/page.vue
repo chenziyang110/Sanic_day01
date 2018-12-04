@@ -44,20 +44,8 @@
         <div class="card-body">
             <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
-                <div class="tablestyle">
-                   <el-table  :data="sourcepageData" :row-class-name="setClassName" >
-                        <el-table-column prop="source" label="来源类型"></el-table-column>
-                        <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-                        <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-                        <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-                        <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-                        <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-                        <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-                        <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-                        <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-                        <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-                        <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-                    </el-table>
+                <div class="tablestyle sourcedomain">
+                    <foldTable :tableList = 'pagedata' :showColumes = 'showColumes'></foldTable>
                 </div>
             </el-card>
             <!-- table2 -->
@@ -70,12 +58,13 @@
 <script>
 import {total, domaintargetdata, domainranklist} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
+import foldTable from '@/components/foldTable'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
 
 export default {
-    components: { SelectRegion, TotalData, SelectMenu, CustomTagForm },
+    components: { SelectRegion, TotalData, foldTable, SelectMenu, CustomTagForm },
     name: 'source-se',
     data() {
         return {
@@ -109,9 +98,10 @@ export default {
                 label: 'IP'
             }],
             directaccessdata: {},
-            domainsdata: [],
+            pagedata: [],
             internalaccessdata: {},
-            totalsdata: {}
+            totalsdata: {},
+            sourceID: this.$route.params.dataObj
         }
     },
     methods: {
@@ -128,7 +118,7 @@ export default {
         },
         
         // 业务请求：表格数据
-        async doQueryTargetData(range, side, visitor, date, targets, sourceID, sourceType) {
+        async doQueryTargetData(range, keyword, side, visitor, date, targets, sourceID, sourceType) {
             this.loading = true
             this.targetData = {}
             await domaintargetdata({
@@ -143,19 +133,19 @@ export default {
             }).then(res => {
                 this.targetData = res.data
                 this.directaccessdata = res.data.directAccess // 直接输入网址或书签
-                this.domainsdata = res.data.domains// 域名列表
+                this.pagedata = res.data.domains// 域名列表
                 this.internalaccessdata = res.data.internalAccess// 站内来源
                 this.totalsdata = res.data.totals // 全部总计
                 // this.sourcepageData = 
 
                 this.totalsdata.source = '全部总计'
-                this.domainsdata.splice(0, 0, this.totalsdata)
+                this.pagedata.splice(0, 0, this.totalsdata)
 
                 this.directaccessdata.source = '直接输入网址或书签'
-                this.domainsdata.splice(1, 0, this.directaccessdata)
+                this.pagedata.splice(1, 0, this.directaccessdata)
 
                 this.internalaccessdata.source = '站内来源'
-                this.domainsdata.splice(2, 0, this.internalaccessdata)
+                this.pagedata.splice(2, 0, this.internalaccessdata)
             })
             this.loading = false
         },
@@ -163,10 +153,9 @@ export default {
         async setuptotalData() {
             await this.doQueryTotal()
         },
-        
          // 初始target数据
-        async setuptargetData() {
-            await this.doQueryTargetData()
+        async setuptargetData(range, keyword, side, visitor, date, targets, sourceID, sourceType) {
+            await this.doQueryTargetData(this.range, this.formSearch.keyword, this.side, this.visitor, this.date, this.targets, this.sourceID, this.sourceType)
         },
         setClassName({row, index}) {
             // 通过自己的逻辑返回一个class或者空

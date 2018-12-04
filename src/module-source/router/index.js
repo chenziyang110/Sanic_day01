@@ -26,18 +26,18 @@ export default [
         name: 'source-type',
         meta: { title: '来源分类', icon: 'documentation', noCache: true }
       },
-      {
-        path: 'se',
-        name: 'source-se',
-        component: _import('source/pages/se'),
-        meta: { title: '搜索引擎', icon: 'documentation', noCache: true }
-      },
-      {
-        path: 'sedetail',
-        name: 'source-sedetail',
-        component: _import('source/pages/sedetail'),
-        meta: {title: '搜索引擎详情页', icon: 'documentation', noCache: true}
-      },
+      // {
+      //   path: 'se',
+      //   name: 'source-se',
+      //   component: _import('source/pages/se'),
+      //   meta: { title: '搜索引擎', icon: 'documentation', noCache: true }
+      // },
+      // {
+      //   path: 'sedetail',
+      //   name: 'source-sedetail',
+      //   component: _import('source/pages/sedetail'),
+      //   meta: {show: false, title: '搜索引擎详情页', icon: 'documentation', noCache: true}
+      // },
       {
         path: 'keywords',
         name: 'source-keywords',
@@ -50,12 +50,12 @@ export default [
         component: _import('source/pages/domain'),
         meta: { title: '来源域名', icon: 'documentation', noCache: true }
       },
-      {
-        path: 'page',
-        name: 'source-page',
-        component: _import('source/pages/page'),
-        meta: { title: '来源页面', icon: 'documentation', noCache: true }
-      },
+      // {
+      //   path: 'page',
+      //   name: 'source-page',
+      //   component: _import('source/pages/page'),
+      //   meta: { title: '来源页面', icon: 'documentation', noCache: true }
+      // },
       {
         path: 'rank',
         name: 'source-rank',

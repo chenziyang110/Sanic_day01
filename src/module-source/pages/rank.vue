@@ -143,19 +143,19 @@ export default {
         renderHeaderChange(h, {column}) {
             return h('div', [
                h('span', {
-                    class: 'order',
+                    class: 'order rise',
                     on: {
                         click: this.handleOrderAdd
                     }
                 }, '+升'),
                 h('span', {
-                    class: 'order',
+                    class: 'order down',
                     on: {
                         click: this.handleOrderLow
                     }
                 }, '-降'),
                 h('span', {
-                    class: 'order',
+                    class: 'order level',
                     on: {
                         click: this.handleOrderNochange
                     }
@@ -245,6 +245,9 @@ export default {
             }
         }
     }
+    .rise { color: red }
+    .down { color: green}
+    .level {}
 }
 
 </style>

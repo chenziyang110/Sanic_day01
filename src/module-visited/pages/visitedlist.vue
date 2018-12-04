@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard-container">
         <el-card class="card-head">
-            <h2 class="title">受访页面（{{defaultdate}}）</h2>
+            <h2 class="title">页面点击列表（{{defaultdate}}）</h2>
             <el-form ref="searchform" :model="formSearch">
                 <el-input  placeholder="请输入" v-model="formSearch.keyword" style="width: 200px;"></el-input>
                 <el-button type="warning" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
@@ -23,10 +23,16 @@
                         label="操作"
                         width="200">
                         <template slot-scope="scope">
-                            <el-button class="operate-btn" type="text" size="small" @click="handleRouterMap(scope.$index, scope.row.id)"><a>查看点击图</a></el-button>
+                            <el-button class="operate-btn" type="text" size="small" @click="handleRouterMap(scope.$index, scope.row.id, scope.row.url)"><a>查看点击图</a></el-button>
                             <span>|</span>
-                            <el-button v-if= " scope.row.stateTitle === '关闭' " @click="handleChangeState(scope.row.id, true)" class="operate-btn" type="text" size="small"><a>开启</a></el-button>
-                            <el-button v-if= " scope.row.stateTitle === '统计中' "  @click="handleChangeState(scope.row.id, false)"  class="operate-btn" type="text" size="small"><a>关闭</a></el-button>
+                            <el-button 
+                                v-if= " scope.row.stateTitle === '关闭' " 
+                                @click="handleChangeState(scope.row.id, true)" 
+                                class="operate-btn" 
+                                type="text" 
+                                size="small"><a>开启</a>
+                            </el-button>
+                            <el-button v-if= "scope.row.stateTitle === '统计中' "  @click="handleChangeState(scope.row.id, false)"  class="operate-btn" type="text" size="small"><a>关闭</a></el-button>
                         </template>
                         </el-table-column>
                 </el-table>
@@ -103,19 +109,20 @@ export default {
         handleCurrentChange(val) {
             this.doQueryVisitedList(val, this.pagination.pageSize)
         },
-        handleRouterMap(index, id) {
-            console.log(id)
+        handleRouterMap(index, id, url) {
              this.$router.push({
                 path: '/visited/visitedhotmap',
                 name: 'visited-hotmap',
                 params: {
-                    id: id
+                    id: id,
+                    url: url
                 }
             })
         },
         // 状态改变
         handleChangeState(id, disabled) {
            this.doQueryState(id, disabled)
+           
         }
     },
     mounted() {},
@@ -130,6 +137,10 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
         margin-top: 20px;
+    }
+    .filter-item {
+        background: #f75426;
+        color: #fff
     }
     .title {
         font-size: 20px;

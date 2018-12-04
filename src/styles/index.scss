@@ -287,10 +287,16 @@ code {
     }
 }
 // el-card
+
 .el-table--enable-row-hover .el-table__body tr:hover>td {
   background-color: #f5f7fa;
   border-top: 1px solid #f0efef;
   border-bottom: 1px solid #f0efef;
+}
+.el-table--enable-row-hover .el-table__body tr.hiddencell:first-child:hover  > td {
+  background-color: #4397ef;
+  border-top: 1px solid #4397ef;
+  border-bottom: 1px solid #fff;
 }
 .el-card__header {
   background: #fbfbfb;
@@ -471,6 +477,8 @@ code {
 .order {
   margin-right: 15px;
   cursor: pointer;
+  &.rise {color: red;}
+  &.down { color: green}
 }
 .allbtn {
   padding: 3px 8px;

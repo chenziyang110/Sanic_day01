@@ -26,29 +26,18 @@ export default [
         component: _import('visited/pages/visiteddomain'),
         meta: {title: '受访域名', icon: 'documentation', noCache: true}
         },
-      {
-        path: 'visitedpage',
-        name: 'visited-page',
-        component: _import('visited/pages/visitedpage'),
-        meta: {title: '受访页面', icon: 'documentation', noCache: true}
-      },
+      
       {
         path: 'visitedlist',
         name: 'visited-list',
         component: _import('visited/pages/visitedlist'),
-        meta: {title: '页面点击图', icon: 'documentation', noCache: true}
+        meta: {title: '页面点击列表', icon: 'documentation', noCache: true}
       },
       {
         path: 'visitedrank',
         name: 'visited-rank',
         component: _import('visited/pages/visitedrank'),
         meta: {title: '受访升降榜', icon: 'documentation', noCache: true}
-      },
-      {
-        path: 'visitedhotmap',
-        name: 'visited-hotmap',
-        component: _import('visited/pages/visitedhotmap'),
-        meta: {title: '热力图', icon: 'documentation', noCache: true}
       }
     ]
   }

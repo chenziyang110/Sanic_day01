@@ -3,7 +3,11 @@
     <el-card class="card-head">
         <h2 class="title">趋势分析（{{defaultdate}}）</h2>
         <!-- 工具栏 -->
-        <SelectRegionCompare v-on:handleToolData = 'handleToolData' v-on:handleCompareData = 'handleCompareData'/>
+        <SelectRegionCompare 
+          v-on:handleChooseData = 'handleChooseData' 
+          v-on:handleDataDate = 'handleDataDate' 
+          v-on:handleToolData = 'handleToolData' 
+          v-on:handleCompareData = 'handleCompareData'/>
     </el-card>
     <!-- 总计栏 -->
     <TotalData :totalList = 'totaldata'/>
@@ -20,7 +24,82 @@
     <!-- 表格数据列表 -->
     <el-card shadow="never" v-loading="loading" class="card-item">
         <div class="tablestyle">
-            <el-table :data="targetData.items">
+            <el-table :data="CompareData" v-if="date2 != ''">
+                <el-table-column prop="date" label="日期"></el-table-column>
+                <el-table-column  label="浏览次数" align="center">
+                    <el-table-column prop="date1timesOfBrowsing">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="date2timesOfBrowsing">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date2}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+                <el-table-column  label="独立访客" align="center">
+                    <el-table-column prop="date1independentVisitors">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="date2independentVisitors">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date2}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+                <el-table-column  label="IP" align="center">
+                    <el-table-column  prop="date1IP">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="date2IP">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date2}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+                <el-table-column  label="平均访问深度" align="center">
+                    <el-table-column  prop="date1averageAccessDepth">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="date2averageAccessDepth">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date2}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+                <el-table-column  label="平均访问时长" align="center">
+                    <el-table-column  prop="date1averageAccessTime">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="date2averageAccessTime">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date2}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+                <el-table-column  label="跳出率" align="center">
+                    <el-table-column  prop="date1bounceRate">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="date2bounceRate">
+                        <template slot="header" slot-scope="scope">
+                            <span>{{date2}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+            </el-table>
+            <el-table :data="targetData.items" v-if="date2 === ''">
               <el-table-column prop="datetime" label="日期"></el-table-column>
               <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
               <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
@@ -32,15 +111,15 @@
               <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
               <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
               <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
-              
             </el-table>
+            
           </div>
     </el-card>
 
   </div>
 </template>
 <script>
-import {total, chart, targetdata} from '@/api/base/flowanalyze'
+import {total, chart, targetdata, contrastdata} from '@/api/base/flowanalyze'
 import SelectRegionCompare from '@/components/SelectRegionCompare'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
@@ -58,15 +137,19 @@ export default {
             visitor: '',
             date: '',
             target: '',
+            tages: ['1', '4', '7', '8', '9', '10'],
             totaldata: {},
             chartdata: {},
             targetData: {},
-            showColumes: [true, false, false, true, false, false, true, true, true, true]
+            contrastData: [],
+            date2: '',
+            showColumes: [true, false, false, true, false, false, true, true, true, true],
+            CompareData: []
         }
     },
     methods: {
         // 业务请求：合计
-        async doQueryTotal(range = 0, side, visitor, date = this.defaultdate) {
+        async doQueryTotal(range, side, visitor, date) {
             this.loading = true
             this.totaldata = {}
             await total({
@@ -78,14 +161,14 @@ export default {
             this.loading = false
         },
         // 业务请求：图表
-        async doQueryChart(range = 0, side, visitor, date1 = this.defaultdate, date2, target = 1) {
+        async doQueryChart(range, side, visitor, date1, date2, target) {
             this.loading = true
             this.chartdata = {}
             await chart({
                 range, side, visitor, date1, date2, target
             }).then(res => {
                 this.chartdata = res.data
-                // 图表模型
+            // 图表模型
             // x轴数据整理
             
             let xdata = []
@@ -160,29 +243,79 @@ export default {
             })
             this.loading = false
         },
+        // 业务请求：对比表格数据
+        async doQueryContrastData(range, side, visitor, date, tages, date2) {
+            this.loading = true
+            this.targetData = {}
+            await contrastdata({
+                range, side, visitor, date, tages, date2
+            }).then(res => {
+                this.contrastData = res.data.items
+
+                let CompareData = []
+                let Object = {}
+                for (let item of this.contrastData) {
+                    CompareData.push({
+                        date: item.date,
+                        date1timesOfBrowsing: item.date1.timesOfBrowsing,
+                        date2timesOfBrowsing: item.date2.timesOfBrowsing,
+                        date1independentVisitors: item.date1.independentVisitors,
+                        date2independentVisitors: item.date2.independentVisitors,
+                        date1IP: item.date1.IP,
+                        date2IP: item.date2.IP,
+                        date1averageAccessDepth: item.date1.averageAccessDepth,
+                        date2averageAccessDepth: item.date2.averageAccessDepth,
+                        date1averageAccessTime: item.date1.averageAccessTime,
+                        date2averageAccessTime: item.date2.averageAccessTime,
+                        date1bounceRate: item.date1.bounceRate,
+                        date2bounceRate: item.date2.bounceRate
+                    })
+                }
+                this.CompareData = CompareData
+                console.log(CompareData)
+            })
+            this.loading = false
+        },
         // 初始total数据
-        async setuptotalData(range = 0, side, visitor, date = this.defaultdate) {
+        async setuptotalData(range = 0, side, visitor, date) {
             await this.doQueryTotal(range, side, visitor, date)
         },
         // 初始chart数据
-        async setupchartData() {
-            await this.doQueryChart()
+        async setupchartData(range = 0, side, visitor, date, date2, target) {
+            await this.doQueryChart(range, side, visitor, date, date2, target)
         },
          // 初始target数据
-        async setuptargetData() {
-            await this.doQueryTargetData()
+        async setuptargetData(range = 0, side, visitor, date, tages) {
+            await this.doQueryTargetData(range, side, visitor, date, tages)
         },
 
+
         // 交互操作
+        // 选择数据
+        handleChooseData(range, side, visitor, date) {
+            date = ''
+            this.doQueryTotal(range, side, visitor, date)
+        },
+        // 自定义日期
+        handleDataDate(range, side, visitor, date) {
+            range = ''
+            this.doQueryTotal(range, side, visitor, date)
+        },
         handleToolData (range, side, visitor, date) {
             this.doQueryTotal(range, side, visitor, date)         
         },
-        handleCompareData(range, side, visitor, date1, date2, target) {
-            this.doQueryChart(range, side, visitor, date1, date2, target) 
+        // 点击对比
+        handleCompareData(range, side, visitor, date, date2, target, tages) {
+            range = ''
+            tages = this.tages
+            this.date = date
+            this.date2 = date2
+            this.doQueryChart(range, side, visitor, date, date2, target)
+            this.doQueryContrastData(range, side, visitor, date, tages, date2)
         },
         handleSelect(target) {
             this.target = target
-            this.doQueryChart(this.range, this.side, this.visitor, this.date1, this.date2, this.target)
+            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.date2, this.target)
         },
         // echart
         echartCreate(data) {

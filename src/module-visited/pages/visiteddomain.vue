@@ -16,6 +16,7 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
+                class="selectoption"
             >
             <el-radio :label='1'>{{ item.label }}</el-radio>
             </el-option>
@@ -29,8 +30,7 @@
             <el-col :span="10">
                 <el-form ref="searchform" :model="formSearch">
                     <el-input  placeholder="请输入" v-model="formSearch.keyword" style="width: 300px;"></el-input>
-                    <el-button type="warning" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
-                    <el-button type="warning" class="filter-item" size="medium">自定义指标</el-button>
+                    <el-button type="default" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
                 </el-form>
             </el-col>
         </el-row>
@@ -43,14 +43,17 @@
     <el-card shadow="never" v-loading="loading" class="card-item pagetype">
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
-                    <el-radio-button label="0">来源域名</el-radio-button>
-                    <el-radio-button label="1">来源页面</el-radio-button>
-                </el-radio-group>
+                <el-radio-button label="0">来路域名</el-radio-button>
+                <el-radio-button label="1">受访页面</el-radio-button>
+            </el-radio-group>
         </div>
         <div class="card-body">
             <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
-                <div class="tablestyle">
+                <div class="tablestyle sourcedomain">
+                    <foldTable :tableList = 'domainsdata' :showColumes = 'showColumes'></foldTable>
+                </div>
+                <!-- <div class="tablestyle">
                     <el-table  :data="domainsdata" :row-class-name="setClassName">
                         <el-table-column type="expand">
                             <template slot-scope="props">
@@ -95,7 +98,7 @@
                         <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
                     
                     </el-table>
-                </div>
+                </div> -->
             </el-card>
             <!-- table2 -->
            
@@ -111,12 +114,13 @@
 import {total, chart, targetdata} from '@/api/base/visited'
 import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
+import foldTable from '@/components/foldTable'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
 import ChartGroup from './../components/ChartGroup'
 
 export default {
-    components: { SelectRegion, TotalData, ChartGroup, SelectMenu, CustomTagForm },
+    components: { SelectRegion, TotalData, foldTable, ChartGroup, SelectMenu, CustomTagForm },
     name: 'source-se',
     data() {
         return {
@@ -126,12 +130,12 @@ export default {
             side: '0',
             visitor: '0',
             date: '',
-            target: '',
+            target: '1',
             totaldata: {},
             chartdata: {},
             targetData: {},
             showColumes: [true, false, false, true, false, false, true, true, true, true],
-            defaultvalue: '',
+            defaultvalue: '浏览次数',
             sourcetype: 0,
             pagetype: 0,
             targets: ['1', '4', '7', '8', '9', '10'],
@@ -192,30 +196,22 @@ export default {
                 sourceType
             }).then(res => {
                 this.targetData = res.data
-                this.directaccessdata = res.data.directAccess // 直接输入网址或书签
                 this.domainsdata = res.data.domains// 域名列表
-                this.internalaccessdata = res.data.internalAccess// 站内来源
                 this.totalsdata = res.data.totals // 全部总计
 
                 this.totalsdata.source = '全部总计'
                 this.domainsdata.splice(0, 0, this.totalsdata)
 
-                this.directaccessdata.source = '直接输入网址或书签'
-                this.domainsdata.splice(1, 0, this.directaccessdata)
-
-                this.internalaccessdata.source = '站内来源'
-                this.domainsdata.splice(2, 0, this.internalaccessdata)
-
             })
             this.loading = false
         },
         // 初始total数据
-        async setuptotalData() {
-            await this.doQueryTotal()
+        async setuptotalData(range, side, visitor, date, sourceID) {
+            await this.doQueryTotal(this.range, this.side, this.visitor, this.date, this.sourceID)
         },
         // 初始chart数据
-        async setupchartData(range, side, visitor, date, sourceID) {
-            await this.doQueryChart(this.range, this.side, this.visitor, this.date, this.sourceID)
+        async setupchartData(range, side, visitor, date, target = 1) {
+            await this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
         },
          // 初始target数据
         async setuptargetData() {
@@ -316,6 +312,10 @@ export default {
     .pageytype .card-body .card-item {
         margin-left: 0;
         margin-right: 0;
+    }
+    .filter-item {
+        background: #f75426;
+        color: #fff
     }
     // child style
     

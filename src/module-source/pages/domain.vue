@@ -29,8 +29,7 @@
             <el-col :span="10">
                 <el-form ref="searchform" :model="formSearch">
                     <el-input  placeholder="请输入" v-model="formSearch.keyword" style="width: 300px;"></el-input>
-                    <el-button type="warning" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
-                    <el-button type="warning" class="filter-item" size="medium">自定义指标</el-button>
+                    <el-button type="default" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
                 </el-form>
             </el-col>
             <el-col :span="9" :offset="5">
@@ -52,8 +51,8 @@
     <el-card shadow="never" v-loading="loading" class="card-item pagetype">
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
-                <el-radio-button label="0">来源域名</el-radio-button>
-                <router-link to="/source/page"><el-radio-button label="1">来源页面</el-radio-button></router-link>
+                <el-radio-button label="0">来路域名</el-radio-button>
+                <router-link to="/source/page"><el-radio-button label="1">来路页面</el-radio-button></router-link>
             </el-radio-group>
         </div>
         <div class="card-body">
@@ -291,6 +290,10 @@ export default {
     .pageytype .card-body .card-item {
         margin-left: 0;
         margin-right: 0;
+    }
+    .filter-item {
+        background: #f75426;
+        color: #fff
     }
     // child style
     

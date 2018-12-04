@@ -32,10 +32,8 @@
             </el-form>
         </div>
         <div class="hotmap">
-            <div id="heatmap" class="col-md-8" style="width: 1130px;">
-                <img id="baidu-img" src="./../assets/testhotmap.png">
-                <div id="main" style="width: 1130px; height: 671px;"></div>
-            </div>
+            <iframe  v-bind:src="hotmapurl" width="100%" height="800px"   frameborder="1/0"  name="iframe名称"  scrolling="yes/no/auto">   </iframe>
+            <div id="heatmap" style="width:100%;height:800px;"></div>
         </div>
     </div>
     
@@ -43,6 +41,7 @@
 <script>
 import {visitedhotmap} from '@/api/base/visited'
 import echarts from 'echarts'
+import Heatmap from 'heatmap.js'
 import resize from './../../components/Charts/mixins/resize'
 
 export default {
@@ -53,14 +52,16 @@ export default {
             range: '0',
             date: '',
             hopmapdata: {},
+            hotmapurl: '',
             heatdata: [],
             chart: null
         }
     },
     created() {
         this.hotmapID = this.$route.params.id
+        this.hotmapurl = this.$route.params.url
+        console.log(this.hotmapurl)
         this.setupHotMapData()
-        console.log(this.hotmapID)
     },
     methods: {
         // 业务请求
@@ -72,55 +73,36 @@ export default {
                 this.hopmapdata = res.data
                 this.heatdata = res.data.data
 
-                let newheatData = []
-                for (let i = 0; i < this.heatdata.length; i++) {
-                    newheatData[i] = [this.heatdata[i].x, this.heatdata[i].y, this.heatdata[i].value]
-                }
-                let xData = []
-                for (let j = 0; j < this.heatdata.length; j++) {
-                    xData.push(this.heatdata[j].x)
-                }
-                let yData = []
-                for (let j = 0; j < this.heatdata.length; j++) {
-                    yData.push(this.heatdata[j].y)
-                }
-                console.log(yData)
+                // let newheatData = []
+                // for (let i = 0; i < this.heatdata.length; i++) {
+                //     newheatData[i] = [this.heatdata[i].x, this.heatdata[i].y, this.heatdata[i].value]
+                // }
+                // let xData = []
+                // for (let j = 0; j < this.heatdata.length; j++) {
+                //     xData.push(this.heatdata[j].x)
+                // }
+                // let yData = []
+                // for (let j = 0; j < this.heatdata.length; j++) {
+                //     yData.push(this.heatdata[j].y)
+                // }
 
-
-                this.chart = echarts.init(document.getElementById('main'))
-                this.chart.setOption({
-                    tooltip: {},
-                    xAxis: {
-                        type: 'category',
-                        data: xData
-                    },
-                    yAxis: {
-                        type: 'category',
-                        data: yData
-                    },
-                    visualMap: {
-                        min: 0,
-                        max: 1,
-                        calculable: true,
-                        realtime: false,
-                        inRange: {
-                            color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
-                        }
-                    },
-                    series: [{
-                        name: 'Gaussian',
-                        type: 'heatmap',
-                        data: newheatData,
-                        itemStyle: {
-                            emphasis: {
-                                borderColor: '#333',
-                                borderWidth: 1
-                            }
-                        },
-                        progressive: 1000,
-                        animation: false
-                    }]
+                // 创建一个heatmap实例对象
+                // 这里直接指定热点图渲染的div了.heatmap支持自定义的样式方案,网页外包接活具体可看官网api
+                var heatmapInstance = Heatmap.create({
+                    container: document.getElementById('heatmap')
                 })
+                // 构建一些随机数据点,网页切图价格这里替换成你的业务数据
+                var max = 120
+                var width = 100 + '%'
+                var height = 800
+                // var len = 200
+                var data = {
+                    max: max,
+                    data: this.heatdata
+                }
+                // 因为data是一组数据,web切图报价所以直接setData
+                heatmapInstance.setData(data)
+                
             })
             this.loading = false
         },
@@ -128,35 +110,44 @@ export default {
         async setupHotMapData() {
             await this.doQueryHotMap()
         },
-        handleData() {
-
+        handleData(id = this.hotmapID, range, date) {
+            this.doQueryHotMap(id, range, date)
         }
     },
-    mounted() {}
+    mounted() {
+        
+    }
 
 }
 </script>
 <style lang="scss" scoped>
 .top-total {
-  padding: 6px;
-  font-size: 16px;
+  padding: 6px 20px;
+  font-size: 20px;
   line-height: 2.5;
   background: #04166c;
   color: #5d8aec;
   .number {
     padding-right: 5px;
-    font-size: 26px;
+    font-size: 32px;
     color: #fff;
   }
 }
 .search {
-  padding: 6px;
+  padding: 6px 20px;
   background: #ebeff5;
   box-shadow: 2px 2px 5px #e4e2e2;
   .formitem {
     padding: 10px 0;
     margin-bottom: 0;
   }
+}
+.hotmap {
+    iframe {
+        position: absolute;
+        left: 0;
+        border: none;
+    }
 }
 #heatmap {
     position: relative;

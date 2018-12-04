@@ -39,7 +39,7 @@
                 <!-- 表格数据列表 -->
                 <el-card shadow="never" v-loading="loading" class="card-item">
                     <div class="tablestyle">
-                        <el-table :data="targetlist" >
+                        <el-table :data="targetlist" :row-class-name="setClassName">
                             <el-table-column prop="keyword" label="来源类型">
                                 <!-- <template slot-scope="scope">
                                     <span>{{scope.row.source}}</span>
@@ -76,7 +76,7 @@
                 <!-- 表格数据列表 -->
                 <el-card shadow="never" v-loading="loading" class="card-item">
                     <div class="tablestyle">
-                        <el-table :data="selist">
+                        <el-table :data="selist" :row-class-name="setClassName">
                             <el-table-column prop="keyword" label="来源类型"></el-table-column>
                             <el-table-column prop="all" label="浏览次数" ></el-table-column>
                             <el-table-column prop="baidu" label="百度"></el-table-column>
@@ -126,6 +126,11 @@ export default {
             }).then(res => {
                 this.targettotal = res.data.totals
                 this.targetlist = res.data.items
+
+                this.targettotal.keyword = '全部总计'
+                this.targetlist.splice(0, 0, this.targettotal)
+
+
             })
             this.loading = false
         },
@@ -138,6 +143,9 @@ export default {
             }).then(res => {
                 this.setotal = res.data.totals
                 this.selist = res.data.items
+
+                this.setotal.keyword = '全部总计'
+                this.selist.splice(0, 0, this.setotal)
             })
             this.loading = false
         },
@@ -155,6 +163,10 @@ export default {
             this.visitor = currentvisitor
             this.date = currentdate
             this.doQueryKeywordsTarget(this.range, this.side, this.visitor, this.date)  
+        },
+        setClassName({row, index}) {
+            // 通过自己的逻辑返回一个class或者空
+            return row.expand ? 'expand' : 'hiddencell'
         }
         
     },

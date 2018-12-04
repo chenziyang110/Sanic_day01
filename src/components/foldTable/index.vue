@@ -29,8 +29,8 @@
             <el-table-column prop="source" label="来源类型">
                 <template slot-scope="scope">
                     <span>{{scope.row.source}}</span>
-                    <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
-                </template>
+                    <i class="el-icon-document iconlink" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                </template> 
             </el-table-column>
             <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
             <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
@@ -69,8 +69,28 @@ export default {
                 }
             })
         },
-        handleSourceLink() {
-
+        // 父级跳转
+        handleSourceLink(index, sourceID) {
+            if (this.$route.path === '/source/domain') {
+                this.$router.push({
+                    path: '/source/page:id',
+                    name: 'source-page',
+                    params: { 
+                        id: 'id',
+                        dataObj: sourceID
+                    }
+                })
+            } else if (this.$route.path === '/visited/visiteddomain') {
+                console.log(this.$route.path)
+                this.$router.push({
+                    path: '/visited/visitedpage:id',
+                    name: 'visited-page',
+                    params: { 
+                        id: 'id',
+                        dataObj: sourceID
+                    }
+                })
+            }
         }
   }
 }
