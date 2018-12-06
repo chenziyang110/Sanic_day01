@@ -83,22 +83,20 @@
             </el-row>
         </el-card>
         <!-- 限制栏 -->
-        <el-card class="card-search">
+        <div class="card-search">
             <el-row :gutter="20">
                 <el-col :span="10">
                     <el-form ref="searchform" :model="formSearch">
                         <el-input  placeholder="请输入" v-model="formSearch.keyword" style="width: 300px;"></el-input>
                         <el-button type="warning" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
-                        <el-button type="warning" class="filter-item" size="medium">自定义指标</el-button>
                     </el-form>
                 </el-col>
             </el-row>
-            <!-- 自定义指标 -->
-            <div class="targets">
-                <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
-            </div>
-            <div class="table-box">
-                <!-- 表格数据列表 -->
+        </div>
+        <!-- 自定义指标 -->
+        <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
+        <div class="table-box">
+            <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
                 <div class="tablestyle">
                     <el-table  :data="tableData" >
@@ -150,8 +148,7 @@
                     </el-table>
                 </div>
             </el-card>
-            </div>
-        </el-card>
+        </div>
     
          
      </div>
@@ -427,7 +424,6 @@ export default {
     }
     .card-total {
         margin-top: 20px;
-        padding: 20px;
         background: #012989;
         .total-title {
             line-height: 2.5;

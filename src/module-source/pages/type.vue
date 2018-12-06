@@ -17,7 +17,7 @@
     <!-- 自定义指标 -->
     <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
     <!-- 表格数据列表 -->
-    <el-card shadow="never" v-loading="loading" class="card-item card-table">
+    <el-card shadow="never" v-loading="loading" class="card-table">
         <div class="tablestyle sourcetype">
             <foldTable :tableList = 'tabledata' :showColumes = 'showColumes'></foldTable>
         </div>
@@ -185,8 +185,10 @@ export default {
             if (range !== '') {
                 this.date = ''
             }
-            this.doQueryTotal(range, side, visitor, this.date)
-            this.doQueryChart(range, side, visitor, this.date, sourceID, this.target)
+            this.doQueryTotal(range, side, visitor, date)
+            this.doQueryChart(range, side, visitor, date, sourceID, this.target)
+
+            this.doQueryTargetData(range, side, visitor, date, sourceID, this.tages)
         },
         handleSelect(target) {
             this.target = target
@@ -277,6 +279,11 @@ export default {
     }
     .table-head,.table-direct {
         span {display: inline-block;}
+    }
+    .card-table {
+        border-top: 0;
+        margin-left: 20px;
+        margin-right: 20px;
     }
     // child style
     

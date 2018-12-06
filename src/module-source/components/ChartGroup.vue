@@ -2,7 +2,7 @@
     <el-row>
         <el-col :span="17">
             <!-- linechart -->
-            <div  id="chart" style="min-height: 400px; width: 99%"></div>
+            <div  id="chart" style="min-height: 400px; width: 100%"></div>
         </el-col>
         <el-col :span="7" >
             <div  id="circle" style="min-height: 400px; width: 100%"></div>

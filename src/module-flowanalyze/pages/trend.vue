@@ -20,7 +20,7 @@
     <!-- 自定义指标 -->
     <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
     <!-- 表格数据列表 -->
-    <el-card shadow="never" v-loading="loading" class="card-item">
+    <el-card shadow="never" v-loading="loading" class="card-table">
         <div class="tablestyle">
             <el-table :data="CompareData" v-if="date2 != ''">
                 <el-table-column prop="date" label="日期"></el-table-column>
@@ -110,8 +110,7 @@
               <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
               <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
             </el-table>
-            
-          </div>
+        </div>
     </el-card>
 
   </div>
@@ -418,6 +417,11 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
         margin-top: 20px;
+    }
+    .card-table {
+        border-top: 0;
+        margin-left: 20px;
+        margin-right: 20px;
     }
     .definetarget {
         background-color: #f75426;

@@ -37,7 +37,7 @@
     <el-card shadow="never" v-loading="loading" class="card-item pagetype">
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
-                    <router-link to="/source/domain"><el-radio-button label="0">来源域名</el-radio-button></router-link>
+                    <!-- <router-link to="/source/domain"><el-radio-button label="0">来源域名</el-radio-button></router-link> -->
                     <router-link to="/source/page"><el-radio-button label="1">来源页面</el-radio-button></router-link>
                 </el-radio-group>
         </div>

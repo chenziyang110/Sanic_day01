@@ -38,36 +38,12 @@ export const constantRouterMap = [
     component: _import('dashboard/pages/login'),
     hidden: true
   },
-
-  // {
-  //   path: 'sedetail/:id',
-  //   name: 'source-sedetail',
-  //   component: _import('source/pages/sedetail'),
-  //   meta: {title: '搜索引擎详情页', icon: 'documentation', noCache: true}
-  // },
-  // {
-  //   path: '/reg',
-  //   component: _import('dashboard/pages/reg'),
-  //   hidden: true
-  // },
-  {
-    path: '/authredirect',
-    component: _import('dashboard/pages/authredirect'),
-    hidden: true
-  },
-  {path: '/404', component: _import('dashboard/pages/404'), hidden: true},
-  {path: '/401', component: _import('dashboard/pages/401'), hidden: true},
   {
     path: '',
     component: Layout,
     redirect: 'dashboard',
+    hidden: true,
     children: [
-      {
-        path: 'dashboard',
-        component: _import('dashboard/pages/dashboard'),
-        name: 'dashboard',
-        meta: {title: 'dashboard', icon: 'dashboard', noCache: true}
-      },
       {
         path: 'se',
         name: 'source-se',
@@ -97,6 +73,32 @@ export const constantRouterMap = [
         name: 'visited-hotmap',
         component: _import('visited/pages/visitedhotmap'),
         meta: {title: '热力图', icon: 'documentation', noCache: true}
+      }
+    ]
+  },
+  // {
+  //   path: '/reg',
+  //   component: _import('dashboard/pages/reg'),
+  //   hidden: true
+  // },
+  {
+    path: '/authredirect',
+    component: _import('dashboard/pages/authredirect'),
+    hidden: true
+  },
+  {path: '/404', component: _import('dashboard/pages/404'), hidden: true},
+  {path: '/401', component: _import('dashboard/pages/401'), hidden: true},
+
+  {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: _import('dashboard/pages/dashboard'),
+        name: 'dashboard',
+        meta: {title: 'dashboard', icon: 'dashboard', noCache: true}
       }
     ]
   }

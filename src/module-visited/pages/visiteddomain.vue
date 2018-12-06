@@ -100,7 +100,6 @@
                     </el-table>
                 </div> -->
             </el-card>
-            <!-- table2 -->
            
         </div>
     </el-card>
@@ -231,7 +230,9 @@ export default {
             this.side = currentside 
             this.visitor = currentvisitor
             this.date = currentdate
-            this.doQueryTotal(this.range, this.side, this.visitor, this.date)  
+            this.doQueryTotal(this.range, this.side, this.visitor, this.date)
+            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
+            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets)
         },
         handleSelect(currenttarget) {
             this.target = currenttarget

@@ -53,7 +53,7 @@
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
                 <el-radio-button label="0">来路域名</el-radio-button>
-                <router-link to="/source/page"><el-radio-button label="1">来路页面</el-radio-button></router-link>
+                <!-- <router-link to="/source/page"><el-radio-button label="1">来路页面</el-radio-button></router-link> -->
             </el-radio-group>
         </div>
         <div class="card-body">
@@ -209,7 +209,9 @@ export default {
             this.side = currentside 
             this.visitor = currentvisitor
             this.date = currentdate
-            this.doQueryTotal(this.range, this.side, this.visitor, this.date)  
+            this.doQueryTotal(this.range, this.side, this.visitor, this.date)
+            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
+            this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets)
         },
         handleSelect(currenttarget) {
             this.target = currenttarget

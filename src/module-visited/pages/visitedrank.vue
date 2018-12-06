@@ -197,6 +197,9 @@ export default {
 </script>
 <style  rel="stylesheet/scss"  lang="scss" scoped>
 .rank {
+    .card-item {
+        margin: -10px 20px 0;
+    }
     .title {
         font-size: 20px;
         color: #012989;
