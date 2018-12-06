@@ -41,10 +41,10 @@
                     <div class="tablestyle">
                         <el-table :data="targetlist" :row-class-name="setClassName">
                             <el-table-column prop="keyword" label="来源类型">
-                                <!-- <template slot-scope="scope">
-                                    <span>{{scope.row.source}}</span>
-                                    <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
-                                </template> -->
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.keyword}}</span>
+                                    <i class="el-icon-document iconlink" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                                </template>
                             </el-table-column>
                             <el-table-column prop="timesOfBrowsing" label="浏览次数" ></el-table-column>
                             <el-table-column prop="independentVisitors" label="独立访客"></el-table-column>
@@ -167,6 +167,16 @@ export default {
         setClassName({row, index}) {
             // 通过自己的逻辑返回一个class或者空
             return row.expand ? 'expand' : 'hiddencell'
+        },
+        handleSourceLink(id, sourceID) {
+            this.$router.push({
+                path: '/source/sedetail',
+                name: 'source-sedetail',
+                params: { 
+                    id: 'id',
+                    dataObj: sourceID
+                }
+            })
         }
         
     },
@@ -179,6 +189,12 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-container {
     // layout
+    .iconlink {
+        float: right;
+        line-height: 1.6;
+        cursor: pointer;
+        color: #5784e7;
+    }
     .title {
         font-size: 20px;
         color: #012989;

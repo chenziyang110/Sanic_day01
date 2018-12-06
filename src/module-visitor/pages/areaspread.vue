@@ -5,20 +5,24 @@
             <h2 class="title">地域分布（{{defaultdate}}）</h2>
             <div class="choose">
                 <el-form :inline="true" >
+
                     <el-form-item class="subtitle" label="时间：">
                     <div class="radios">
+                        <el-button round   @click="handleOpenTime">打开</el-button>
                             <el-radio-group  v-model="range" @change="handleToolData">
-                                <el-radio-button label="0">最近1个月</el-radio-button>
-                                <el-radio-button label="1">最近2个月</el-radio-button>
-                                <el-radio-button label="7">最近3个月</el-radio-button>
-                                <el-radio-button label="30">最近半年</el-radio-button>
+                                <el-radio-button label="0" :disabled="timedisabled">今天</el-radio-button>
+                                <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
+                                <el-radio-button label="7" :disabled="timedisabled">最近7日</el-radio-button>
+                                <el-radio-button label="30" :disabled="timedisabled">最近30日</el-radio-button>
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-form-item  class="subtitle" label="日期：">
+                    <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <el-form-item  class="subtitle" label="">
                         <el-date-picker
                             v-model="date"
                             @change="handleToolData"
+                            :disabled="datedisabled"
                             type="date"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
@@ -170,6 +174,10 @@ export default {
             range: '0',
             date: '',
             visitor: '0',
+            // 日期控制
+            definitedisable: false,
+            datedisabled: true,
+            timedisabled: false,
             totalData: {},
             tableData: [],
             chart: null,
@@ -344,6 +352,18 @@ export default {
             await this.doQueryTable()
         },
         // 交互操作
+        handleOpenTime() {
+          this.datedisabled = true
+          this.range = '0'
+          this.timedisabled = false
+          this.handleToolData()
+        },
+        handleDefiniteDate() {
+          this.timedisabled = true
+          this.range = ''
+          this.date = ''
+          this.datedisabled = false
+        },
         handleToolData(range, visitor, date, sourceType) {
             this.doQueryTotal(this.range, this.visitor, this.date, this.sourceType)
             this.doQueryChart(this.range, this.visitor, this.date, this.sourceType)
@@ -395,6 +415,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dashboard-container {
+    .definite-btn {
+    font-size: 16px;
+    padding-right: 0
+}
     // layout
     .title {
         font-size: 20px;
@@ -459,6 +483,7 @@ export default {
     .table-box {
         margin-top: 10px;
     }
+    
 }
 </style>
 

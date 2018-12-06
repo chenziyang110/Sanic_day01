@@ -217,7 +217,6 @@ export default {
         },
 
         handleTagForm(currenttages) {
-            console.log(currenttages)
             this.targets = currenttages
             
             this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets)

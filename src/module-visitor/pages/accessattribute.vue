@@ -43,17 +43,16 @@
                 <el-col :span="8">
                     <h3>性别比例</h3>
                     <div class="card-chart sexpercent" style="min-height: 400px; width: 99%">
-                        <ul>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
-                            <li><i class="fa fa-child" aria-hidden="true"></i></li>
+                        
+                        <ul class="left-man">
+                            <li v-for="(item,index) in blueman" :key="index" :class="item">
+                                <i class="fa fa-child" aria-hidden="true"></i>
+                            </li>
+                        </ul>
+                        <ul class="right-woman">
+                            <li v-for="(item,index) in redwoman" :key="index" :class="item">
+                                <i class="fa fa-child" aria-hidden="true"></i>
+                            </li>
                         </ul>
                         <p class="percent"><span class="man">{{manpercent}}</span><span class="woman">{{womanpercent}}</span></p>
                         
@@ -117,7 +116,9 @@ export default {
             ageachart: null,
             sexchart: null,
             jobchart: null,
-            aihaochart: null
+            aihaochart: null,
+            blueman: [],
+            redwoman: []
         }
     },
     watch: {
@@ -135,6 +136,28 @@ export default {
                 this.genderData = res.data.gender
                 this.interestData = res.data.interest.items
                 this.jobData = res.data.job.items
+
+                let mannumber = Math.round(res.data.gender.man / res.data.gender.total * 10000) / 100.00
+                let manicons = Math.round(Math.round(mannumber) / 10)
+
+                if (manicons > 10) {
+                    manicons = 10
+                }
+                
+                // 男性图表数量
+               let blueman = new Array(manicons)
+               for (let i = 0; i < blueman.length; i++) {
+                   blueman[i] = 'man'
+               }
+               this.blueman = blueman
+
+               // 女性图表数量
+               let redwoman = new Array(10 - manicons)
+               for (let j = 0; j < redwoman.length; j++) {
+                   redwoman[j] = 'woman'
+               }
+               this.redwoman = redwoman
+
 
                 this.manpercent = Math.round(res.data.gender.man / res.data.gender.total * 10000) / 100.00 + '%'
                 this.womanpercent = Math.round(res.data.gender.woman / res.data.gender.total * 10000) / 100.00 + '%'
@@ -376,12 +399,19 @@ export default {
         color: #012989;
         font-weight: normal;
     }
+    .left-man {
+        float: left;
+    }
+    .right-woman {
+        float: left;
+    }
     .showcard {
         margin-top: 20px;
         margin-left: 20px;
         margin-right: 20px;
     }
     .card-chart {
+        padding-left: 9px;
         background: #fbfbfb;
         border: 1px solid #ebeff5;
         border-radius: 5px;
@@ -391,15 +421,21 @@ export default {
             padding: 20px;
             font-size: 3em;
             font-weight: bold;
+            clear: both;
             .man { color: #38d2ff; }
             .woman { float: right; color: #f4663f }
         }
-        ul {
-            padding:20px 20px 0; 
-        }
+    
         li {
-            display: inline-block;
-            margin-left: -5px;
+            display: inline;
+            width: 10%;
+            text-align: center;
+            &.man {
+                i { color: #38d2ff;}
+            }
+            &.woman {
+                i { color: #f4663f;}
+            }
             .fa-child {
                 font-size: 5em;
             }

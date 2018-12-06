@@ -3,7 +3,7 @@
       <el-form :inline="true" >
         <el-form-item class="subtitle" label="时间：">
            <div class="radios">
-                <el-button round   @click="handleOpenTime"  :disabled="timeswitch" >打开</el-button>
+                <el-button round   @click="handleOpenTime"  >打开</el-button>
                 <el-radio-group  v-model="currentrange" @change="handleData">
                     <el-radio-button label="0" :disabled="timedisabled">今天</el-radio-button>
                     <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
@@ -61,6 +61,7 @@ export default {
         // date
         timedisabled: false,
         datedisabled: true,
+        definitedisable: false,
         // device&visitor
         sidedisable: true,
         visitordisable: true,
@@ -83,14 +84,15 @@ export default {
       handleOpenTime() {
           this.datedisabled = true
           this.currentrange = '0'
+          this.currentdate = ''
           this.timedisabled = false
           this.$emit('handleTotalData', this.currentrange, this.currentside, this.currentvisitor, this.currentdate)
       },
       handleDefiniteDate() {
           this.timedisabled = true
           this.currentrange = ''
+          this.currentdate = ''
           this.datedisabled = false
-
       },
       handleSwitchSide() {
           this.flag1 = !this.flag1

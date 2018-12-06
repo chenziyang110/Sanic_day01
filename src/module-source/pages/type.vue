@@ -219,7 +219,7 @@ export default {
         // 路由：去搜索引擎详情页
         handleGoSeDetail(index, sourceID) {
             this.$router.push({
-                path: '/source/sedetail:id',
+                path: '/source/sedetail',
                 name: 'source-sedetail',
                 params: { 
                     id: 'id',

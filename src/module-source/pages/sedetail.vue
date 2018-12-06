@@ -1,7 +1,7 @@
 <template>
     <div  class="dashboard-container">
         <el-card class="card-head">
-            <h2 class="title">外部链接({{defaultdate}}）</h2>
+            <h2 class="title">搜索引擎({{defaultdate}}）</h2>
             <!-- 工具栏 -->
             <SelectRegion v-on:handleTotalData = 'handleTotalData'/>
         </el-card>
@@ -46,7 +46,7 @@
     </div>
 </template>
 <script>
-import {total, chart, targetdata} from '@/api/base/source'
+import {total, chart, targetdata, setargetdata} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
@@ -99,7 +99,7 @@ export default {
         async doQueryTargetData(range, side, visitor, date, sourceID) {
             this.loading = true
             this.targetData = {}
-            await targetdata({
+            await setargetdata({
                 range, side, visitor, date, sourceID
             }).then(res => {
                 this.targetData = res.data
@@ -130,6 +130,9 @@ export default {
         handleSelect(currenttarget) {
             this.target = currenttarget
             this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
+        },
+        handleSourceLink() {
+            
         }
     },
     created() {

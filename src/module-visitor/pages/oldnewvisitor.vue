@@ -7,18 +7,21 @@
                 <el-form :inline="true" >
                     <el-form-item class="subtitle" label="时间：">
                     <div class="radios">
+                        <el-button round   @click="handleOpenTime">打开</el-button>
                             <el-radio-group  v-model="range" @change="handleData">
-                                <el-radio-button label="0">最近1个月</el-radio-button>
-                                <el-radio-button label="1">最近2个月</el-radio-button>
-                                <el-radio-button label="7">最近3个月</el-radio-button>
-                                <el-radio-button label="30">最近半年</el-radio-button>
+                                <el-radio-button label="0"  :disabled="timedisabled">今天</el-radio-button>
+                                <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
+                                <el-radio-button label="7" :disabled="timedisabled">最近7日</el-radio-button>
+                                <el-radio-button label="30" :disabled="timedisabled">最近30日</el-radio-button>
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-form-item  class="subtitle" label="日期：">
+                    <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <el-form-item  class="subtitle">
                         <el-date-picker
                             v-model="date"
                             @change="handleData"
+                            :disabled="datedisabled"
                             type="date"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
@@ -110,6 +113,7 @@
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
+                    class="selectoption"
                 >
                 <el-radio :label='1'>{{ item.label }}</el-radio>
                 </el-option>
@@ -124,7 +128,7 @@
                 style="width: 100%">
                 <el-table-column
                     prop="date"
-                    label="日期">
+                    label="时间">
                 </el-table-column>
                 <el-table-column
                     prop="newVisitor"
@@ -161,32 +165,38 @@ export default {
             range: '0',
             date: '',
             side: '0',
+            // 日期控制
+            definitedisable: false,
+            datedisabled: true,
+            timedisabled: false,
             totalData: [],
             tableData: [],
             chart: null,
-            target: '',
-            targetitems: [{
-                value: '1',
-                label: '浏览次数'
-            }, {
-                value: '2',
-                label: '访客次数'
-            }, {
-                value: '3',
-                label: 'IP'
-            }, {
-                value: '4',
-                label: '新独立访客数'
-            }, {
-                value: '5',
-                label: '平均访客深度'
-            }, {
-                value: '6',
-                label: '平均访客时长'
-            }, {
-                value: '7',
-                label: '跳出率'
-            }],
+            target: '1',
+            targetitems: [
+                {
+                    value: '1',
+                    label: '浏览次数'
+                }, {
+                    value: '2',
+                    label: '访客次数'
+                }, {
+                    value: '3',
+                    label: 'IP'
+                }, {
+                    value: '4',
+                    label: '新独立访客数'
+                }, {
+                    value: '5',
+                    label: '平均访客深度'
+                }, {
+                    value: '6',
+                    label: '平均访客时长'
+                }, {
+                    value: '7',
+                    label: '跳出率'
+                }
+            ],
             total0: {},
             total1: {},
             total2: {},
@@ -307,6 +317,18 @@ export default {
             })
         },
         // 交互操作
+        handleOpenTime() {
+          this.datedisabled = true
+          this.range = '0'
+          this.timedisabled = false
+          this.handleData()
+        },
+        handleDefiniteDate() {
+          this.timedisabled = true
+          this.range = ''
+          this.date = ''
+          this.datedisabled = false
+        },
         handleData(range, date, side) {
             this.doQueryTotal(this.range, this.date, this.side)
             this.doQueryChart(this.target, this.range, this.date, this.side)

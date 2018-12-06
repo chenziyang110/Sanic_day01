@@ -58,7 +58,12 @@
         <el-card shadow="never" v-loading="loading" class="card-item">
             <div class="tablestyle">
                 <el-table :data="rankListItems" >
-                    <el-table-column prop="source" label="地址"></el-table-column>
+                    <el-table-column prop="source" label="地址">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.source}}</span>
+                            <i class="el-icon-document  iconlink" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="date1" :render-header="renderHeaderDate1">
                          <!-- <template slot-scope="scope">
                             <span>{{scope.row.source}}</span>
@@ -186,6 +191,16 @@ export default {
         handleOrderAll(date1, date2, targetID, order) {
             this.order = ''
             this.doQueryRankList(this.date1, this.date2, this.targetID, this.order)
+        },
+        handleSourceLink(index, sourceID) {
+            this.$router.push({
+                path: '/source/sedetail',
+                name: 'source-sedetail',
+                params: { 
+                    id: 'id',
+                    dataObj: sourceID
+                }
+            })
         }
     },
     mounted() {},
@@ -247,7 +262,12 @@ export default {
     }
     .rise { color: red }
     .down { color: green}
-    .level {}
+    .iconlink {
+        float: right;
+        line-height: 1.6;
+        cursor: pointer;
+        color: #5784e7;
+    }
 }
 
 </style>

@@ -301,6 +301,16 @@ code {
 .el-card__header {
   background: #fbfbfb;
 }
+// .tablestyle .el-table tbody tr:first-child {
+//   background: #012989;
+//   color: #fff
+// }
+// .innertable table tbody tr:first-child {
+//   background: #fff;
+// }
+// .tablestyle .el-table--enable-row-hover .el-table__body tr:first-child:hover > td {
+//   background: #1890ff;
+// }
 .card {
   .tablestyle {
     .el-table th.is-leaf {
@@ -316,6 +326,7 @@ code {
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;
     }
+    
   }
   .el-card__body{
     padding: 0;
@@ -544,6 +555,9 @@ code {
 .sourcedomain .hiddencell:nth-child(2) .undefined .cell,
 .sourcedomain .hiddencell:nth-child(3) .undefined .cell
  {
+  display: none;
+}
+.visiteddomain .hiddencell:first-child .undefined .cell{
   display: none;
 }
 // 有搜索框的指标

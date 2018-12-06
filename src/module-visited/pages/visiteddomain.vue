@@ -43,14 +43,14 @@
     <el-card shadow="never" v-loading="loading" class="card-item pagetype">
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
-                <el-radio-button label="0">来路域名</el-radio-button>
-                <el-radio-button label="1">受访页面</el-radio-button>
+                <el-radio-button label="0" disabled>受访域名</el-radio-button>
+                <!-- <el-radio-button label="1" disabled>受访页面</el-radio-button> -->
             </el-radio-group>
         </div>
         <div class="card-body">
             <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
-                <div class="tablestyle sourcedomain">
+                <div class="tablestyle visiteddomain">
                     <foldTable :tableList = 'domainsdata' :showColumes = 'showColumes'></foldTable>
                 </div>
                 <!-- <div class="tablestyle">

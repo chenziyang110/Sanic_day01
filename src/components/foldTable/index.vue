@@ -25,7 +25,7 @@
                         <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
                     </el-table>
                 </template>
-                </el-table-column>
+            </el-table-column>
             <el-table-column prop="source" label="来源类型">
                 <template slot-scope="scope">
                     <span>{{scope.row.source}}</span>
@@ -61,7 +61,7 @@ export default {
         },
         handleGoSeDetail(index, sourceID) {
             this.$router.push({
-                path: '/source/sedetail:id',
+                path: '/source/sedetail',
                 name: 'source-sedetail',
                 params: { 
                     id: 'id',
@@ -81,7 +81,6 @@ export default {
                     }
                 })
             } else if (this.$route.path === '/visited/visiteddomain') {
-                console.log(this.$route.path)
                 this.$router.push({
                     path: '/visited/visitedpage:id',
                     name: 'visited-page',

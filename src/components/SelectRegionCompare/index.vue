@@ -3,8 +3,8 @@
       <el-form :inline="true" >
         <el-form-item class="subtitle" label="时间：">
            <div class="radios">
-                <el-button  @click="handleSwitchTime" round :disabled="switchtimedisabled">{{switchtime}}</el-button>
-                <el-radio-group  v-model="range" @change="handleChooseData">
+                <el-button round   @click="handleOpenTime"  >打开</el-button>
+                <el-radio-group  v-model="range" @change="handleData">
                     <el-radio-button label="0" :disabled="timedisabled">今天</el-radio-button>
                     <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
                     <el-radio-button label="7" :disabled="timedisabled">最近7日</el-radio-button>
@@ -12,19 +12,19 @@
                 </el-radio-group>
             </div>
         </el-form-item>
-        <el-button  @click="handleDefiniteDate" round :disabled="definitedisable" >{{switchdate}}</el-button>
+        <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
         <el-form-item  class="subtitle" label="">
           <el-date-picker
             class="date"
             v-model="date"
-            @change="handleDateData"
+            @change="handleData"
             type="date"
             :disabled = "datedisabled"
             format= "yyyy-MM-dd"
             value-format="yyyy-MM-dd"
             placeholder="选择日期">
           </el-date-picker>
-          <el-checkbox v-model="comparecheck" @change="handleCompare">对比</el-checkbox>
+          <el-checkbox  @change="handleCompare" :disabled="comparedisabled">对比</el-checkbox>
           <el-date-picker
             v-model="date2"
             class="date2"
@@ -68,7 +68,7 @@ export default {
         range: '0',
         side: '',
         visitor: '',
-        comparecheck: '',
+        comparedisabled: true,
         // 日期选择
         date: '',
         date2: '',
@@ -98,35 +98,26 @@ export default {
       handleCompareDate() {
           this.$emit('handleCompareData', this.range, this.side, this.visitor, this.date, this.date2)
       },
-      handleChooseData() {
-          this.datedisabled = true
-          this.$emit('handleChooseData', this.range, this.side, this.visitor, this.date)
-      },
-      handleDateData() {
-          this.$emit('handleDataDate', this.range, this.side, this.visitor, this.date)
-      },
       handleData() {
           this.$emit('handleToolData', this.range, this.side, this.visitor, this.date)
       },
       // 日期选择
-      handleSwitchTime() {
-
+      // 日期选择
+      handleOpenTime() {
+          this.datedisabled = true
+          this.range = '0' 
+          this.timedisabled = false
+          this.comparedisabled = true
+          this.date2 = ''
+          this.$emit('handleToolData', this.range, this.side, this.visitor, this.date)
       },
-      // 点击自定义日期
-      handleDefiniteDate() {
-          this.flagdate = !this.flagdate
-          if (this.flagdate === true) {
-              this.switchtime = '选择时间'
-          } else if (this.flagdate === true) {
-               this.switchtime = '关闭时间'
-          }
-          
-          this.timedisabled = !this.timedisabled
-          if (this.switchtime === '关闭时间') {
-           this.datedisabled = true
-          } else {
-              this.datedisabled = false
-          }
+      // 自定义日期
+       handleDefiniteDate() {
+          this.timedisabled = true
+          this.range = ''
+          this.date = ''
+          this.datedisabled = false
+          this.comparedisabled = false
       },
       // 设备选项
       handleSwitchSide() {

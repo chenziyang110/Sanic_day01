@@ -75,7 +75,7 @@ export const constantRouterMap = [
         meta: { title: '搜索引擎', icon: 'documentation', noCache: true }
       },
       {
-        path: 'sedetail/:id',
+        path: 'sedetail',
         name: 'source-sedetail',
         component: _import('source/pages/sedetail'),
         meta: {title: '搜索引擎详情页', icon: 'documentation', noCache: true}

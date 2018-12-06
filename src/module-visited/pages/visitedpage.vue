@@ -8,8 +8,7 @@
     <!-- 总计栏 -->
     <TotalData :totalList = 'totaldata'/>
 
-    <el-card shadow="never" v-loading="loading"  class="chart">
-        <!-- 下拉框 -->
+    <!-- <el-card shadow="never" v-loading="loading"  class="chart">
         <el-select v-model="defaultvalue" placeholder="选择指示" @change="handleSelect">
             <el-option
                 v-for="item in targetitems"
@@ -21,7 +20,7 @@
             <el-radio :label='1'>{{ item.label }}</el-radio>
             </el-option>
         </el-select>
-    </el-card>
+    </el-card> -->
     <!-- 限制栏 -->
     <div class="card-item">
         <el-row :gutter="20">
@@ -41,14 +40,14 @@
     <el-card shadow="never" v-loading="loading" class="card-item pagetype">
         <div slot="header" class="clearfix">
             <el-radio-group v-model="pagetype" class="pagefrom">
-                <el-radio-button label="0">来路域名</el-radio-button>
+                <!-- <el-radio-button label="0">来路域名</el-radio-button> -->
                 <el-radio-button label="1">受访页面</el-radio-button>
             </el-radio-group>
         </div>
         <div class="card-body">
             <!-- 表格数据列表 -->
             <el-card shadow="never" v-loading="loading" class="card-item card-table">
-                <div class="tablestyle sourcedomain">
+                <div class="tablestyle visiteddomain">
                     <foldTable :tableList = 'domainsdata' :showColumes = 'showColumes'></foldTable>
                 </div>
             </el-card>           
@@ -153,11 +152,7 @@ export default {
                 this.totalsdata.source = '全部总计'
                 this.domainsdata.splice(0, 0, this.totalsdata)
 
-                this.directaccessdata.source = '直接输入网址或书签'
-                this.domainsdata.splice(1, 0, this.directaccessdata)
-
-                this.internalaccessdata.source = '站内来源'
-                this.domainsdata.splice(2, 0, this.internalaccessdata)
+               
 
             })
             this.loading = false
