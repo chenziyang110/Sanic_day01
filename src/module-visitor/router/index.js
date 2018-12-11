@@ -17,7 +17,7 @@ export default [
     name: 'visitor',
     meta: {
       title: '访客分析',
-      icon: 'component'
+      icon: 'fa fa-users'
     },
     children: [
         {

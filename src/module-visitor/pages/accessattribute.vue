@@ -7,22 +7,34 @@
                 <el-form :inline="true" >
                     <el-form-item class="subtitle" label="时间：">
                     <div class="radios">
+                         <el-button round   @click="handleOpenTime"  >打开</el-button>
                             <el-radio-group  v-model="currentrange" @change="handleData">
-                                <el-radio-button label="0">最近1个月</el-radio-button>
-                                <el-radio-button label="1">最近2个月</el-radio-button>
-                                <el-radio-button label="7">最近3个月</el-radio-button>
-                                <el-radio-button label="30">最近半年</el-radio-button>
+                                <el-radio-button label="0" :disabled="timedisabled">最近1个月</el-radio-button>
+                                <el-radio-button label="1" :disabled="timedisabled">最近2个月</el-radio-button>
+                                <el-radio-button label="7" :disabled="timedisabled">最近3个月</el-radio-button>
+                                <el-radio-button label="30" :disabled="timedisabled">最近半年</el-radio-button>
                             </el-radio-group>
                         </div>
                     </el-form-item>
+                    <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
                     <el-form-item  class="subtitle" label="日期：">
                         <el-date-picker
-                            v-model="currentdate"
-                            @change="handleData"
+                            v-model="sd"
                             type="date"
+                            :disabled="sddisabled"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
-                            placeholder="选择日期">
+                            placeholder="开始日期">
+                        </el-date-picker>
+                        <span>至</span>
+                        <el-date-picker
+                            v-model="ed"
+                            @change="handleDateData"
+                            type="date"
+                            :disabled="eddisabled"
+                            format= "yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item  class="subtitle" label="访客：">
@@ -95,7 +107,8 @@
 
 import {properties} from '@/api/base/visitor'
 import echarts from 'echarts'
-import resize from './../../components/Charts/mixins/resize'
+// import resize from './../../components/Charts/mixins/resize'
+import { debounce } from '@/utils'
 
 export default {
     data() {
@@ -105,6 +118,13 @@ export default {
             currentrange: '0',
             currentdate: '',
             currentvisitor: '0',
+            sd: '',
+            ed: '',
+            sddisabled: true,
+            eddisabled: true,
+            timedisabled: false,
+            definitedisable: false,
+
             ageData: {},
             educationData: {},
             genderData: {},
@@ -113,7 +133,7 @@ export default {
             manpercent: '',
             womanpercent: '',
             chart: null,
-            ageachart: null,
+            agechart: null,
             sexchart: null,
             jobchart: null,
             aihaochart: null,
@@ -126,10 +146,10 @@ export default {
     },
     methods: {
         // 业务请求
-         async doQueryProperties(range, visitor, date) {
+         async doQueryProperties(range, visitor, sd, ed) {
             this.loading = true
             await properties({
-                range, visitor, date
+                range, visitor, sd, ed
             }).then(res => {
                 this.ageData = res.data.age
                 this.educationData = res.data.education
@@ -145,20 +165,18 @@ export default {
                 }
                 
                 // 男性图表数量
-               let blueman = new Array(manicons)
-               for (let i = 0; i < blueman.length; i++) {
-                   blueman[i] = 'man'
-               }
-               this.blueman = blueman
+                let blueman = new Array(manicons)
+                for (let i = 0; i < blueman.length; i++) {
+                    blueman[i] = 'man'
+                }
+                this.blueman = blueman
 
-               // 女性图表数量
-               let redwoman = new Array(10 - manicons)
-               for (let j = 0; j < redwoman.length; j++) {
-                   redwoman[j] = 'woman'
-               }
-               this.redwoman = redwoman
-
-
+                // 女性图表数量
+                let redwoman = new Array(10 - manicons)
+                for (let j = 0; j < redwoman.length; j++) {
+                    redwoman[j] = 'woman'
+                }
+                this.redwoman = redwoman
                 this.manpercent = Math.round(res.data.gender.man / res.data.gender.total * 10000) / 100.00 + '%'
                 this.womanpercent = Math.round(res.data.gender.woman / res.data.gender.total * 10000) / 100.00 + '%'
 
@@ -257,11 +275,7 @@ export default {
                         }
                     }]
                 })
-
-
-
-
-                // intrest-Chart
+                // aihao-chart
                 let max = 0
                 for (var i = 0; i < this.interestData.length; i++) {
                     if (this.interestData[i].data > max) {
@@ -277,7 +291,6 @@ export default {
                     intrestdata[0][i][2] = this.interestData[i].data
                     intrestdata[0][i][3] = this.interestData[i].title
                 }
-
                 this.aihaochart = echarts.init(document.getElementById('aihaochart'))
                 this.aihaochart.setOption({
                     xAxis: {
@@ -320,13 +333,6 @@ export default {
                         }
                     }]
                 })
-
-                // sex-chart
-                this.sexchart = echarts.init(document.getElementById('educationchart'))
-                this.sexchart.setOption({
-                    
-                })
-
                 // edu-Chart
                 this.chart = echarts.init(document.getElementById('educationchart'))
                 this.chart.setOption({
@@ -374,11 +380,32 @@ export default {
         async setuppropertiesData() {
             await this.doQueryProperties()
         },
-        handleData(range, visitor, date) {
-            range = this.currentrange
-            visitor = this.currentvisitor
-            date = this.currentdate
-            this.doQueryProperties(range, visitor, date)
+        // 打开时间
+        handleOpenTime() {
+            this.sddisabled = true
+            this.eddisabled = true
+            this.currentrange = '0'
+            this.timedisabled = false
+        },
+        // 打开自定义日期
+        handleDefiniteDate() {
+            this.timedisabled = true
+            this.currentrange = ''
+            this.sddisabled = false
+            this.eddisabled = false
+        },
+        // 点击选择时间段
+        handleData(range, visitor, sd, ed) {
+            if (this.timedisabled === true) {
+                this.doQueryProperties(range = '', this.currentvisitor, this.sd, this.ed)
+            } else {
+                this.doQueryProperties(range, this.currentvisitor, sd = '', ed = '')
+            }
+            
+        },
+        // 点击选择自定义日期
+        handleDateData(range, visitor, sd, ed) {
+            this.doQueryProperties(range = '', this.currentvisitor, this.sd, this.ed)
         }
     },
     created() {
@@ -386,8 +413,18 @@ export default {
         
     },
     mounted() {
-        // this.ageChart()
-       // this.educationChart()
+        this.__resizeHanlder = debounce(() => {
+        if (this.chart || this.aihaochart || this.jobchart || agechart) {
+                this.chart.resize()
+                this.aihaochart.resize()
+                this.jobchart.resize()
+                this.agechart.resize()
+            }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHanlder)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.__resizeHanlder)
     }
 }
 </script>

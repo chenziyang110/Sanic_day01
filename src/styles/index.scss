@@ -22,7 +22,27 @@
 .info {
   color: #909399;
 }
-
+// 整体布局
+.el-menu.el-menu--horizontal {
+  border-bottom-color: transparent
+}
+.home .el-table__header-wrapper {
+  display: none;
+}
+.home .el-table::before {
+  content: none
+}
+.home .el-table td {
+  border: none;
+  font-size: 15px;
+}
+.home .el-table--enable-row-hover .el-table__body tr:hover>td {
+  background: transparent;
+  border: none;
+}
+.tablecards .el-card__header {
+  padding: 14px 20px;
+}
 // 对齐
 
 
@@ -153,7 +173,7 @@ code {
 
 //main-container全局样式
 .main-container {
-  background: #f0f2f5;
+  background: #ebeff5;
 }
 
 .app-container {
@@ -289,7 +309,7 @@ code {
 // el-card
 
 .el-table--enable-row-hover .el-table__body tr:hover>td {
-  background-color: #f5f7fa;
+  background-color: #fbfbfb;
   border-top: 1px solid #f0efef;
   border-bottom: 1px solid #f0efef;
 }
@@ -339,6 +359,9 @@ code {
 .el-radio-button--medium .el-radio-button__inner {
   font-size: 16px;
 }
+.tab-choose .el-radio-button--medium .el-radio-button__inner {
+  font-size: 18px;
+}
 .el-radio-button:first-child .el-radio-button__inner {
   border-left: 0;
   border-radius: 0;
@@ -346,8 +369,8 @@ code {
 .el-radio-button:last-child .el-radio-button__inner {
   border-radius: 0;
 }
-.el-radio-button--medium .el-radio-button__inner {
-  padding: 10px 35px;
+.tab-choose .el-radio-button--medium .el-radio-button__inner {
+  padding: 10px 35px 20px;
 }
 .el-radio-button__inner {
   background-color: transparent;
@@ -358,7 +381,7 @@ code {
   color: #f75426;
   background-color: transparent;
   border: 0;
-  border-bottom: 2px solid #f75426;
+  border-bottom: 4px solid #f75426;
   box-shadow: none;
 }
 

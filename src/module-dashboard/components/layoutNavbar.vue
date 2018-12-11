@@ -166,14 +166,14 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
-  height: 50px;
-  line-height: 50px;
+  height: 75px;
+  line-height: 75px;
   border-radius: 0px !important;
   background-color: #04166c;
   // background-image: -webkit-linear-gradient(left, #04166c, #5b8cff);
   .hamburger-container {
-    line-height: 58px;
-    height: 50px;
+    line-height: 78px;
+    height: 75px;
     float: left;
     padding: 0 10px;
   }
@@ -186,7 +186,7 @@ export default {
   }
   .right-menu {
     float: right;
-    height: 50px;
+    height: 75px;
     .item {
       display: inline-block;
       margin-right: 10px;

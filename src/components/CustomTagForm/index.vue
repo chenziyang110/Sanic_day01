@@ -1,6 +1,6 @@
 <template>
     <!-- 自定义指标 -->
-    <el-card shadow="never"  class="card-item">
+    <el-card shadow="never"  class="card-item targets">
         <div slot="header" class="clearfix">
             <el-button class="definetarget">自定义指标</el-button>
         </div>
@@ -64,6 +64,10 @@ export default {
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 20px;
+    &.targets {
+        border-radius: 0;
+        border-bottom: none
+    }
     .definetarget {
         background-color: #f75426;
         color: #fff;

@@ -1,14 +1,50 @@
 <template>
   <div class="dashboard-container">
+    <el-card class="yesterday"  v-bind:style="{'padding-bottom': paddingBottom}" shadow="never">
+      <el-row>
+            <el-col :span="3" class="target">
+                <h1 class="title">昨日流量</h1>
+            </el-col>
+            <el-col :span="21" class="target">
+               <el-row>
+                  <el-col :span="4" class="target">
+                      <h1 class="number">12345</h1>
+                      <p>浏览次数</p>
+                  </el-col>
+                  <el-col :span="4" class="target">
+                      <h1 class="number">12345</h1>
+                      <p>独立访客</p>
+                  </el-col>
+                  <el-col :span="4" class="target">
+                      <h1 class="number">23456</h1>
+                      <p>IP数量</p>
+                  </el-col>
+                  <el-col :span="4" class="target">
+                      <h1 class="number">234</h1>
+                      <p>平均访问深度</p>
+                  </el-col>
+                  <el-col :span="4" class="target">
+                      <h1 class="number">343543</h1>
+                      <p>平均访问长度</p>
+                  </el-col>
+                  <el-col :span="4" class="target">
+                      <h1 class="number">22</h1>
+                      <p>跳出率</p>
+                  </el-col>
+               </el-row>
+            </el-col>
+            
+        </el-row>
+    </el-card>
     <!-- 昨日浏览量 -->
-    <el-card shadow="never" v-loading="loading">
-      <div slot="header" class="clearfix">
-         <span>昨日流量</span>
-      </div>
-      <div class="text home">
-        <!-- 数据表格 -->
+    <div class="card-head home" :class="{active:tableshow}">
+      <!-- 数据表格 -->
         <el-table :data="items">
-          <el-table-column prop="title" label=" "></el-table-column>
+          <el-table-column label=" ">
+            <template slot-scope="scope">
+              <span class="row-name">{{ scope.row.title }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="timesOfBrowsing" label="浏览次数"></el-table-column>
           <el-table-column prop="independentVisitors" label="独立访客"></el-table-column>
           <el-table-column prop="IP" label="IP"></el-table-column>
@@ -16,8 +52,12 @@
           <el-table-column prop="averageVisitorDuration" label="平均访客时长"></el-table-column>
           <el-table-column prop="bounceRate" label="跳出率"></el-table-column>
         </el-table>
-      </div>
-     </el-card>
+    </div>
+    <div class="point">
+      <span @click="handleCollapse">
+        <i :class="icon"></i>
+      </span>
+    </div>
      <!-- tab选择 -->
      <div class="tab-choose">
         <el-radio-group v-model="tab1" @change="handleTab">
@@ -37,13 +77,23 @@
         </div>
         <!-- 趋势图表 -->
         <div>
+            <!-- <el-dropdown split-button type="primary">
+              默认尺寸
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+                <el-dropdown-item>狮子头</el-dropdown-item>
+                <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                <el-dropdown-item>双皮奶</el-dropdown-item>
+                <el-dropdown-item>蚵仔煎</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown> -->
            <el-select class="selectdropdown" v-model="defaultvalue" placeholder="选择指示" @change="handleOption">
               <el-option
                 v-for="item in targets"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                 class="selectoption"
+                class="selectoption"
                 >
                 <el-radio :label="1">{{ item.label }}</el-radio>
               </el-option>
@@ -54,69 +104,82 @@
         </div>
      </el-card>
      <!-- TOP榜 -->
-     <el-row :gutter="12">
-      <el-col :span="8">
-        <el-card shadow="always" class="card">
-          <div slot="header" class="clearfix">
-            <span>新老访客</span>
-             <router-link to='/visitor/oldnewvisitor'>
-            <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
-            </router-link>
-          </div>
-          <div class="tablestyle">
-            <!-- 访客表格 -->
-            <el-table :data="visitors" >
-              <el-table-column prop="target" label="指标名称"></el-table-column>
-              <el-table-column prop="newVisitor" label="新访客"></el-table-column>
-              <el-table-column prop="oldVisitors" label="老访客"></el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="always"  class="card">
-          <div slot="header" class="clearfix">
-            <span>TOP10搜索词</span>
-             <router-link to='/source/keywords'>
-            <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
-            </router-link>
-          </div>
-          <div class="tablestyle">
-            <!-- 搜索词表格 -->
-            <el-table :data="searchterm">
-              
-              <el-table-column prop="searchTerm" label="搜索词">
-                <template slot-scope="scope">
-                  <i v-bind:class="(scope.$index == 0) || (scope.$index == 1) ||(scope.$index == 2)  ? 'top' : 'tableindex'">{{scope.$index+1}}</i>
-                  <span style="margin-left: 10px">{{ scope.row.searchTerm }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
-              <el-table-column prop="occupationRatio" label="占比"></el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="always"  class="card">
-          <div slot="header" class="clearfix">
-            <span>TOP10受访界面</span>
-             <router-link to='/visited/visitedpage'>
-            <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
-            </router-link>
-          </div>
-          <div class="tablestyle">
-            <!-- 受访表格 -->
-            <el-table :data="interviewing">
-              <el-table-column prop="interviewingInterface" label="受访界面"></el-table-column>
-              <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
-              <el-table-column prop="occupationRatio" label="占比"></el-table-column>
-            </el-table>
-          </div>
-         
-        </el-card>
-      </el-col>
-    </el-row>
+     <div  class="tablecards">
+        <el-row :gutter="12">
+
+          <el-col :span="8">
+            <div class="table-item">
+              <el-card shadow="always" class="card">
+                <div slot="header" class="clearfix">
+                  <span>新老访客</span>
+                  <router-link to='/visitor/oldnewvisitor'>
+                  <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+                  </router-link>
+                </div>
+                <div class="tablestyle">
+                  <!-- 访客表格 -->
+                  <el-table :data="visitors" >
+                    <el-table-column prop="target" label="指标名称">
+                      <template slot-scope="scope">
+                        <span class="row-target">{{ scope.row.target }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="newVisitor" label="新访客"></el-table-column>
+                    <el-table-column prop="oldVisitors" label="老访客"></el-table-column>
+                  </el-table>
+                </div>
+              </el-card>
+             </div>
+          </el-col>
+
+          <el-col :span="8">
+            <div class="table-item">
+            <el-card shadow="always"  class="card">
+              <div slot="header" class="clearfix">
+                <span>TOP10搜索词</span>
+                <router-link to='/source/keywords'>
+                <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+                </router-link>
+              </div>
+              <div class="tablestyle">
+                <!-- 搜索词表格 -->
+                <el-table :data="searchterm">
+                  
+                  <el-table-column prop="searchTerm" label="搜索词">
+                    <template slot-scope="scope">
+                      <i v-bind:class="(scope.$index == 0) || (scope.$index == 1) ||(scope.$index == 2)  ? 'top' : 'tableindex'">{{scope.$index+1}}</i>
+                      <span style="margin-left: 10px">{{ scope.row.searchTerm }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
+                  <el-table-column prop="occupationRatio" label="占比"></el-table-column>
+                </el-table>
+              </div>
+            </el-card>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="always"  class="card">
+              <div slot="header" class="clearfix">
+                <span>TOP10受访界面</span>
+                <router-link to='/visited/visitedpage'>
+                <el-button class="golink"  type="text"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
+                </router-link>
+              </div>
+              <div class="tablestyle">
+                <!-- 受访表格 -->
+                <el-table :data="interviewing">
+                  <el-table-column prop="interviewingInterface" label="受访界面"></el-table-column>
+                  <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
+                  <el-table-column prop="occupationRatio" label="占比"></el-table-column>
+                </el-table>
+              </div>
+            
+            </el-card>
+          </el-col>
+        </el-row>
+     </div>
+    
 
   </div>
 </template>
@@ -124,15 +187,15 @@
 <script>
 import {list, type, trend} from '@/api/base/home'
 import echarts from 'echarts'
-import resize from './../../components/Charts/mixins/resize'
-
-
+// import resize from './../../components/Charts/mixins/resize'
+import { debounce } from '@/utils'
 
 export default {
   name: 'dashboard',
   components: {},
   data() {
     return {
+      activeNames: ['1'],
       loading: false,
       tab1: 0,
       items: [], // 昨日流量
@@ -165,12 +228,18 @@ export default {
       defaultvalue: '浏览次数',
       trenddata: {},
       currentrange: 0,
-      chart: null
+      chart: null,
+      tableshow: true,
+      icon: 'el-icon-d-arrow-left',
+      paddingBottom: '60px'
     }
   },
   computed: {},
   methods: {
-    // 读取昨日流量数据
+    handleChange(val) {
+        console.log(val)
+    },
+    // 昨日流量数据
     async reloadData() {
       await list({}).then(res => {
         this.items = res.data.items
@@ -202,7 +271,7 @@ export default {
     handleTab(range, target) {
       this.doQuery(range, target)
     },
-    // option分类数据请求
+    // 图表数据请求
     async redoQuery(target = 1, range = 0) {
       range = this.currentrange
       await trend({
@@ -255,6 +324,7 @@ export default {
             type: 'line'
           }]
         })
+        
       })
     },
     // option选择
@@ -264,17 +334,30 @@ export default {
     // 初始option分类数据
     async setupoptionData() {
       await this.redoQuery()
+    },
+    // 折叠与展开
+    handleCollapse() {
+      this.tableshow = !this.tableshow
+      if (this.tableshow === true) {
+        this.icon = 'el-icon-d-arrow-left'
+        this.paddingBottom = '60px'
+      } else {
+        this.icon = 'el-icon-d-arrow-right'
+         this.paddingBottom = '30px'
+      }
     }
-  
-    // echart
-    // echartCreate(data) {
-    //   let echartView = this.$echarts.init(document.getElementById('trend'))     
-    //   echartView.setOption(data)
-    // }
   },
   // 挂载结束
-  mounted: function() {
-    // this.echartCreate()
+  mounted() {
+    this.__resizeHanlder = debounce(() => {
+      if (this.chart) {
+        this.chart.resize()
+      }
+    }, 100)
+    window.addEventListener('resize', this.__resizeHanlder)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.__resizeHanlder)
   },
   // 创建完毕状态
   created: function() {
@@ -290,14 +373,95 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-container {
-  margin: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  .yesterday {
+    background: #012989;
+    color: #fff;
+    border: none;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-top: 10px;
+    .target {
+      text-align: center;
+      .title{
+        color: #4ed6fe;
+        font-weight: normal;
+        font-size: 1.8em;
+        margin: 1.2em 0;
+      }
+      .number {
+        font-size: 2.5em;
+        font-weight: normal;
+        line-height: 32px;
+        margin: 0.4em 0;
+      }
+      p {
+        font-size: 18px;
+        color: #87aaf5;
+      }
+    }
+  }
+  .card-head {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: -50px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 7px;
+  }
+  .home.active {
+    height: 252px;
+    transition: height 0.5s;
+    visibility: visible;
+  }
+  .home {
+    height: 0;
+    transition: height 1s;
+    visibility: hidden;
+  }
+  .point {
+    margin-top: -10px;
+    text-align: center;
+    span {
+      background: #fff;
+      padding: 6px 15px;
+      box-shadow: 0px 0px 3px #e3e8ec;
+      cursor: pointer;
+    }
+    i {
+      font-size: 20px;
+      color: #4ed6fe;
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      transform: rotate(90deg);
+    }
+  }
+  .row-name {
+    color: #012989;
+  }
   .tab-choose {
-    margin: 15px 0;
+    margin: 25px 10px;
     box-shadow:0 6px 5px -3px #dedee4;
   }
-  .el-card {
-    margin-bottom: 12px;
+  .trend {
     border-radius: 0;
+    margin: 0 10px 20px;
+    .selectdropdown {
+      padding-left: 10px;
+    }
+  }
+  .tablecards {
+    margin-left: 10px;
+    margin-right: 10px;
+    .table-item {
+      padding-right: 10px;
+      .row-target {
+        color: #999
+      }
+    }
   }
   .card {
     .el-card__body {
@@ -307,7 +471,8 @@ export default {
   .el-card__header {
     background: #fbfbfb;
     span {
-      font-size: 18px;
+      padding-left: 10px;
+      font-size: 22px;
       color: #012989;
       line-height: 1.5;
     }
@@ -322,14 +487,16 @@ export default {
     color: #fff;
   }
   .top {
-    background: red;
+    background: #f75426;
     font-style: normal;
-    padding: 2px 5px;
+    padding: 2px 6px;
+    border-radius: 2px;
     color: #fff;
   }
   .golink {
     float: right; 
     padding: 3px 0;
+    font-size: 20px;
     &:hover {
       span {
         i {
@@ -338,10 +505,5 @@ export default {
       }
     }
   }
-  .tableindex:first-child {
-    // background: red
-  }
-
-
 }
 </style>

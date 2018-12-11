@@ -1,122 +1,136 @@
 <template>
-  <div class="chart" id="chart"  style="height:400px,width:100%"></div>
+  <div id="chart" class="chart"></div>
+  <!-- <div id="chart"  style="min-height:400px,width:100%">123</div> -->
 </template>
 <script>
 import echarts from 'echarts'
-import resize from './mixins/resize'
+import { debounce } from '@/utils'
 
 
 export default {
-    name: 'line-chart',
-    props: ['echatData'],
-    mixins: [resize],
-    // props: {
-    //     data: {
-
-    //     },
-    //     className: {
-    //         type: String,
-    //         default: 'chart'
-    //     },
-    //     id: {
-    //         type: String,
-    //         default: 'chart'
-    //     },
-    //     width: {
-    //         type: String,
-    //         default: '200px'
-    //     },
-    //     height: {
-    //         type: String,
-    //         default: '200px'
-    //     }
-    // },
+    name: 'lineChart',
+    props: {
+        lineChartData: Object,
+        required: true
+    },
     data() {
         return {
-            chart: null
+            chart: null,
+            chartData: {},
+            xData: [],
+            oneSeries: [],
+            twoSeries: [],
+            threeSeries: [],
+            oneChartName: '',
+            twoChartName: '',
+            threeChartName: '',
+            oneChartTotal: '',
+            twoChartTotal: '',
+            threeChartTotal: ''
         }
     },
-    mounted() {
-        this.initChart()
-    },
-    beforeDestroy() {
-        if (!this.chart) {
-        return
-        }
-        this.chart.dispose()
-        this.chart = null
-    },
-    methods: {
-        initChart() {
-            this.chart = echarts.init(document.getElementById('chart'))
+    watch: {
+        
+        lineChartData(value) {
+            this.chartData = value
+            console.log(this.chartData)
 
-            console.log(this.chart)
-            console.log(this.echatData.series)
-            console.log(this.echatData.xAxis)
-
-
-
-
-            // x轴数据整理
+            //  数据处理
+            // xAxis数据
             let usexdata = []
-            let getxdata = this.echatData.xAxis
+            let getxdata = this.chartData.xAxis
                 for (let xitem of getxdata) {
                  usexdata.push(xitem.data)
             }
-            console.log(usexdata)
+            this.xData = usexdata
+            console.log(this.xData)
 
-             // series数据整理
-            let seriesdata1 = []
-            let getseriesdata1 = seriesdata[0].items
-            let chartname1 = seriesdata[0].name
-
-            for (let seriesitem1 of getseriesdata1) {
-              seriesdata1.push(seriesitem1.data)
+            // series数据整理
+            let seriesdata0 = []
+            let getseriesdata0 = this.chartData.series[0].items
+            let chartname0 = this.chartData.series[0].name
+            for (let seriesitem0 of getseriesdata0) {
+              seriesdata0.push(seriesitem0.data)
             }
-            
+            this.oneSeries = seriesdata0
+            console.log(this.oneSeries)
 
-            let seriesdata2 = []
-            let getseriesdata2 = seriesdata[1].items
-            let chartname2 = seriesdata[1].name
+            // chartname 数据
+            let getchartname0 = this.chartData.series[0].name
+            this.oneChartName = getchartname0
+           
 
-            for (let seriesitem2 of getseriesdata2) {
-              seriesdata2.push(seriesitem2.data)
-            }
+            // chartname 数据
+            let getcharttotal0 = this.chartData.series[0].total
+            this.oneChartTotal = getcharttotal0
 
-            // console.log(seriesdata1)
-            // console.log(seriesdata2)
-
+            this.chart = echarts.init(document.getElementById('chart'))
             this.chart.setOption({
-                title: {
-                    text: '对比图'
-                },
-               tooltip: {
-                    trigger: 'axis'
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        lineStyle: {
+                        color: '#57617B'
+                        }
+                    }
                 },
                 legend: {
                     bottom: 'bottom',
-                    data: [chartname1, chartname2]
+                    data: [this.oneChartName]
                 },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: usexdata
+                    data: this.xData
                 },
                 yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    axisLabel: {
+                        formatter: function(value, index) {
+                            return value / 10000 + '万'
+                        }
+                    }
                 },
-                series: [{
-                    name: chartname1,
-                    data: seriesdata1,
-                    type: 'line'
-                }, {
-                    name: chartname2,
-                    data: seriesdata2,
-                    type: 'line'
-                }]
+                series: [
+                    {
+                        name: this.oneChartName,
+                        type: 'line',
+                        stack: '总量',
+                        data: this.oneSeries
+                    }
+                ]
             })
+            
+
+            // if (value != null) { 
+                this.initLineChart()
+            // }
         }
+    },
+    methods: {
+        initLineChart() {
+            
+        }
+    },
+    created: function() {
+    },
+    mounted() {
+        this.__resizeHanlder = debounce(() => {
+            if (this.chart) {
+                this.chart.resize()
+            }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHanlder)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.__resizeHanlder)
     }
-     
+    
 }
 </script>
+<style lang="scss" scoped>
+.chart{
+    height: 400px;
+    width: 100%
+}
+</style>

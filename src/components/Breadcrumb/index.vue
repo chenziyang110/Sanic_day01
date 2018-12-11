@@ -47,7 +47,7 @@ export default {
   cursor: text;
   .breadBtn{background: #84a9fe; font-size: 14px ;padding:0 10px;display: inline-block;height: 30px; line-height: 30px;border-radius: 10px; margin-left: 15px;}
   img {
-    margin-top: 5px;
+    margin-top: 15px;
   }
 }
 </style>

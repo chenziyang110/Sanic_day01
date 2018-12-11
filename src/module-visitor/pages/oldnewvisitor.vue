@@ -155,7 +155,8 @@
 
 import {totals, targetDatas, chart} from '@/api/base/visitor'
 import echarts from 'echarts'
-import resize from './../../components/Charts/mixins/resize'
+// import resize from './../../components/Charts/mixins/resize'
+import { debounce } from '@/utils'
 
 export default {
     data() {
@@ -395,7 +396,15 @@ export default {
         
     },
     mounted() {
-        // this.newOldsChart()
+        this.__resizeHanlder = debounce(() => {
+        if (this.chart) {
+            this.chart.resize()
+        }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHanlder)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.__resizeHanlder)
     }
 }
 </script>

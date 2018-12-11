@@ -160,7 +160,7 @@ import TotalData from '@/components/TotalData'
 import CustomTagForm from '@/components/CustomTagForm'
 import 'echarts/map/js/china.js'
 import echarts from 'echarts'
-import resize from './../../components/Charts/mixins/resize'
+import { debounce } from '@/utils'
 
 export default {
     components: { TotalData, CustomTagForm },
@@ -369,7 +369,6 @@ export default {
         handleSelectTarget(range, visitor, date, sourceType, target) {
             this.doQueryChart(this.range, this.visitor, this.date, this.sourceType, this.target)
         },
-        handleSearch() {},
         handleTagForm(currenttages) {
             this.targets = currenttages
             
@@ -395,9 +394,6 @@ export default {
             }
             return false
         }
-        //  图表
-       
-        
     },
     created() {
         this.setuptotalData()
@@ -406,7 +402,16 @@ export default {
         
     },
     mounted() {
-        // this.newOldsChart()
+        this.__resizeHanlder = debounce(() => {
+            if (this.chart || this.chart2) {
+                this.chart.resize()
+                this.chart2.resize()
+            }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHanlder)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.__resizeHanlder)
     }
 }
 </script>

@@ -17,7 +17,7 @@ export default [
     name: 'visited',
     meta: {
       title: '受访分析',
-      icon: 'component'
+      icon: 'fa fa-sliders'
     },
     children: [
         {

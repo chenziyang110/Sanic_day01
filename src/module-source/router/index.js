@@ -17,7 +17,7 @@ export default [
     name: 'source',
     meta: {
       title: '来源分析',
-      icon: 'component'
+      icon: 'fa fa-pie-chart'
     },
     children: [
       {

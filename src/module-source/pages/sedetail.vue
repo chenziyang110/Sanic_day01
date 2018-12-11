@@ -12,7 +12,8 @@
             <!-- 下拉框 -->
             <SelectMenu v-on:handleSelect = "handleSelect"/>
             <!-- 图表 -->
-            <ChartGroup :chartList = 'chartdata'/>
+            <lineChart :lineChartData = 'linechartData'/>
+            <!-- <ChartGroup :chartList = 'chartdata'/> -->
         </el-card>
         <!-- 表格数据列表 -->
         <el-card shadow="never" v-loading="loading" class="card-item card-table">
@@ -51,11 +52,12 @@ import SelectRegion from '@/components/SelectRegion'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
-import ChartGroup from './../components/ChartGroup'
+import lineChart from '@/components/Charts/lineChart'
+// import ChartGroup from './../components/ChartGroup'
 
 
 export default {
-    components: { SelectRegion, TotalData, ChartGroup, SelectMenu, CustomTagForm },
+    components: { SelectRegion, TotalData, lineChart, SelectMenu, CustomTagForm },
     data() {
         return {
             loading: false,
@@ -66,7 +68,7 @@ export default {
             date: '',
             target: '',
             totaldata: {},
-            chartdata: {},
+            linechartData: {}, // 图表数据
             targetData: {},
             showColumes: [true, false, false, true, false, false, true, true, true, true],
             sourceID: this.$route.params.dataObj
@@ -91,7 +93,7 @@ export default {
             await chart({
                 range, side, visitor, date, target, sourceID
             }).then(res => {
-                this.chartdata = res.data
+                this.linechartData = res.data
             })
             this.loading = false
         },

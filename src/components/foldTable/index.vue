@@ -59,6 +59,7 @@ export default {
             // 通过自己的逻辑返回一个class或者空
             return row.expand ? 'expand' : 'hiddencell'
         },
+        // 去往详情页
         handleGoSeDetail(index, sourceID) {
             this.$router.push({
                 path: '/source/sedetail',
@@ -73,7 +74,7 @@ export default {
         handleSourceLink(index, sourceID) {
             if (this.$route.path === '/source/domain') {
                 this.$router.push({
-                    path: '/source/page:id',
+                    path: '/source/page',
                     name: 'source-page',
                     params: { 
                         id: 'id',
@@ -82,8 +83,17 @@ export default {
                 })
             } else if (this.$route.path === '/visited/visiteddomain') {
                 this.$router.push({
-                    path: '/visited/visitedpage:id',
+                    path: '/visited/visitedpage',
                     name: 'visited-page',
+                    params: { 
+                        id: 'id',
+                        dataObj: sourceID
+                    }
+                })
+            } else if (this.$route.path === '/source/type') {
+                this.$router.push({
+                    path: '/source/domain',
+                    name: 'source-domain',
                     params: { 
                         id: 'id',
                         dataObj: sourceID

@@ -5,18 +5,19 @@
             <div  id="chart" style="min-height: 400px; width: 99%"></div>
         </el-col>
         <el-col :span="7" >
-            <div  id="circle" style="min-height: 400px; width: 100%"></div>
+            <div  id="chart2" style="min-height: 400px; width: 100%"></div>
 
         </el-col>
     </el-row>
 </template>
 <script>
 import echarts from 'echarts'
-import resize from './../../components/Charts/mixins/resize'
+// import resize from './../../components/Charts/mixins/resize'
+import { debounce } from '@/utils'
 
 export default {
     name: 'ChartGroup',
-    mixins: [resize],
+    // mixins: [resize],
     props: {
         chartList: Object,
         required: true
@@ -24,6 +25,7 @@ export default {
     data() {
         return {
              chart: null,
+             chart2: null,
              linechartdata: {},
              realxdata: [],
              realseries0: [],
@@ -99,21 +101,12 @@ export default {
             }
         }
     },
-    mounted() {
-    },
-    beforeDestroy() {
-        if (!this.chart) {
-         return
-        }
-        this.chart.dispose()
-        this.chart = null
-    },
    created() {
    },
     methods: {
         ininCircleChart() {
-            this.chart = echarts.init(document.getElementById('circle'))
-            this.chart.setOption({
+            this.chart2 = echarts.init(document.getElementById('chart2'))
+            this.chart2.setOption({
                 tooltip: {
                     trigger: 'item',
                     formatter: '{a} <br/>{b}: {c} ({d}%)'
@@ -196,15 +189,20 @@ export default {
                     }
                 ]
             })
-            }
-            
-        },
-        // 下拉选择
-        handleOption(target) {
-            console.log(target)
-        },
-        testclick() {
-            console.log(123344)
         }
+            
+    },
+    mounted() {
+        this.__resizeHanlder = debounce(() => {
+            if (this.chart || this.chart2) {
+                this.chart.resize()
+                this.chart2.resize()
+            }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHanlder)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.__resizeHanlder)
+    }
 }
 </script>

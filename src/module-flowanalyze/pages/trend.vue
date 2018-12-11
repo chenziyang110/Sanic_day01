@@ -20,7 +20,7 @@
     <!-- 自定义指标 -->
     <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
     <!-- 表格数据列表 -->
-    <el-card shadow="never" v-loading="loading" class="card-table">
+    <div shadow="never" v-loading="loading" class="card-table">
         <div class="tablestyle">
             <el-table :data="CompareData" v-if="date2 != ''">
                 <el-table-column prop="date" label="日期"></el-table-column>
@@ -98,20 +98,21 @@
                 </el-table-column>
             </el-table>
             <el-table :data="targetData" v-if="date2 === ''">
-              <el-table-column prop="datetime" label="日期"></el-table-column>
-              <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-              <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-              <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-              <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-              <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-              <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-              <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-              <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-              <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-              <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
+            <el-table-column prop="datetime" label="日期"></el-table-column>
+            <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
+            <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
+            <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
+            <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
+            <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
+            <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
+            <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
+            <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
+            <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
+            <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
             </el-table>
         </div>
-    </el-card>
+    </div>
+    
 
   </div>
 </template>
@@ -121,6 +122,8 @@ import SelectRegionCompare from '@/components/SelectRegionCompare'
 import TotalData from '@/components/TotalData'
 import SelectMenu from '@/components/SelectMenu'
 import CustomTagForm from '@/components/CustomTagForm'
+import echarts from 'echarts'
+import { debounce } from '@/utils'
 
 export default {
     components: { SelectRegionCompare, TotalData, SelectMenu, CustomTagForm },
@@ -141,7 +144,8 @@ export default {
             contrastData: [],
             date2: '',
             showColumes: [true, false, false, true, false, false, true, true, true, true],
-            CompareData: []
+            CompareData: [],
+            chart: null
         }
     },
     methods: {
@@ -191,8 +195,8 @@ export default {
               seriesdata2.push(seriesitem2.data)
             }
 
-            // option定义
-            let option = {
+            this.chart = echarts.init(document.getElementById('chart'))
+            this.chart.setOption({
                 tooltip: {
                     trigger: 'item',
                     formatter: '{b} <br/>{a} : {c}'
@@ -223,9 +227,7 @@ export default {
                     data: seriesdata2,
                     type: 'line'
                 }]
-            }
-            this.echartCreate(option)
-
+                })
             })
             this.loading = false
         },
@@ -348,6 +350,17 @@ export default {
             return false
         }
     },
+    mounted() {
+        this.__resizeHanlder = debounce(() => {
+            if (this.chart) {
+                this.chart.resize()
+            }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHanlder)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.__resizeHanlder)
+    },
     // 创建完毕状态
     created() {
         this.setuptotalData()
@@ -370,6 +383,9 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
         border-radius: 0;   
+    }
+    .target-table .el-card {
+        border-top: none
     }
     // child style
     

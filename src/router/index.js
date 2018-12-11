@@ -41,7 +41,7 @@ export const constantRouterMap = [
   {
     path: '',
     component: Layout,
-    redirect: 'dashboard',
+    redirect: 'el-icon-setting',
     hidden: true,
     children: [
       {
@@ -98,7 +98,7 @@ export const constantRouterMap = [
         path: 'dashboard',
         component: _import('dashboard/pages/dashboard'),
         name: 'dashboard',
-        meta: {title: 'dashboard', icon: 'dashboard', noCache: true}
+        meta: {title: 'dashboard', icon: 'fa fa-tachometer', noCache: true}
       }
     ]
   }

@@ -17,14 +17,14 @@ export default [
     name: 'flowanalyze',
     meta: {
       title: '流量分析',
-      icon: 'component'
+      icon: 'el-icon-setting'
     },
     children: [
       {
         path: 'trend',
         component: _import('flowanalyze/pages/trend'),
         name: 'flowanalyze-trend',
-        meta: {title: '趋势分析', icon: 'documentation', noCache: true}
+        meta: {title: '趋势分析', icon: 'fa fa-line-chart', noCache: true}
       }
       
     ]

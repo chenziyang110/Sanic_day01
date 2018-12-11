@@ -17,7 +17,7 @@ export default [
     name: 'base',
     meta: {
       title: 'manage',
-      icon: 'component'
+      icon: 'fa fa-cogs'
     },
     children: [
       {
