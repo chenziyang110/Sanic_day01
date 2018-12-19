@@ -1,7 +1,7 @@
 <template>
-    <div class="dashboard-container rank">
+    <div class="dashboard-container">
         <el-card class="card-head">
-            <h2 class="title">来源升降榜</h2>
+            <h2 class="title">来源升降榜（{{defaultdate}}）</h2>
             <!-- 工具栏 -->
             <el-form :inline="true" >
                 <el-form-item class="subtitle" label="时间：">
@@ -55,19 +55,24 @@
             </el-row>
         </div>
         <!-- 数据列表 -->
-        <el-card shadow="never" v-loading="loading" class="card-item">
+        <el-card shadow="never" v-loading="loading" class="card-item rank">
             <div class="tablestyle">
                 <el-table :data="rankListItems" >
                     <el-table-column prop="source" label="地址">
                         <template slot-scope="scope">
-                            <span>{{scope.row.source}}</span>
-                            <i class="el-icon-document  iconlink" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                            <span class="url" style="float:left">{{scope.row.source}}</span>
+                            <el-popover trigger="hover" placement="right">
+                                <span @click="handleSourceLink(scope.row.$index, scope.row.sourceID)">查看历史趋势</span>
+                                <div slot="reference" class="name-wrapper">
+                                    <i class="fa fa-file-text iconlink"></i>
+                                </div>
+                            </el-popover>
                         </template>
                     </el-table-column>
                     <el-table-column prop="date1" :render-header="renderHeaderDate1">
                          <!-- <template slot-scope="scope">
                             <span>{{scope.row.source}}</span>
-                            <i class="el-icon-document" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                            <i class="el-icon-document"  @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
                         </template> -->
                     </el-table-column>
                     <el-table-column prop="date2" :render-header="renderHeaderDate2"></el-table-column>
@@ -82,6 +87,7 @@ import { domainranklist } from '@/api/base/source'
 export default {
     data() {
         return {
+            defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             date1: '',
             date2: '',
             targetID: '1',
@@ -106,6 +112,10 @@ export default {
             }).then(res => {
                 this.rankListtotal = res.data.totals
                 this.rankListItems = res.data.items
+
+                this.rankListtotal.source = '全部总计'
+                this.rankListItems.splice(0, 0, this.rankListtotal)
+
             })
             this.loading = false
         },
@@ -153,12 +163,12 @@ export default {
                         click: this.handleOrderAdd
                     }
                 }, '+升'),
-                h('span', {
+                h('span', {  
                     class: 'order down',
                     on: {
                         click: this.handleOrderLow
                     }
-                }, '-降'),
+                }, '-降'),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
                 h('span', {
                     class: 'order level',
                     on: {
@@ -211,12 +221,7 @@ export default {
 }
 </script>
 <style  rel="stylesheet/scss"  lang="scss" scoped>
-.rank {
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
+.dashboard-container {
     .yesterdaybtn {
         padding: 9px 20px;
         line-height: 32px;
@@ -236,19 +241,18 @@ export default {
     }
     .total {
         margin-top: 15px;
-        padding: 2em 0;
+        padding: 2.5em 0;
         background: #012989;
-        color: #fff;
-        
+        color: #fff;  
         .target {
             margin-left: -15px;
             text-align: center;
             .targetname {
                 font-size: 1.6em;
-                line-height: 2;
+                line-height: 3;
             }
             h2 {
-                font-size: 2em;
+                font-size:40px;
                 line-height: 1;
                 margin-top: 0.2em;
                 margin-bottom: 0.2em;
@@ -259,6 +263,9 @@ export default {
                 color: #7b9de8;
             }
         }
+    }
+    .url {
+        color: #3d8ddf
     }
     .rise { color: red }
     .down { color: green}

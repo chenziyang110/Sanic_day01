@@ -20,95 +20,100 @@
     <!-- 自定义指标 -->
     <CustomTagForm v-on:handleTagForm = 'handleTagForm'/>
     <!-- 表格数据列表 -->
-    <div shadow="never" v-loading="loading" class="card-table">
-        <div class="tablestyle">
-            <el-table :data="CompareData" v-if="date2 != ''">
-                <el-table-column prop="date" label="日期"></el-table-column>
+    <div shadow="never" v-loading="loading" class="card-table ">
+        <div class="tablestyle trendcomparetable" >
+            <!-- <div class="btn-scroll"  v-if="date2 != ''">
+                <span class="left" @click="scrollLeft"><i class="el-icon-caret-left"></i></span>
+                <span class="right"  @click="scrollRight"><i class="el-icon-caret-right"></i></span>
+            </div> -->
+            <el-table :data="CompareData" style="width: 100%" v-if="date2 != ''">
+                <el-table-column prop="date" fixed  align="center"  label="日期"  width="100" ></el-table-column>
                 <el-table-column  label="浏览次数" align="center" v-if="showColumes[0]">
-                    <el-table-column prop="date1timesOfBrowsing">
+                    <el-table-column prop="date1timesOfBrowsing" align="center" width="400" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="date2timesOfBrowsing">
+                    <el-table-column  prop="date2timesOfBrowsing"  align="center"  width="400" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date2}}</span>
                         </template>
                     </el-table-column>
                 </el-table-column>
                 <el-table-column  label="独立访客" align="center"  v-if="showColumes[3]">>
-                    <el-table-column prop="date1independentVisitors">
+                    <el-table-column prop="date1independentVisitors"  align="center"  width="400">
                         <template slot="header" slot-scope="scope">
                             <span>{{date}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="date2independentVisitors">
+                    <el-table-column prop="date2independentVisitors"  align="center"  width="400">
                         <template slot="header" slot-scope="scope">
                             <span>{{date2}}</span>
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column  label="IP" align="center"  v-if="showColumes[6]">
-                    <el-table-column  prop="date1IP">
+                <el-table-column label="IP" align="center"  v-if="showColumes[6]">
+                    <el-table-column  prop="date1IP" width="400"  align="center" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="date2IP">
+                    <el-table-column  prop="date2IP" width="400"  align="center" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date2}}</span>
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column  label="平均访问深度" align="center"  v-if="showColumes[8]">
-                    <el-table-column  prop="date1averageAccessDepth">
+                <el-table-column label="平均访问深度" align="center"  v-if="showColumes[8]">
+                    <el-table-column  prop="date1averageAccessDepth"  align="center"  width="400" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="date2averageAccessDepth">
+                    <el-table-column  prop="date2averageAccessDepth"  align="center"  width="400" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date2}}</span>
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column  label="平均访问时长" align="center"  v-if="showColumes[9]">
-                    <el-table-column  prop="date1averageAccessTime">
+                <el-table-column label="平均访问时长" align="center"  v-if="showColumes[9]">
+                    <el-table-column  prop="date1averageAccessTime"  align="center"  width="400">
                         <template slot="header" slot-scope="scope">
                             <span>{{date}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="date2averageAccessTime">
+                    <el-table-column  prop="date2averageAccessTime"  align="center"  width="400">
                         <template slot="header" slot-scope="scope">
                             <span>{{date2}}</span>
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column  label="跳出率" align="center" v-if="showColumes[7]">
-                    <el-table-column  prop="date1bounceRate">
-                        <template slot="header" slot-scope="scope">
+                <el-table-column label="跳出率" align="center" v-if="showColumes[7]">
+                    <el-table-column  prop="date1bounceRate"  align="center"  width="400" >
+                        <template slot="header" slot-scope="scope" >
                             <span>{{date}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="date2bounceRate">
+                    <el-table-column  prop="date2bounceRate"  align="center"  width="400" >
                         <template slot="header" slot-scope="scope">
                             <span>{{date2}}</span>
                         </template>
                     </el-table-column>
                 </el-table-column>
             </el-table>
-            <el-table :data="targetData" v-if="date2 === ''">
-            <el-table-column prop="datetime" label="日期"></el-table-column>
-            <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
-            <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
-            <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
-            <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
-            <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
-            <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
-            <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
-            <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
-            <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
-            <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
+
+            <el-table :data="targetData" v-if="date2 === ''" class="trendtable">
+                <el-table-column prop="datetime" label="日期"></el-table-column>
+                <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
+                <el-table-column prop="browsingVolume" label="浏览量占比" v-if="showColumes[1]"></el-table-column>
+                <el-table-column prop="timesOfVisite" label="访问次数" v-if="showColumes[2]"></el-table-column>
+                <el-table-column prop="independentVisitors" label="独立访客" v-if="showColumes[3]"></el-table-column>
+                <el-table-column prop="independentNewVisitors" label="新独立访客数" v-if="showColumes[4]"></el-table-column>
+                <el-table-column prop="independentNewVisitorsRate" label="新独立访比率" v-if="showColumes[5]"></el-table-column>
+                <el-table-column prop="IP" label="IP" v-if="showColumes[6]"></el-table-column>
+                <el-table-column prop="bounceRate" label="跳出率" v-if="showColumes[7]"></el-table-column>
+                <el-table-column prop="averageAccessDepth" label="平均访问深度" v-if="showColumes[8]"></el-table-column>
+                <el-table-column prop="averageAccessTime" label="平均访问时长" v-if="showColumes[9]"></el-table-column>
             </el-table>
         </div>
     </div>
@@ -132,7 +137,7 @@ export default {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             currentdate2: '',
-            range: '0',
+            range: '1',
             side: '',
             visitor: '',
             date: '',
@@ -286,15 +291,15 @@ export default {
             this.loading = false
         },
         // 初始total数据
-        async setuptotalData(range = 0, side, visitor, date) {
+        async setuptotalData(range = 1, side, visitor, date) {
             await this.doQueryTotal(range, side, visitor, date)
         },
         // 初始chart数据
-        async setupchartData(range = 0, side, visitor, date, date2, target) {
+        async setupchartData(range = 1, side, visitor, date, date2, target) {
             await this.doQueryChart(range, side, visitor, date, date2, target)
         },
          // 初始target数据
-        async setuptargetData(range = 0, side, visitor, date, tages) {
+        async setuptargetData(range = 1, side, visitor, date, tages) {
             await this.doQueryTargetData(range, side, visitor, date, tages)
         },
         // 交互操作
@@ -348,6 +353,16 @@ export default {
                 }
             }
             return false
+        },
+        // 按钮控制滚动条
+        handleScroll() {
+            console.log(123)
+        },
+        scrollLeft() {
+            
+        },
+        scrollRight() {
+            console.log(123)
         }
     },
     mounted() {
@@ -372,108 +387,39 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-container {
-    // layout
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
     .chart {
         margin-top: -4em;
         margin-left: 20px;
         margin-right: 20px;
         border-radius: 0;   
     }
-    .target-table .el-card {
-        border-top: none
-    }
-    // child style
-    
-    .block {
-        display: inline-block;
-    }
-    .compare {
-        margin-left: 4%;
-        margin-right: 10px;
-    }
-    .item2 {
-        margin-top: 15px;
-        .subtitle {
-            float: left;
-            margin-left: 10px;
-            margin-right: 13px;
-        }
-    }
-    .total {
-        margin-top: 15px;
-        padding: 20px 0 6em;
-        background: #012989;
-        color: #fff;
-        .target {
-            margin-left: -15px;
-            text-align: center;
-            h1 {
-                font-size: 3em;
-                line-height: 1;
-                margin-top: 0.2em;
-                margin-bottom: 0.2em;
-                font-weight: normal;
-            }
-            p {
-                font-size: 1.2em;
-                color: #7b9de8;
-            }
-        }
-    }
-    .defaultdate {
-        margin-left: 20px;
-    }
-    
-    .card-item {
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-    }
     .card-table {
         border-top: 0;
         margin-left: 20px;
         margin-right: 20px;
     }
-    .definetarget {
-        background-color: #f75426;
-        color: #fff;
-        border: 1px solid transparent;
-        border-radius: 20px;
-        font-size: 1.1em;
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-    .choose {
-        .el-row { margin-bottom: 10px;}
-    } 
-    .formbody {
-        .tip {
-            display: inline-block;
-            margin-bottom: 15px;
-            padding: 6px 6em 6px 14px;
-            background: #f5f5f5;
-            color: #666;
-            .el-icon-warning {
-                margin-right: 5px
+    .tablestyle {
+        position: relative;
+        .btn-scroll {
+            position: absolute;
+            z-index: 999;
+            right: 10px;
+            top: 7px;
+            span {
+                display: inline-block;
+                padding: 3px 5px;
+                border: 1px solid #cecece;
+                border-radius: 3px;
+                margin-right: 5px;
+                cursor: pointer;
+                i {
+                    font-size: 24px;
+                    line-height: 24px;
+                    color: #012989;
+                }
             }
         }
-        .form-item {
-            margin-bottom: 0;
-        }
-        .checkbox {
-            .target {
-                margin-bottom: 5px;
-            }
-        }
-        .submit { 
-            text-align: center;
-            .submit-btn { background:#f75426 }
-        }
     }
+    
 }
 </style>

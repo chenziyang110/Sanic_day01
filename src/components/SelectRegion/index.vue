@@ -3,7 +3,7 @@
       <el-form :inline="true" >
         <el-form-item class="subtitle" label="时间：">
            <div class="radios">
-                <el-button round   @click="handleOpenTime"  >打开</el-button>
+                <el-button round   @click="handleOpenTime" :disabled="opened" >打开</el-button>
                 <el-radio-group  v-model="currentrange" @change="handleData">
                     <el-radio-button label="0" :disabled="timedisabled">今天</el-radio-button>
                     <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
@@ -12,12 +12,13 @@
                 </el-radio-group>
             </div>
         </el-form-item>
-        <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+        <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
         <el-form-item  class="subtitle" label="">
           <el-date-picker
             v-model="currentdate"
             @change="handleData"
             :disabled="datedisabled"
+            :picker-options="pickerOptions"
             type="date"
             format= "yyyy-MM-dd"
             value-format="yyyy-MM-dd"
@@ -54,10 +55,17 @@ export default {
   name: 'SelectRegion',
   data() {
     return {
-        currentrange: '0',
+        currentrange: '1',
         currentside: '',
         currentvisitor: '',
         currentdate: '',
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now()
+          }
+        },
+        // 打开按钮
+        opened: true,
         // date
         timedisabled: false,
         datedisabled: true,
@@ -93,6 +101,7 @@ export default {
           this.currentrange = ''
           this.currentdate = ''
           this.datedisabled = false
+          this.opened = false
       },
       handleSwitchSide() {
           this.flag1 = !this.flag1

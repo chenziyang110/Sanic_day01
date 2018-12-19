@@ -49,7 +49,7 @@ export default {
     data() {
         return {
             hotmapID: '',
-            range: '0',
+            range: '1',
             date: '',
             hopmapdata: {},
             hotmapurl: '',
@@ -60,7 +60,6 @@ export default {
     created() {
         this.hotmapID = this.$route.params.id
         this.hotmapurl = this.$route.params.url
-        console.log(this.hotmapurl)
         this.setupHotMapData()
     },
     methods: {

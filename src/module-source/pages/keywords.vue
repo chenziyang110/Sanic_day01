@@ -8,7 +8,7 @@
         <!-- tab选择 -->
         <el-tabs class="keywordstab" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="按指标分类" name="first">
-                <div class="total">
+                <div class="tabtotal">
                     <el-row>
                         <el-col :span="4" class="target">
                             <h1>{{targettotal.timesOfBrowsing}}</h1>
@@ -37,13 +37,18 @@
                     </el-row>
                 </div>
                 <!-- 表格数据列表 -->
-                <el-card shadow="never" v-loading="loading" class="card-item">
+                <el-card shadow="never" v-loading="loading" class="card-tableitem keywordstable">
                     <div class="tablestyle">
                         <el-table :data="targetlist" :row-class-name="setClassName">
                             <el-table-column prop="keyword" label="来源类型">
                                 <template slot-scope="scope">
-                                    <span>{{scope.row.keyword}}</span>
-                                    <i class="el-icon-document iconlink" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                                    <span style="float:left">{{scope.row.keyword}}</span>
+                                    <el-popover trigger="hover" placement="right">
+                                        <span @click="handleSourceLink(scope.row.$index, scope.row.sourceID)">查看历史趋势</span>
+                                        <div slot="reference" class="name-wrapper">
+                                            <i class="fa fa-file-text iconlink"></i>
+                                        </div>
+                                    </el-popover>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="timesOfBrowsing" label="浏览次数" ></el-table-column>
@@ -56,8 +61,8 @@
                     </div>
                 </el-card>
             </el-tab-pane>
-            <el-tab-pane label="按搜索引擎" name="second">
-                <div class="total">
+            <el-tab-pane label="按搜索引擎分类" name="second">
+                <div class="tabtotal">
                     <el-row>
                         <el-col :span="4" class="target">
                             <h1>{{setotal.all}}</h1>
@@ -74,7 +79,7 @@
                     </el-row>
                 </div>
                 <!-- 表格数据列表 -->
-                <el-card shadow="never" v-loading="loading" class="card-item">
+                <el-card shadow="never" v-loading="loading" class="card-tableitem  keywordstable">
                     <div class="tablestyle">
                         <el-table :data="selist" :row-class-name="setClassName">
                             <el-table-column prop="keyword" label="来源类型"></el-table-column>
@@ -100,7 +105,7 @@ export default {
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
             activeName: 'first',
             tab1: '0',
-            range: '0',
+            range: '1',
             side: '1',
             visitor: '2',
             date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
@@ -195,18 +200,9 @@ export default {
         cursor: pointer;
         color: #5784e7;
     }
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
-    .tab-choose {
-        padding-left: 15px;
-        margin: 15px 0;
-    }
-    .total {
-        margin-top: 15px;
-        padding: 1.5em 0;
+    .tabtotal {
+        margin-top: 10px;
+        padding: 40px 0;
         background: #012989;
         color: #fff;
         .target {
@@ -225,10 +221,13 @@ export default {
             }
         }
     }
-    .card-item {
+    .card-tableitem {
         margin-left: 20px;
         margin-right: 20px;
         margin-top: 20px;
+        .el-card__body {
+            padding: 0;
+        }
     }
 }
 </style>

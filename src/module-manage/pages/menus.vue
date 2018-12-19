@@ -10,7 +10,7 @@
     <!-- 搜索框 / -->
     <!-- 正文 -->
     <div class="app-container">
-      <el-card shadow="never" v-loading="loading">
+      <el-card shadow="never" v-loading="loading"  class="backmanage">
         <!-- 数据表格 -->
         <el-table :data="items" border style="width: 100%; margin-top:10px;">
           <el-table-column prop="title" label="名称">
@@ -23,7 +23,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="code" label="代码"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
+          <el-table-column fixed="right" label="操作">
             <template slot-scope="scope">
               <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
               <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>

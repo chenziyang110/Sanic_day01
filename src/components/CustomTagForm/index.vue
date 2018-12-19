@@ -73,11 +73,12 @@ export default {
         color: #fff;
         border: 1px solid transparent;
         border-radius: 20px;
-        font-size: 1.1em;
+        font-size: 1.2em;
         padding-left: 30px;
         padding-right: 30px;
     }
     .formbody {
+        padding: 20px 20px 0;
         .tip {
             display: inline-block;
             margin-bottom: 15px;

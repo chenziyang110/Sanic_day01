@@ -9,8 +9,28 @@
     <TotalData :totalList = 'totaldata'/>
 
     <el-card shadow="never" v-loading="loading"  class="chart">
+        <div class="selectradiogroup">
+            <div class="selectBox_show">
+                <input type="text"  @click="handleDropdown" name="unit" v-model="targetsName" placeholder="请选择">
+                <span :class="iconstyle"></span>
+            </div>
+            <!-- <span class="arrowup"></span> -->
+            <el-form ref="form"  :rules="rules" :model="form"  action="" v-show="isShowSelect" class="radioform" style="display: block;">
+                <el-form-item prop="targets">
+                    <el-radio-group  v-model="form.targets" >
+                        <el-radio :label="1">浏览次数</el-radio>
+                        <el-radio :label="2">访客次数</el-radio>
+                        <el-radio :label="3">IP</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item class="submit-box">
+                    <el-button type="primary" size="small" class="btn-submit" @click="submitForm('form')">确定</el-button>
+                    <el-button  size="small" class="btn-cancel" @click="handleDropBox">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
         <!-- 下拉框 -->
-        <el-select v-model="defaultvalue" placeholder="选择指示" @change="handleSelect">
+        <!-- <el-select v-model="defaultvalue" placeholder="选择指示" @change="handleSelect">
             <el-option
                 v-for="item in targetitems"
                 :key="item.value"
@@ -20,12 +40,12 @@
             >
             <el-radio :label='1'>{{ item.label }}</el-radio>
             </el-option>
-        </el-select>
+        </el-select> -->
         <!-- 图表 -->
         <ChartGroup :chartList = 'chartdata'/>
     </el-card>
     <!-- 限制栏 -->
-    <div class="card-item">
+    <div class="card-item card-search">
         <el-row :gutter="20">
             <el-col :span="10">
                 <el-form ref="searchform" :model="formSearch">
@@ -86,7 +106,7 @@ export default {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            range: '0',
+            range: '1',
             side: '',
             visitor: '',
             date: '',
@@ -97,6 +117,19 @@ export default {
             tabledata: [],
             showColumes: [true, false, false, true, false, false, true, true, true, true],
             showRowNum: 6,
+            iconstyle: 'el-icon-arrow-right',
+            unitName: '请选择',
+            targetsName: '',
+            isShowSelect: false,
+            form: {
+                targets: 1
+            },
+            rules: {
+                targets: [
+                    { required: true, message: '请至少选择一项', trigger: 'change' }
+                ]
+            },
+
             defaultvalue: '浏览次数',
             sourcetype: 0,
             pagetype: 0,
@@ -164,14 +197,10 @@ export default {
                 this.tabledata = res.data.domains// 域名列表
                 this.internalaccessdata = res.data.internalAccess// 站内来源
                 
-
                 this.totalsdata.source = '全部总计'
-                
                 this.tabledata.splice(0, 0, this.totalsdata)
-
                 this.directaccessdata.source = '直接输入网址或书签'
                 this.tabledata.splice(1, 0, this.directaccessdata)
-
                 this.internalaccessdata.source = '站内来源'
                 this.tabledata.splice(2, 0, this.internalaccessdata)
             })
@@ -194,6 +223,39 @@ export default {
             return row.expand ? 'expand' : 'hiddencell'
         },
         // 交互操作
+        // 自定义下拉框
+        handleDropdown() {
+            this.isShowSelect = !this.isShowSelect
+            if (this.isShowSelect === true) {
+                this.iconstyle = 'el-icon-arrow-down'
+            } else {
+                this.iconstyle = 'el-icon-arrow-right'
+            }
+        },
+        // 下拉框提交
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                 this.isShowSelect = !this.isShowSelect
+                 switch (this.form.targets) {
+                    case 1: this.targetsName = '浏览次数'
+                    break
+                    case 2: this.targetsName = '访客次数'
+                    break
+                    case 3: this.targetsName = 'IP'
+                    break
+                 }
+                 this.targets = this.form.targets
+                 this.doQueryChart(this.range, this.side, this.visitor, this.date, this.form.targets)
+            } else {
+                return false
+            }
+            })
+         },
+         // 下拉框取消
+         handleDropBox() {
+            this.isShowSelect = !this.isShowSelect
+         },
         // 点击搜索
         handleSearch() {
             this.doQueryTargetData()
@@ -201,7 +263,6 @@ export default {
         // 点击选择来源类型
         handleSourceType(sourceType) {
             this.sourcetype = sourceType
-            console.log(sourceType)
             this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets, this.sourceID, this.sourcetype)
         },
         handleTotalData (currentrange, currentside, currentvisitor, currentdate) {
@@ -209,15 +270,13 @@ export default {
             this.side = currentside 
             this.visitor = currentvisitor
             this.date = currentdate
+            this.form.targets = 1
+            this.targetsName = '浏览次数'
             this.doQueryTotal(this.range, this.side, this.visitor, this.date)
             this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
             this.doQueryTargetData(this.range, this.side, this.visitor, this.date, this.targets)
         },
-        handleSelect(currenttarget) {
-            this.target = currenttarget
-            this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
-        },
-
+        // 提交指标
         handleTagForm(currenttages) {
             this.targets = currenttages
             
@@ -253,131 +312,102 @@ export default {
                 }
             })
         }
+        // handleSelect(currenttarget) {
+        //     this.target = currenttarget
+        //     this.doQueryChart(this.range, this.side, this.visitor, this.date, this.target)
+        // }
     },
     // 创建完毕状态
     created() {
         this.setuptotalData()
         this.setupchartData()
         this.setuptargetData()
+        if (this.form.targets === 1) {
+            this.targetsName = '浏览次数'
+        }
     }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-container {
-    // layout
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
     .chart {
         margin-top: -4em;
         margin-left: 20px;
         margin-right: 20px;
         border-radius: 0;   
     }
-    .el-icon-document {
-        float: right;
-        line-height: 26px;
-        margin-right: 15px;
-        font-size: 16px;
-        color: #f75426;
-        cursor: pointer;
-    }
-    .sub-title {
-        font-size: 18px;
-        line-height: 20px;
-    }
-    .pageytype .card-body .card-item {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    .filter-item {
-        background: #f75426;
-        color: #fff
-    }
-    // child style
-    
-    .block {
-        display: inline-block;
-    }
-    .compare {
-        margin-left: 4%;
-        margin-right: 10px;
-    }
-    .item2 {
-        margin-top: 15px;
-        .subtitle {
-            float: left;
-            margin-left: 10px;
-            margin-right: 13px;
-        }
-    }
-    .total {
-        margin-top: 15px;
-        padding: 20px 0 6em;
-        background: #012989;
-        color: #fff;
-        .target {
-            margin-left: -15px;
-            text-align: center;
-            h1 {
-                font-size: 3em;
-                line-height: 1;
-                margin-top: 0.2em;
-                margin-bottom: 0.2em;
-                font-weight: normal;
-            }
-            p {
-                font-size: 1.2em;
-                color: #7b9de8;
-            }
-        }
-    }
-    .defaultdate {
-        margin-left: 20px;
-    }
-    
     .card-item {
         margin-left: 20px;
         margin-right: 20px;
         margin-top: 20px;
+        border-radius: 0;
     }
-    .definetarget {
-        background-color: #f75426;
-        color: #fff;
-        border: 1px solid transparent;
-        border-radius: 20px;
-        font-size: 1.1em;
-        padding-left: 30px;
-        padding-right: 30px;
+    .card-search {
+        .filter-item {
+            background: #f75426;
+            color: #fff
+        }
+        .sub-title {
+            font-size: 18px;
+            line-height: 20px;
+        }
     }
-    .choose {
-        .el-row { margin-bottom: 10px;}
-    } 
-    .formbody {
-        .tip {
-            display: inline-block;
+    .selectradiogroup {
+        .selectBox_show {
             margin-bottom: 15px;
-            padding: 6px 6em 6px 14px;
-            background: #f5f5f5;
-            color: #666;
-            .el-icon-warning {
-                margin-right: 5px
+            width: 235px;
+            position: relative;
+            span {
+                position: absolute;
+                right: 10px;
+                top: 10px;
             }
         }
-        .form-item {
-            margin-bottom: 0;
+        input { 
+            cursor: pointer;
+            line-height: 2;
+            padding-left: 15px;
+            width: 235px;
+            outline:none;
+            border:1px solid #cecece;
+            color: #012989;
+            font-weight: bold;
         }
-        .checkbox {
-            .target {
+        .radioform {
+            position: absolute;
+            padding: 10px 15px;
+            z-index: 999;
+            // max-height: 240px;
+            width: 235px;
+            background: #fff;
+            border: 1px solid #cecece;
+            .el-form-item {
                 margin-bottom: 5px;
             }
         }
-        .submit { 
+        .arrowup {
+            content: " ";
+            width: 0;
+            height: 0;
+            display: block;
+            border-top: 1px solid #555;
+            border-left: 1px solid transparent;
+        }
+        .submit-box {
+            margin-bottom: 0;
             text-align: center;
-            .submit-btn { background:#f75426 }
+            .btn-submit {
+                padding: 6px 12px;
+                border-radius: 12px;
+            }
+            .btn-cancel {
+                padding: 6px 12px;
+                border-radius: 12px;
+                background: #012989;
+                color: #fff;
+                border-color: #012989;
+            }
         }
     }
 }

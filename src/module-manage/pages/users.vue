@@ -16,17 +16,17 @@
     <!-- 搜索框 / -->
     <!-- 正文 -->
     <div class="app-container">
-      <el-card shadow="never" v-loading="loading">
+      <el-card shadow="never" v-loading="loading" class="backmanage">
         <!-- 数据表格 -->
         <el-table :data="items" border style="width: 100%; margin-top:10px;" @selection-change="handleSelectionChange">
           <!-- <el-table-column type="selection" width="55"></el-table-column> -->
           <el-table-column prop="id" label="编号"></el-table-column>
           <el-table-column prop="account" label="账号"></el-table-column>
           <el-table-column prop="fullName" label="姓名"></el-table-column>
-          <el-table-column prop="mobile" label="联系电话" width="120"></el-table-column>
+          <el-table-column prop="mobile" label="联系电话" ></el-table-column>
           <el-table-column prop="permission_group_title" label="权限组名称"></el-table-column>
           <el-table-column prop="email" label="邮件"></el-table-column>
-          <el-table-column prop="disabled" label="屏蔽" width="50">
+          <el-table-column prop="disabled" label="屏蔽" width="100">
             <template slot-scope="scope">
               <div class="text-center">
                 <i class="el-icon-success success" v-if="!scope.row.disabled"></i>
@@ -34,7 +34,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="160">
+          <el-table-column fixed="right" label="操作" >
             <template slot-scope="scope">
               <el-button @click="handelPassword(scope.row)" type="text" size="small">重置密码</el-button>
               <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>

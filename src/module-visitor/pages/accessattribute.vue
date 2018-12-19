@@ -16,14 +16,15 @@
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
-                    <el-form-item  class="subtitle" label="日期：">
+                    <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <el-form-item  class="subtitle" label="">
                         <el-date-picker
                             v-model="sd"
                             type="date"
                             :disabled="sddisabled"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
+                            :picker-options="startDatePicker"
                             placeholder="开始日期">
                         </el-date-picker>
                         <span>至</span>
@@ -34,6 +35,7 @@
                             :disabled="eddisabled"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
+                            :picker-options="endDatePicker"
                             placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
@@ -115,11 +117,29 @@ export default {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            currentrange: '0',
+            currentrange: '1',
             currentdate: '',
             currentvisitor: '0',
             sd: '',
             ed: '',
+            startDatePicker: {
+                disabledDate: (time) => {
+                    if (this.ed !== '') {
+                        return new Date(this.ed).getTime() < time.getTime()
+                    } else {
+                        return time.getTime() > Date.now()
+                    }
+                }
+            },
+            endDatePicker: {
+                disabledDate: (time) => {
+                    if (this.sd !== '') {
+                        return new Date(this.sd).getTime() > time.getTime()
+                    } else {
+                        return time.getTime() > Date.now()
+                    }
+                }
+            },
             sddisabled: true,
             eddisabled: true,
             timedisabled: false,
@@ -384,7 +404,7 @@ export default {
         handleOpenTime() {
             this.sddisabled = true
             this.eddisabled = true
-            this.currentrange = '0'
+            this.currentrange = '1'
             this.timedisabled = false
         },
         // 打开自定义日期
@@ -393,6 +413,12 @@ export default {
             this.currentrange = ''
             this.sddisabled = false
             this.eddisabled = false
+        },
+        beginDate() {
+            
+        },
+        processDate() {
+
         },
         // 点击选择时间段
         handleData(range, visitor, sd, ed) {
@@ -430,12 +456,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dashboard-container {
-    // layout
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
+    
     .left-man {
         float: left;
     }
@@ -462,7 +483,6 @@ export default {
             .man { color: #38d2ff; }
             .woman { float: right; color: #f4663f }
         }
-    
         li {
             display: inline;
             width: 10%;

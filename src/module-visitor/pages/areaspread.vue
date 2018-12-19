@@ -17,7 +17,7 @@
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
                     <el-form-item  class="subtitle" label="">
                         <el-date-picker
                             v-model="date"
@@ -26,6 +26,7 @@
                             type="date"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
+                            :picker-options="pickerOptions"
                             placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
@@ -62,17 +63,8 @@
         <!-- 图表 -->
         <el-card shadow="never"   class="card-module">
             <!-- 下拉框 -->
-            <el-select v-model="target" placeholder="选择指示" @change="handleSelectTarget">
-                <el-option
-                    v-for="item in targetitems"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                    class="selectoption"
-                >
-                <el-radio :label='1'>{{ item.label }}</el-radio>
-                </el-option>
-            </el-select>
+            <SelectMenu v-on:handleSelect = "handleSelect" ref="selectmenu"/>
+            
             <el-row>
                 <el-col :span="15" >
                     <div  id="map" style="min-height: 400px; width: 99%"></div>
@@ -158,17 +150,18 @@
 import {areatotals, areachart, areatargetData} from '@/api/base/visitor'
 import TotalData from '@/components/TotalData'
 import CustomTagForm from '@/components/CustomTagForm'
+import SelectMenu from '@/components/SelectMenu'
 import 'echarts/map/js/china.js'
 import echarts from 'echarts'
 import { debounce } from '@/utils'
 
 export default {
-    components: { TotalData, CustomTagForm },
+    components: { TotalData, CustomTagForm, SelectMenu },
     data() {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            range: '0',
+            range: '1',
             date: '',
             visitor: '0',
             // 日期控制
@@ -192,37 +185,19 @@ export default {
                     value: '3',
                     label: '外部链接'
                 }],
-            target: '浏览次数',
-            targetitems: [{
-                value: '1',
-                label: '浏览次数'
-            }, {
-                value: '2',
-                label: '访客次数'
-            }, {
-                value: '3',
-                label: 'IP'
-            }, {
-                value: '4',
-                label: '新独立访客数'
-            }, {
-                value: '5',
-                label: '平均访客深度'
-            }, {
-                value: '6',
-                label: '平均访客时长'
-            }, {
-                value: '7',
-                label: '跳出率'
-            }],
+         
             formSearch: {
                 keyword: ''
             },
-            areatabledata: []           
+            areatabledata: [],
+            target: '',
+            targetname: '',
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now()
+                    }
+            }       
         }
-    },
-    watch: {
-        
     },
     methods: {
         // 总计业务请求
@@ -349,9 +324,13 @@ export default {
             await this.doQueryTable()
         },
         // 交互操作
+        // 下拉选择
+        handleSelect(target) {
+            this.doQueryChart(this.range, this.visitor, this.date, this.sourceType, target)
+        },
         handleOpenTime() {
           this.datedisabled = true
-          this.range = '0'
+          this.range = '1'
           this.timedisabled = false
           this.handleToolData()
         },
@@ -361,10 +340,13 @@ export default {
           this.date = ''
           this.datedisabled = false
         },
+        handleSearch() {},
         handleToolData(range, visitor, date, sourceType) {
+            this.target = 1
+            this.$refs.selectmenu.targetName()
             this.doQueryTotal(this.range, this.visitor, this.date, this.sourceType)
-            this.doQueryChart(this.range, this.visitor, this.date, this.sourceType)
-            this.doQueryTable(this.range, this.visitor, this.date, this.sourceType)
+            this.doQueryChart(this.range, this.visitor, this.date, this.sourceType, this.target)
+            this.doQueryTable(this.range, this.visitor, this.date, this.sourceType, this.tages)
         },
         handleSelectTarget(range, visitor, date, sourceType, target) {
             this.doQueryChart(this.range, this.visitor, this.date, this.sourceType, this.target)
@@ -421,50 +403,14 @@ export default {
     font-size: 16px;
     padding-right: 0
 }
-    // layout
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
     .card-total {
         margin-top: 20px;
         background: #012989;
-        .total-title {
-            line-height: 2.5;
-            font-size: 24px;
-            color: #4ed6fe
-        }
-        .total-item {
-            .fa-users {
-                float: left;
-                margin-right: 15px;
-                line-height: 1.8;
-                font-size: 40px;
-                color: #0c40be;
-            }
-            .text {
-                float: left;
-                text-align: center;
-                line-height: 1.2
-            }
-            span {
-                display: block;
-                &.percent {
-                    font-size: 36px;
-                    color: #fff;
-                }
-                &.name {
-                    font-size: 20px;
-                    color: #87aaf5;
-                }
-            }
-        }
     }
     .card-module {
         margin-left: 20px;
         margin-right: 20px;
-        margin-top: -30px;
+        margin-top: -50px;
     }
     .card-table, .card-search{
         margin: 20px 20px 0;
@@ -477,9 +423,6 @@ export default {
         font-size: 1.1em;
         padding-left: 30px;
         padding-right: 30px;
-    }
-    .targets  .card-item {
-        padding: 0
     }
     .table-box {
         margin-top: 10px;

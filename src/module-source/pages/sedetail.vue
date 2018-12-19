@@ -62,7 +62,7 @@ export default {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            range: '0',
+            range: '1',
             side: '0',
             visitor: '0',
             date: '',
@@ -146,34 +146,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dashboard-container {
-    // layout
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
     .chart {
         margin-top: -20px;
         margin-left: 20px;
         margin-right: 20px;
         border-radius: 0;   
     }
-    .el-icon-document {
-        float: right;
-        line-height: 26px;
-        margin-right: 15px;
-        font-size: 16px;
-        color: #f75426;
-        cursor: pointer;
-    }
-    .datelink {
-        cursor: pointer;
-        color: #012989
-    }
-    .card-item {
+    .card-table {
+        border-top: 0;
         margin-left: 20px;
         margin-right: 20px;
-        margin-top: 20px;
     }
 }
 </style>

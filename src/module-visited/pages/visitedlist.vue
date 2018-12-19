@@ -7,32 +7,43 @@
                 <el-button type="warning" class="filter-item" size="medium"  @click="handleSearch">搜索</el-button>
             </el-form>
         </el-card>
-        <el-card shadow="never" v-loading="loading" class="card-item">
+        <el-card shadow="never" v-loading="loading" class="card-item visitedlist">
             <div class="tablestyle">
                 <el-table :data="visitedlistData.items">
                      <el-table-column prop="title" label="点击图名称"></el-table-column>
                      <el-table-column prop="description" label="页面范围"></el-table-column>
                      <el-table-column prop="url" label="预览页面">
                          <template slot-scope="scope">
-                            <span><a :href="scope.row.url">{{scope.row.url}}</a></span>
+                            <span><a class="urlpage" :href="scope.row.url">{{scope.row.url}}</a></span>
                         </template>
                      </el-table-column>
-                     <el-table-column prop="stateTitle" label="状态"></el-table-column>
+                     <el-table-column  label="状态">
+                         <template slot-scope="scope">
+                            <span :class="scope.row.stateTitle === '统计中'? 'doing': 'close'">{{scope.row.stateTitle}}</span>
+                        </template>
+                     </el-table-column>
+                     <el-table-column prop="add_date" label="创建日期"></el-table-column>
                      <el-table-column
                         fixed="right"
                         label="操作"
-                        width="200">
+                        width="300">
                         <template slot-scope="scope">
                             <el-button class="operate-btn" type="text" size="small" @click="handleRouterMap(scope.$index, scope.row.id, scope.row.url)"><a>查看点击图</a></el-button>
-                            <span>|</span>
+                            <span class="partline">|</span>
                             <el-button 
-                                v-if= " scope.row.stateTitle === '关闭' " 
+                                v-if= "scope.row.stateTitle === '关闭' " 
                                 @click="handleChangeState(scope.row.id, true)" 
-                                class="operate-btn" 
+                                class="operate-btn opened" 
                                 type="text" 
                                 size="small"><a>开启</a>
                             </el-button>
-                            <el-button v-if= "scope.row.stateTitle === '统计中' "  @click="handleChangeState(scope.row.id, false)"  class="operate-btn" type="text" size="small"><a>关闭</a></el-button>
+                            <el-button 
+                                v-if= "scope.row.stateTitle === '统计中' "  
+                                @click="handleChangeState(scope.row.id, false)"  
+                                class="operate-btn closed" 
+                                type="text" 
+                                size="small"><a>关闭</a>
+                            </el-button>
                         </template>
                         </el-table-column>
                 </el-table>
@@ -137,6 +148,7 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
         margin-top: 20px;
+        .doing {color:  #175ddd}
     }
     .filter-item {
         background: #f75426;
@@ -147,8 +159,19 @@ export default {
         color: #012989;
         font-weight: normal;
     }
-    a {color: #3d8ddf;}
+    .partline {
+        color: #cecece;
+        margin: 0 10px;
+    }
+    a {
+        color: #3d8ddf;
+        font-size: 15px;
+        &.urlpage {
+            &:hover { color: #012989}
+        }
+    }
     .operate-btn {
+        &.opened {a {color: #f11a3f;}}
         span {color: #3d8ddf;}
     }
 }

@@ -161,9 +161,10 @@ export default {
                 yAxis: {
                     type: 'value',
                     axisLabel: {
-                    formatter: function(value, index) {
-                        return value / 10000 + '万'
-                    }
+                        formatter: function(value, index) {
+                            return value
+                            // return value / 10000 + '万'
+                        }
                     }
                 },
                 series: [

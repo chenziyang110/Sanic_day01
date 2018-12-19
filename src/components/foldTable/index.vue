@@ -9,8 +9,13 @@
                         style="width: 100%">
                         <el-table-column label="来源类型" prop="source" >
                             <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{scope.row.source}}</span>
-                                <i class="el-icon-document iconlink" @click="handleGoSeDetail(scope.$index, scope.row.sourceID)"></i>
+                                <span style="float:left">{{scope.row.source}}</span>
+                                <el-popover trigger="hover" placement="right">
+                                    <span @click="handleGoSeDetail(scope.row.$index, scope.row.sourceID)">查看历史趋势</span>
+                                    <div slot="reference" class="name-wrapper">
+                                        <i class="fa fa-file-text iconlink"></i>
+                                    </div>
+                                </el-popover>
                             </template>
                         </el-table-column>
                         <el-table-column label="浏览次数"  prop="timesOfBrowsing" v-if="showColumes[0]"> </el-table-column>
@@ -28,8 +33,13 @@
             </el-table-column>
             <el-table-column prop="source" label="来源类型">
                 <template slot-scope="scope">
-                    <span>{{scope.row.source}}</span>
-                    <i class="el-icon-document iconlink" @click="handleSourceLink(scope.$index, scope.row.sourceID)"></i>
+                    <span style="float:left">{{scope.row.source}}</span>
+                    <el-popover trigger="hover" placement="right">
+                        <span @click="handleGoSeDetail(scope.row.$index, scope.row.sourceID)">查看历史趋势</span>
+                        <div slot="reference" class="name-wrapper">
+                            <i class="fa fa-file-text iconlink"></i>
+                        </div>
+                    </el-popover> 
                 </template> 
             </el-table-column>
             <el-table-column prop="timesOfBrowsing" label="浏览次数" v-if="showColumes[0]"></el-table-column>
@@ -51,6 +61,7 @@ export default {
   props: ['tableList', 'showColumes'],
   data() {
     return {
+        readmore: false
         // showColumes: [true, false, false, true, false, false, true, true, true, true]
     }
   },
@@ -61,6 +72,7 @@ export default {
         },
         // 去往详情页
         handleGoSeDetail(index, sourceID) {
+            console.log(12333)
             this.$router.push({
                 path: '/source/sedetail',
                 name: 'source-sedetail',
@@ -69,6 +81,9 @@ export default {
                     dataObj: sourceID
                 }
             })
+        },
+        handleEnter() {
+            this.readmore = true
         },
         // 父级跳转
         handleSourceLink(index, sourceID) {
@@ -105,12 +120,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.iconlink {
-    float: right;
-    line-height: 1.6;
-    cursor: pointer;
-    color: #5784e7;
+.foldtable {
+    .iconlink {
+        position: relative;
+        float: right;
+        line-height: 1.6;
+        cursor: pointer;
+        color: #5784e7;
+    }
 }
+
 </style>
 
 

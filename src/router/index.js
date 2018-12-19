@@ -41,7 +41,7 @@ export const constantRouterMap = [
   {
     path: '',
     component: Layout,
-    redirect: 'el-icon-setting',
+    redirect: 'dashboard',
     hidden: true,
     children: [
       {

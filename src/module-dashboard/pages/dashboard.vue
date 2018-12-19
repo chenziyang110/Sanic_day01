@@ -77,17 +77,9 @@
         </div>
         <!-- 趋势图表 -->
         <div>
-            <!-- <el-dropdown split-button type="primary">
-              默认尺寸
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item>双皮奶</el-dropdown-item>
-                <el-dropdown-item>蚵仔煎</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown> -->
-           <el-select class="selectdropdown" v-model="defaultvalue" placeholder="选择指示" @change="handleOption">
+          <!-- 下拉框 -->
+        <SelectMenu v-on:handleSelect = "handleSelect" ref="selectmenu"/>
+           <!-- <el-select class="selectdropdown" v-model="defaultvalue" placeholder="选择指示" @change="handleOption">
               <el-option
                 v-for="item in targets"
                 :key="item.value"
@@ -97,7 +89,7 @@
                 >
                 <el-radio :label="1">{{ item.label }}</el-radio>
               </el-option>
-            </el-select>
+            </el-select> -->
 
              <div id="trendchart" style="width: 100%;min-height:400px;"></div>
 
@@ -188,11 +180,12 @@
 import {list, type, trend} from '@/api/base/home'
 import echarts from 'echarts'
 // import resize from './../../components/Charts/mixins/resize'
+import SelectMenu from '@/components/SelectMenu'
 import { debounce } from '@/utils'
 
 export default {
   name: 'dashboard',
-  components: {},
+  components: {SelectMenu},
   data() {
     return {
       activeNames: ['1'],
@@ -231,14 +224,13 @@ export default {
       chart: null,
       tableshow: true,
       icon: 'el-icon-d-arrow-left',
-      paddingBottom: '60px'
+      paddingBottom: '60px',
+      target: '',
+      targetname: ''
     }
   },
   computed: {},
   methods: {
-    handleChange(val) {
-        console.log(val)
-    },
     // 昨日流量数据
     async reloadData() {
       await list({}).then(res => {
@@ -267,9 +259,9 @@ export default {
     async setuptabData() {
       await this.doQuery()
     },
-    // tab选择
-    handleTab(range, target) {
-      this.doQuery(range, target)
+    // 初始option分类数据
+    async setupoptionData() {
+      await this.redoQuery()
     },
     // 图表数据请求
     async redoQuery(target = 1, range = 0) {
@@ -327,14 +319,22 @@ export default {
         
       })
     },
+    // tab选择
+    handleTab(range, target) {
+      this.target = 1
+      this.$refs.selectmenu.targetName()
+      this.doQuery(range, target)
+    },
+    // 下拉选择
+    handleSelect(target, range) {
+      this.target = target
+      this.redoQuery(this.target, this.range)
+    },
     // option选择
     handleOption(target, range) {
       this.redoQuery(target, range)
     },
-    // 初始option分类数据
-    async setupoptionData() {
-      await this.redoQuery()
-    },
+    
     // 折叠与展开
     handleCollapse() {
       this.tableshow = !this.tableshow

@@ -16,7 +16,7 @@
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-button type="text" class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
                     <el-form-item  class="subtitle">
                         <el-date-picker
                             v-model="date"
@@ -25,6 +25,7 @@
                             type="date"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
+                            :picker-options="pickerOptions"
                             placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
@@ -40,25 +41,6 @@
                 </el-form>
             </div>
         </el-card>
-        <!-- 用户占比 -->
-        <!-- <el-card shadow="never"  class="card-total">
-            <el-table
-                :data="totalData"
-                style="width: 100%">
-                <el-table-column
-                    prop="title"
-                    label="">
-                </el-table-column>
-                <el-table-column
-                    prop="newVisitor"
-                    label="新访客">
-                </el-table-column>
-                <el-table-column
-                    prop="oldVisitors"
-                    label="老访客">
-                </el-table-column>
-            </el-table>
-        </el-card> -->
         <el-card shadow="never"  class="card-total">
            <el-row>
                <el-col :span="6" class="total-title">
@@ -83,46 +65,66 @@
         </el-card>
         <el-card shadow="never" class="card-newold">
             <el-row>
-                <el-col :offset="6" :span="7">{{total1.title}}：{{total1.newVisitor}}</el-col>
-                <el-col :span="9">{{total1.title}}：{{total1.oldVisitors}}</el-col>
+                <el-col :offset="6" :span="7">
+                    <span class="title">{{total1.title}}：</span>
+                    <span class="newdata">{{total1.newVisitor}}</span>
+                </el-col>
+                <el-col :span="9">
+                    <span class="title">{{total1.title}}：</span>
+                    <span class="olddata">{{total1.oldVisitors}}</span>
+                </el-col>
             </el-row>
             <el-row>
-                <el-col :offset="6" :span="7">{{total2.title}}：{{total2.newVisitor}}</el-col>
-                <el-col :span="9">{{total2.title}}：{{total2.oldVisitors}}</el-col>
+                <el-col :offset="6" :span="7">
+                    <span class="title">{{total2.title}}：</span>：
+                    <span class="newdata">{{total2.newVisitor}}</span>
+                </el-col>
+                <el-col :span="9">
+                    <span class="title">{{total2.title}}：</span>
+                    <span class="olddata">{{total2.oldVisitors}}</span>
+                </el-col>
             </el-row>
             <el-row>
-                <el-col :offset="6" :span="7">{{total3.title}}：{{total3.newVisitor}}</el-col>
-                <el-col :span="9">{{total3.title}}：{{total3.oldVisitors}}</el-col>
+                <el-col :offset="6" :span="7">
+                    <span class="title">{{total3.title}}：</span>
+                    <span class="newdata">{{total3.newVisitor}}</span>
+                </el-col>
+                <el-col :span="9">
+                    <span class="title">{{total3.title}}：</span>
+                    <span class="olddata">{{total3.oldVisitors}}</span>
+                </el-col>
             </el-row>
             <el-row>
-                <el-col :offset="6" :span="7">{{total4.title}}：{{total4.newVisitor}}</el-col>
-                <el-col :span="9">{{total4.title}}：{{total4.oldVisitors}}</el-col>
+                <el-col :offset="6" :span="7">
+                    <span class="title">{{total4.title}}：</span>
+                    <span class="newdata">{{total4.newVisitor}}</span>
+                </el-col>
+                <el-col :span="9">
+                    <span class="title">{{total4.title}}：</span>
+                    <span class="olddata">{{total4.oldVisitors}}</span>
+                </el-col>
             </el-row>
             <el-row>
-                <el-col :offset="6" :span="7">{{total5.title}}：{{total5.newVisitor}}</el-col>
-                <el-col :span="9">{{total5.title}}：{{total5.oldVisitors}}</el-col>
+                <el-col :offset="6" :span="7">
+                    <span class="title">{{total5.title}}：</span>
+                    <span class="newdata">{{total5.newVisitor}}</span>
+                </el-col>
+                <el-col :span="9">
+                    <span class="title">{{total5.title}}：</span>
+                    <span class="olddata">{{total5.oldVisitors}}</span>
+                </el-col>
             </el-row>
            
         </el-card>
         <!-- 图表 -->
         <el-card shadow="never"   class="card-module">
             <!-- 下拉框 -->
-            <el-select v-model="target" placeholder="选择指示" @change="handleSelect">
-                <el-option
-                    v-for="item in targetitems"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                    class="selectoption"
-                >
-                <el-radio :label='1'>{{ item.label }}</el-radio>
-                </el-option>
-            </el-select>
+             <SelectMenu v-on:handleSelect = "handleSelect" ref="selectmenu"/>
              <div  id="chart" style="min-height: 400px; width: 99%"></div>
         </el-card>
        
         <!-- 数据列表 -->
-        <el-card shadow="never" class="card-module">
+        <el-card shadow="never" class="card-module oldnewvisitor">
             <el-table
                 :data="tableData"
                 style="width: 100%">
@@ -155,15 +157,17 @@
 
 import {totals, targetDatas, chart} from '@/api/base/visitor'
 import echarts from 'echarts'
+import SelectMenu from '@/components/SelectMenu'
 // import resize from './../../components/Charts/mixins/resize'
 import { debounce } from '@/utils'
 
 export default {
+    components: {SelectMenu},
     data() {
         return {
             loading: false,
             defaultdate: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            range: '0',
+            range: '1',
             date: '',
             side: '0',
             // 日期控制
@@ -173,37 +177,18 @@ export default {
             totalData: [],
             tableData: [],
             chart: null,
-            target: '1',
-            targetitems: [
-                {
-                    value: '1',
-                    label: '浏览次数'
-                }, {
-                    value: '2',
-                    label: '访客次数'
-                }, {
-                    value: '3',
-                    label: 'IP'
-                }, {
-                    value: '4',
-                    label: '新独立访客数'
-                }, {
-                    value: '5',
-                    label: '平均访客深度'
-                }, {
-                    value: '6',
-                    label: '平均访客时长'
-                }, {
-                    value: '7',
-                    label: '跳出率'
-                }
-            ],
             total0: {},
             total1: {},
             total2: {},
             total3: {},
             total4: {}, 
-            total5: {}        
+            total5: {},
+            target: '',
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now()
+                }
+            }     
         }
     },
     methods: {
@@ -320,7 +305,7 @@ export default {
         // 交互操作
         handleOpenTime() {
           this.datedisabled = true
-          this.range = '0'
+          this.range = '1'
           this.timedisabled = false
           this.handleData()
         },
@@ -331,12 +316,14 @@ export default {
           this.datedisabled = false
         },
         handleData(range, date, side) {
+            this.target = 1
+            this.$refs.selectmenu.targetName()
             this.doQueryTotal(this.range, this.date, this.side)
             this.doQueryChart(this.target, this.range, this.date, this.side)
             this.doQueryTable(this.range, this.date) 
         },
-        handleSelect(target, range, date, side) {
-            this.doQueryChart(this.target, this.range, this.date, this.side)
+        handleSelect(target) {
+            this.doQueryChart(target, this.range, this.date, this.side)
         },
         //  图表
        
@@ -410,15 +397,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dashboard-container {
-    // layout
-    .title {
-        font-size: 20px;
-        color: #012989;
-        font-weight: normal;
-    }
     .card-total {
         margin-top: 20px;
-        padding: 20px 20px 30px;
+        padding: 3em 5em 6em;
         background: #012989;
         .total-title {
             line-height: 2.5;
@@ -459,9 +440,18 @@ export default {
     .card-newold {
         margin-left: 20px;
         margin-right: 20px;
-        margin-top: -20px;
+        margin-top: -50px;
         line-height: 2;
         font-size: 15px;
+        .el-row {
+            padding-bottom: 8px;
+        }
+        .title { 
+            font-size: 16px;
+            color: #999;
+        }
+        .newdata {font-size: 18px; color: #f75426}
+        .olddata {font-size: 18px; color: #012989}
     }
 }
 </style>
