@@ -3,7 +3,7 @@
 
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
-    <breadcrumb class="breadcrumb-container"></breadcrumb>
+    <!-- <breadcrumb class="breadcrumb-container"></breadcrumb> -->
 
     <div class="right-menu">
       <!-- 站内搜索 -->
@@ -166,10 +166,11 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
-  height: 75px;
-  line-height: 75px;
+  height: 62px;
+  line-height: 62px;
   border-radius: 0px !important;
-  background-color: #04166c;
+  background-color: #fff;
+  border-bottom:1px solid #f2f4f4;
   // background-image: -webkit-linear-gradient(left, #04166c, #5b8cff);
   .hamburger-container {
     line-height: 78px;
@@ -205,7 +206,7 @@ export default {
       }
     }
     .el-button--text {
-      color: #fff;
+      color: #595959;
     }
   }
 }

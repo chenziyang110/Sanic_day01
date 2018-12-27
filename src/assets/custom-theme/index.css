@@ -314,6 +314,7 @@
 }
 .custom-theme .el-icon-question:before {
   content: '\e634';
+  color: #595959;
 }
 .custom-theme .el-icon-remove:before {
   content: '\e635';

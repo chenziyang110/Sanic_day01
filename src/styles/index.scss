@@ -371,10 +371,10 @@ code {
   border-bottom: 2px solid transparent;
 }
 .el-radio-button__orig-radio:checked+.el-radio-button__inner {
-  color: #f75426;
+  color: #3a6cd0;
   background-color: transparent;
   border: 0;
-  border-bottom: 4px solid #f75426;
+  border-bottom: 4px solid #ec4b47;
   box-shadow: none;
 }
 
@@ -424,7 +424,7 @@ code {
     margin-right: 5px;
   }
   .el-radio-button__inner {
-    font-size: 16px;
+    font-size: 14px;
     border: 1px solid transparent
   }
   .el-radio-button__orig-radio:checked + .el-radio-button__inner {
@@ -475,7 +475,7 @@ code {
 .subtitle {
   .el-form-item__label {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 // tab
@@ -570,13 +570,14 @@ code {
   .title {
     margin-top: 10px;
     font-size: 22px;
-    color: #012989;
+    color: #3a6cd0;
     font-weight: normal;
   }
   .el-card__body {
       padding: 10px 20px;
-      background: #ebeff5;
-      box-shadow: 0 6px 5px -3px #f0f2f5;
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      // box-shadow: 0 6px 5px -3px #f0f2f5;
   }
 }
 // bottom style
@@ -602,7 +603,7 @@ code {
 }
 // trendtable
 .trendtable .el-table__body-wrapper tr:first-child{
-  background: #5784e7;
+  background: #5282e2;
   color: #fff;
   font-size: 16px;
 }
@@ -629,7 +630,7 @@ code {
 }
 .foldtable .hiddencell:first-child {
   font-size: 16px;
-  background-color: #5784e7;
+  background-color: #3a6cd0;
   color: #fff;
 }
 .el-popover {
@@ -657,7 +658,7 @@ code {
 .keywordstab .el-tabs__item {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   height: 50px;
 }
 .keywordstab .card-tableitem .el-card__body {
@@ -673,7 +674,7 @@ code {
   padding-left: 20px;
 }
 .keywordstab .el-tabs__item.is-active {
-  border-bottom: 3px solid #f75426
+  border-bottom: 3px solid #3b6dd0
 }
 .keywordstab .card-tableitem .el-table--enable-row-hover .el-table__body tr.hiddencell:first-child:hover > td {
   border-top-color: transparent

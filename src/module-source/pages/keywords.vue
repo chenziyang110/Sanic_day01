@@ -201,10 +201,10 @@ export default {
         color: #5784e7;
     }
     .tabtotal {
-        margin-top: 10px;
-        padding: 40px 0;
-        background: #012989;
-        color: #fff;
+        // margin-top: 10px;
+        padding: 3em 0;
+        background: #fff;
+        color: #333;
         .target {
             margin-left: -15px;
             text-align: center;
@@ -217,7 +217,7 @@ export default {
             }
             p {
                 font-size: 1.2em;
-                color: #7b9de8;
+                color: #999;
             }
         }
     }
