@@ -73,7 +73,7 @@ export default {
         border-bottom: none
     }
     .definetarget {
-        background-color: #f75426;
+        background-color: #3a6cd0;
         color: #fff;
         border: 1px solid transparent;
         border-radius: 20px;
@@ -108,7 +108,7 @@ export default {
         }
         .submit { 
             text-align: center;
-            .submit-btn { background:#f75426 }
+            .submit-btn { background:#3a6cd0 }
         }
     }
 }

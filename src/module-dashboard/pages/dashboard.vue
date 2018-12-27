@@ -404,7 +404,7 @@ export default {
       }
       p {
         font-size: 14px;
-        color: #999;
+        color: #87aaf5;
       }
     }
   }

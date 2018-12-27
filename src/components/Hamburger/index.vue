@@ -31,5 +31,6 @@ export default {
   cursor: pointer;
   width: 20px;
   height: 20px;
+  /* color: #fff; */
 }
 </style>

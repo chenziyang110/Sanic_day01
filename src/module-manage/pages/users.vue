@@ -58,39 +58,41 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="handleSave(false)">取 消</el-button>
-          <el-button type="primary" @click="handelPasswordSave(true)">确 定</el-button>
-        </span>
+        <el-button @click="handleSave(false)">取 消</el-button>
+        <el-button type="primary" @click="handelPasswordSave(true)">确 定</el-button>
+      </span>
       </template>
       <!-- 重置密码 / -->
       <!-- 用户 -->
-      <el-form v-if="dialogType === 'user'" :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="formData.account" placeholder="账号"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名" prop="fullName">
-          <el-input v-model="formData.fullName" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model="formData.mobile" placeholder="联系电话"></el-input>
-        </el-form-item>
-        <el-form-item label="权限组" prop="permission_group_id">
-          <el-select v-model="formData.permission_group_id" placeholder="权限组">
-            <el-option v-for="item in permissions" :key="item.id" :label="item.title" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="邮件" prop="email">
-          <el-input v-model="formData.email" placeholder="邮件"></el-input>
-        </el-form-item>
-        <el-form-item label="屏蔽" prop="disabled">
-          <el-switch v-model="formData.disabled" active-color={true} inactive-color={false}>
-          </el-switch>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleSave(false)">取 消</el-button>
-        <el-button type="primary" @click="handleSave(true)">确 定</el-button>
-      </span>
+      <template v-if="dialogType === 'user'">
+        <el-form :rules="rules" ref="dataForm" :model="formData" label-width="100px" label-position="right">
+          <el-form-item label="账号" prop="account">
+            <el-input v-model="formData.account" placeholder="账号"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名" prop="fullName">
+            <el-input v-model="formData.fullName" placeholder="姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="联系电话" prop="mobile">
+            <el-input v-model="formData.mobile" placeholder="联系电话"></el-input>
+          </el-form-item>
+          <el-form-item label="权限组" prop="permission_group_id">
+            <el-select v-model="formData.permission_group_id" placeholder="权限组">
+              <el-option v-for="item in permissions" :key="item.id" :label="item.title" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="邮件" prop="email">
+            <el-input v-model="formData.email" placeholder="邮件"></el-input>
+          </el-form-item>
+          <el-form-item label="屏蔽" prop="disabled">
+            <el-switch v-model="formData.disabled" active-color={true} inactive-color={false}>
+            </el-switch>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="handleSave(false)">取 消</el-button>
+          <el-button type="primary" @click="handleSave(true)">确 定</el-button>
+        </span>
+      </template>
       <!-- 用户 / -->
     </el-dialog>
     <!-- 弹出窗 / -->

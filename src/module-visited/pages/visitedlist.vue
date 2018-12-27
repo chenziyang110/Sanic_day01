@@ -148,15 +148,15 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
         margin-top: 20px;
-        .doing {color:  #175ddd}
+        .doing {color:  #3a6cd0}
     }
     .filter-item {
-        background: #f75426;
+        background: #3a6cd0;
         color: #fff
     }
     .title {
         font-size: 20px;
-        color: #012989;
+        color: #3a6cd0;
         font-weight: normal;
     }
     .partline {
@@ -171,7 +171,7 @@ export default {
         }
     }
     .operate-btn {
-        &.opened {a {color: #f11a3f;}}
+        &.opened {a {color: #ec4b47;}}
         span {color: #3d8ddf;}
     }
 }

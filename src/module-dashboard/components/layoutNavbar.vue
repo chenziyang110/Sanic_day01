@@ -214,7 +214,7 @@ export default {
       }
     }
     .el-button--text {
-      color: #666;
+      color: #595959;
       margin-right:20px;
     }
   }

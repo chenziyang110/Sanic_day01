@@ -8,21 +8,20 @@
 
                     <el-form-item class="subtitle" label="时间：">
                     <div class="radios">
-                        <el-button round   @click="handleOpenTime">打开</el-button>
+                        <!-- <el-button round   @click="handleOpenTime">打开</el-button> -->
                             <el-radio-group  v-model="range" @change="handleToolData">
-                                <el-radio-button label="0" :disabled="timedisabled">今天</el-radio-button>
-                                <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
-                                <el-radio-button label="7" :disabled="timedisabled">最近7日</el-radio-button>
-                                <el-radio-button label="30" :disabled="timedisabled">最近30日</el-radio-button>
+                                <el-radio-button label="0">今天</el-radio-button>
+                                <el-radio-button label="1" >昨天</el-radio-button>
+                                <el-radio-button label="7">最近7日</el-radio-button>
+                                <el-radio-button label="30">最近30日</el-radio-button>
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <!-- <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button> -->
                     <el-form-item  class="subtitle" label="">
                         <el-date-picker
                             v-model="date"
                             @change="handleToolData"
-                            :disabled="datedisabled"
                             type="date"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
@@ -30,9 +29,7 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
-                    <br />
-
-                     <el-form-item   class="subtitle" label="来源：">
+                     <el-form-item class="subtitle" label="来源：" style="margin-left:30px">
 
                          <el-select v-model="sourceType" @change="handleToolData" placeholder="请选择">
                             <el-option
@@ -44,7 +41,7 @@
                         </el-select>
                     </el-form-item>
 
-                    <el-form-item  class="subtitle" label="访客：">
+                    <!-- <el-form-item  class="subtitle" label="访客：">
                         <div class="radios">
                             <el-radio-group  v-model="visitor"  @change="handleToolData">                             
                                 <el-radio-button label="0" >全部</el-radio-button>
@@ -52,7 +49,7 @@
                                 <el-radio-button label="2">老访客</el-radio-button>
                             </el-radio-group>
                         </div>
-                    </el-form-item>
+                    </el-form-item> -->
                 </el-form>
             </div>
         </el-card>
@@ -410,13 +407,13 @@ export default {
     .card-module {
         margin-left: 20px;
         margin-right: 20px;
-        margin-top: -50px;
+        margin-top: 15px;
     }
     .card-table, .card-search{
         margin: 20px 20px 0;
     }
     .filter-item {
-        background-color: #f75426;
+        background-color: #3a6cd0;
         color: #fff;
         border: 1px solid transparent;
         border-radius: 20px;

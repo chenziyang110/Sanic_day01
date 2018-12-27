@@ -3,7 +3,7 @@
       <el-form :inline="true" >
         <el-form-item class="subtitle" label="时间：">
            <div class="radios">
-                <el-button round   @click="handleOpenTime" :disabled="opened" >打开</el-button>
+                <!-- <el-button round   @click="handleOpenTime" :disabled="opened" >打开</el-button> -->
                 <el-radio-group  v-model="currentrange" @change="handleData">
                     <el-radio-button label="0" :disabled="timedisabled">今天</el-radio-button>
                     <el-radio-button label="1" :disabled="timedisabled">昨天</el-radio-button>
@@ -12,12 +12,12 @@
                 </el-radio-group>
             </div>
         </el-form-item>
-        <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+        <!-- <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button> -->
         <el-form-item  class="subtitle" label="">
           <el-date-picker
             v-model="currentdate"
             @change="handleData"
-            :disabled="datedisabled"
+            
             :picker-options="pickerOptions"
             type="date"
             format= "yyyy-MM-dd"
@@ -25,18 +25,17 @@
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-        <br />
-        <el-form-item  class="subtitle" label="设备：">
+        <el-form-item  class="subtitle" label="设备：" style="margin-left:50px">
            <div class="radios">
-                <el-button  @click="handleSwitchSide" round :disabled="switchsidedisable">{{switchside}}</el-button>
+                <!-- <el-button  @click="handleSwitchSide" round :disabled="switchsidedisable">{{switchside}}</el-button> -->
                 <el-radio-group  v-model="currentside" @change="handleData">
-                    <el-radio-button label="0" :disabled="sidedisable">全部</el-radio-button>
-                    <el-radio-button label="1" :disabled="sidedisable">PC端</el-radio-button>
-                    <el-radio-button label="2" :disabled="sidedisable">移动端</el-radio-button>
+                    <el-radio-button label="0">全部</el-radio-button>
+                    <el-radio-button label="1">PC端</el-radio-button>
+                    <el-radio-button label="2">移动端</el-radio-button>
                 </el-radio-group>
             </div>
         </el-form-item>
-        <el-form-item  class="subtitle" label="访客：">
+        <!-- <el-form-item  class="subtitle" label="访客：">
            <div class="radios">
                 <el-button @click="handleSwitchVisitor"   round :disabled="switchvisitordisable">{{switchvisitor}}</el-button>
                 <el-radio-group  v-model="currentvisitor"  @change="handleData">
@@ -46,7 +45,7 @@
                     <el-radio-button label="2" :disabled="visitordisable">老访客</el-radio-button>
                 </el-radio-group>
             </div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
   </div>
 </template>
