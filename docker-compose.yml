@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  # mysql:
+  #   image: mysql:5.7
+  #   restart: always
+  #   command: mysqld  --skip-ssl --character_set_server=utf8mb4 --sql_mode=""
+  #   # command: --default-authentication-plugin=mysql_native_password
+  #   volumes:
+  #     - ./myhome-api/data:/docker-entrypoint-initdb.d/
+  #   environment:
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  #   #   MYSQL_ROOT_PASSWORD: '123456'
+  #   # ports:
+  #   #   - 3306:3306
+  # server:
+  #   image: itcast/front-hkzf-server
+  #   restart: always
+  #   # ports:
+  #   #   - 9086:8086
+  #   depends_on:
+  #     - mysql
+  client:
+    image: itcast/front-analytics-cmm
+    restart: always
+    ports:
+      - 9010:80
+    depends_on:
+      - server
