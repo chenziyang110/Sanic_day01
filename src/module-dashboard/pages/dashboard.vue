@@ -70,7 +70,7 @@
      <!-- 趋势图 -->
      <el-card shadow="never" v-loading="loading"  class="trend">
        <div slot="header" class="clearfix">
-          <span>趋势图</span>
+          <span class="trendchartTitle">趋势图</span>
            <router-link to='/flowanalyze/trend'>
               <el-button class="golink"  type="text" ><i class="fa fa-ellipsis-h" aria-hidden="true"></i></el-button>
            </router-link>
@@ -375,6 +375,9 @@ export default {
 .dashboard-container {
   margin-left: 10px;
   margin-right: 10px;
+  .el-card__header span.trendchartTitle {
+    color: #012989
+  }
   .yesterday {
     background: #012989;
     color: #fff;

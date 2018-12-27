@@ -56,8 +56,8 @@ export default {
   data() {
     return {
         currentrange: '1',
-        currentside: '',
-        currentvisitor: '',
+        currentside: '0',
+        currentvisitor: '0',
         currentdate: '',
         pickerOptions: {
           disabledDate(time) {

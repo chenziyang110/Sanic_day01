@@ -67,8 +67,8 @@ export default {
   data() {
     return {
         range: '1',
-        side: '',
-        visitor: '',
+        side: '0',
+        visitor: '0',
         comparedisabled: true,
          // 打开按钮
         opened: true,
