@@ -1,10 +1,10 @@
 /**
  * 解析时间
- * 
+ *
  * @export
- * @param {any} time 
- * @param {any} cFormat 
- * @returns 
+ * @param {any} time
+ * @param {any} cFormat
+ * @returns
  */
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -42,11 +42,11 @@ export function parseTime(time, cFormat) {
 
 /**
  * 格式化时间
- * 
+ *
  * @export
- * @param {any} time 
- * @param {any} option 
- * @returns 
+ * @param {any} time
+ * @param {any} option
+ * @returns
  */
 export function formatTime(time, option) {
   time = +time * 1000
@@ -84,10 +84,10 @@ export function formatTime(time, option) {
 
 /**
  * 格式化时间
- * 
+ *
  * @export
- * @param {any} url 
- * @returns 
+ * @param {any} url
+ * @returns
  */
 export function getQueryObject(url) {
   url = url == null ? window.location.href : url
@@ -158,10 +158,10 @@ export function param2Obj(url) {
 
 /**
  * html转文字
- * 
+ *
  * @export
- * @param {any} val 
- * @returns 
+ * @param {any} val
+ * @returns
  */
 export function html2Text(val) {
   const div = document.createElement('div')
@@ -301,7 +301,25 @@ export function debounce(func, wait, immediate) {
     return result
   }
 }
+export function numberString(data) {
+  data = String(data)
+  if (data.length > 3) {
+    let newStr = ''
+    let count = 0
+    for (let i = data.length - 1; i >= 0; i--) {
+      if (count % 3 === 0 && count !== 0) {
+        newStr = data.charAt(i) + ',' + newStr
+        console.log(888, newStr)
+      } else {
+        newStr = data.charAt(i) + newStr
+      }
+    }
 
+    return newStr
+  } else {
+    return data
+  }
+}
 export function deepClone(source) {
   if (!source && typeof source !== 'object') {
     throw new Error('error arguments', 'shallowClone')

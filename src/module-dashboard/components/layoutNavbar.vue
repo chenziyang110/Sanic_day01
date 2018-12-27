@@ -3,7 +3,7 @@
 
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
-    <breadcrumb class="breadcrumb-container"></breadcrumb>
+    <!-- <breadcrumb class="breadcrumb-container"></breadcrumb> -->
 
     <div class="right-menu">
       <!-- 站内搜索 -->
@@ -12,21 +12,21 @@
           <el-button icon="el-icon-search" type="text" class="btnSearch" @click="handleBtnSearch"></el-button>
         </el-tooltip>
         <transition name="el-fade-in-linear">
-          <el-autocomplete 
+          <el-autocomplete
             ref="searchInput"
             v-model="searchVal"
-            :fetch-suggestions="querySearchAsync" 
-            @select="handleSelect" 
+            :fetch-suggestions="querySearchAsync"
+            @select="handleSelect"
             @blur="showSearchInput = false"
-            placeholder="站内搜索" 
+            placeholder="站内搜索"
             :trigger-on-focus="true"
             v-show="showSearchInput" ></el-autocomplete>
         </transition>
       </div> -->
       <!-- 使用文档 -->
-      <a href="javascript:void()" class="item" target="_blank">
+      <!-- <a href="javascript:void()" class="item" target="_blank">
         <el-tooltip class="item" effect="dark" content="使用文档" placement="bottom"><i class="el-icon-question"></i></el-tooltip>
-      </a>
+      </a> -->
       <!-- 错误 -->
       <!-- <error-log class="error item"></error-log> -->
       <!-- 全屏 -->
@@ -63,7 +63,10 @@
       </el-dropdown> -->
 
       <!-- 退出 -->
-      <el-button @click="logout" type="text" class="item">退出</el-button>
+        <span class="icon"><img src="./../assets/bigUserHeader.png" width="25" alt=""></span>
+        <span>Serati Ma</span>
+        <el-button @click="logout" type="text" class="item">| 退出</el-button>
+
 
     </div>
   </el-menu>
@@ -155,25 +158,31 @@ export default {
   border-bottom: 1px solid #dcdfe6;
   border-radius: 0px;
 }
+.icon{
+  position: relative;
+  top:6px;
+  margin-right: 25px;
+}
 .item {
   .screenfull-svg,
   .svg-icon {
-    fill: #fff !important;
+
   }
 }
-.el-dropdown{color: #fff;}
+.el-dropdown{}
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
-  height: 75px;
-  line-height: 75px;
+  height: 45px;
+  line-height: 50px;
   border-radius: 0px !important;
-  background-color: #04166c;
+  position: relative;
+  background-color: #fff;
+  z-index: 3;
+  box-shadow: 0 1px 1px #efeaea;
   // background-image: -webkit-linear-gradient(left, #04166c, #5b8cff);
   .hamburger-container {
-    line-height: 78px;
-    height: 75px;
     float: left;
     padding: 0 10px;
   }
@@ -186,7 +195,7 @@ export default {
   }
   .right-menu {
     float: right;
-    height: 75px;
+    height: 45px;
     .item {
       display: inline-block;
       margin-right: 10px;
@@ -205,7 +214,8 @@ export default {
       }
     }
     .el-button--text {
-      color: #fff;
+      color: #666;
+      margin-right:20px;
     }
   }
 }

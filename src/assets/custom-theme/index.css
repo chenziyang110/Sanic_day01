@@ -221,6 +221,7 @@
 }
 .custom-theme .el-icon-d-arrow-left:before {
   content: '\e610';
+  color: #466ec9;
 }
 .custom-theme .el-icon-check:before {
   content: '\e611';
@@ -16899,7 +16900,7 @@
   color: #2d2f33;
 }
 .custom-theme .el-card__header {
-  padding: 18px 20px;
+  padding: 10px 20px;
   border-bottom: 1px solid #e6ebf5;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

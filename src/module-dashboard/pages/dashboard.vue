@@ -1,39 +1,36 @@
 <template>
   <div class="dashboard-container">
-    <el-card class="yesterday"  v-bind:style="{'padding-bottom': paddingBottom}" shadow="never">
+    <el-card class="yesterday" shadow="never">
       <el-row>
-            <el-col :span="3" class="target">
-                <h1 class="title">昨日流量</h1>
-            </el-col>
-            <el-col :span="21" class="target">
+            <el-col :span="24" class="target">
                <el-row>
                   <el-col :span="4" class="target">
-                      <h1 class="number">12345</h1>
+                      <h1 class="number">{{items[0].timesOfBrowsing}}</h1>
                       <p>浏览次数</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">12345</h1>
+                      <h1 class="number">{{items[0].independentVisitors}}</h1>
                       <p>独立访客</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">23456</h1>
+                      <h1 class="number">{{items[0].IP}}</h1>
                       <p>IP数量</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">234</h1>
+                      <h1 class="number">{{items[0].averageVisitorDepth}}</h1>
                       <p>平均访问深度</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">343543</h1>
+                      <h1 class="number">{{items[0].averageVisitorDuration}}</h1>
                       <p>平均访问长度</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">22</h1>
+                      <h1 class="number">{{items[0].bounceRate}}</h1>
                       <p>跳出率</p>
                   </el-col>
                </el-row>
             </el-col>
-            
+
         </el-row>
     </el-card>
     <!-- 昨日浏览量 -->
@@ -53,7 +50,7 @@
           <el-table-column prop="bounceRate" label="跳出率"></el-table-column>
         </el-table>
     </div>
-    <div class="point">
+    <div class="point" v-bind:style="{'position':'relative', 'top': paddingBottom}">
       <span @click="handleCollapse">
         <i :class="icon"></i>
       </span>
@@ -111,13 +108,21 @@
                 <div class="tablestyle">
                   <!-- 访客表格 -->
                   <el-table :data="visitors" >
-                    <el-table-column prop="target" label="指标名称">
+                    <el-table-column prop="target" width="140px" label="指标名称">
                       <template slot-scope="scope">
                         <span class="row-target">{{ scope.row.target }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="newVisitor" label="新访客"></el-table-column>
-                    <el-table-column prop="oldVisitors" label="老访客"></el-table-column>
+                    <el-table-column prop="newVisitor" label="新访客">
+                      <template slot-scope="scope">
+                        <span class="row-target" style="color:#ec4b47">{{ scope.row.newVisitor }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="oldVisitors" style="color:#012989" label="老访客">
+                      <template slot-scope="scope">
+                        <span class="row-target" style="color:#012989">{{ scope.row.oldVisitors }}</span>
+                      </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </el-card>
@@ -136,8 +141,8 @@
               <div class="tablestyle">
                 <!-- 搜索词表格 -->
                 <el-table :data="searchterm">
-                  
-                  <el-table-column prop="searchTerm" label="搜索词">
+
+                  <el-table-column prop="searchTerm" label="搜索词" width="150px">
                     <template slot-scope="scope">
                       <i v-bind:class="(scope.$index == 0) || (scope.$index == 1) ||(scope.$index == 2)  ? 'top' : 'tableindex'">{{scope.$index+1}}</i>
                       <span style="margin-left: 10px">{{ scope.row.searchTerm }}</span>
@@ -161,17 +166,17 @@
               <div class="tablestyle">
                 <!-- 受访表格 -->
                 <el-table :data="interviewing">
-                  <el-table-column prop="interviewingInterface" label="受访界面"></el-table-column>
+                  <el-table-column prop="searchTerm" width="150" show-overflow-tooltip label="受访界面"></el-table-column>
                   <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
                   <el-table-column prop="occupationRatio" label="占比"></el-table-column>
                 </el-table>
               </div>
-            
+
             </el-card>
           </el-col>
         </el-row>
      </div>
-    
+
 
   </div>
 </template>
@@ -224,7 +229,7 @@ export default {
       chart: null,
       tableshow: true,
       icon: 'el-icon-d-arrow-left',
-      paddingBottom: '60px',
+      paddingBottom: '0px',
       target: '',
       targetname: ''
     }
@@ -240,7 +245,7 @@ export default {
     // tab分类数据请求
     async doQuery(range = 0, target = 1) {
       this.currentrange = range
-   
+
       this.loading = true
       this.typesdata = []
       await type({
@@ -271,7 +276,7 @@ export default {
         range
       }).then(res => {
         this.trenddata = res.data
-        
+
         // x轴数据整理
         let xdata = []
         let getxdata = this.trenddata.xAxis
@@ -316,7 +321,7 @@ export default {
             type: 'line'
           }]
         })
-        
+
       })
     },
     // tab选择
@@ -334,16 +339,16 @@ export default {
     handleOption(target, range) {
       this.redoQuery(target, range)
     },
-    
+
     // 折叠与展开
     handleCollapse() {
       this.tableshow = !this.tableshow
       if (this.tableshow === true) {
         this.icon = 'el-icon-d-arrow-left'
-        this.paddingBottom = '30px'
+        this.paddingBottom = '0px'
       } else {
         this.icon = 'el-icon-d-arrow-right'
-         this.paddingBottom = '30px'
+         this.paddingBottom = '-55px'
       }
     }
   },
@@ -364,7 +369,7 @@ export default {
     this.reloadData()
     this.setuptabData()
     this.setupoptionData()
-   
+
   },
   // 组件更新
   updated: function() {}
@@ -373,18 +378,16 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-container {
-  margin-left: 10px;
-  margin-right: 10px;
+
   .el-card__header span.trendchartTitle {
     color: #012989
   }
   .yesterday {
-    background: #012989;
-    color: #fff;
+    background: #fff;
+    width: 100%;
     border: none;
-    margin-left: -10px;
-    margin-right: -10px;
-    padding-top: 10px;
+    position: relative;
+    top: -5px;
     .target {
       text-align: center;
       .title{
@@ -394,27 +397,27 @@ export default {
         margin: 1.2em 0;
       }
       .number {
-        font-size: 2.5em;
+        font-size: 1.8em;
         font-weight: normal;
         line-height: 32px;
         margin: 0.4em 0;
       }
       p {
-        font-size: 18px;
-        color: #87aaf5;
+        font-size: 14px;
+        color: #999;
       }
     }
   }
   .card-head {
     margin-left: 10px;
     margin-right: 10px;
-    margin-top: -42px;
-    padding: 20px;
+    margin-top: 15px;
+    padding:10px 20px;
     background: #fff;
     border-radius: 7px;
   }
   .home.active {
-    height: 252px;
+    height: 197px;
     transition: height 0.5s;
     visibility: visible;
   }
@@ -446,7 +449,7 @@ export default {
     color: #012989;
   }
   .tab-choose {
-    margin: 25px 10px;
+    margin: 10px 10px;
     box-shadow:0 6px 5px -3px #dedee4;
   }
   .trend {
@@ -476,7 +479,7 @@ export default {
     span {
       padding-left: 10px;
       font-size: 20px;
-      color: #f75426;
+      color: #012989;
       line-height: 1.5;
     }
   }
@@ -497,7 +500,7 @@ export default {
     color: #fff;
   }
   .golink {
-    float: right; 
+    float: right;
     padding: 3px 0;
     font-size: 20px;
     &:hover {

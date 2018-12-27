@@ -1,7 +1,7 @@
 <template>
      <div class="dashboard-container">
         <!-- 工具栏 -->
-        <el-card class="card-head">
+        <el-card class="card-head" style="background: #fff;width:100%;">
             <h2 class="title">访客属性（{{defaultdate}}）</h2>
             <div class="choose">
                 <el-form :inline="true" >
@@ -41,7 +41,7 @@
                     </el-form-item>
                     <el-form-item  class="subtitle" label="访客：">
                         <div class="radios">
-                            <el-radio-group  v-model="currentvisitor"  @change="handleData">                             
+                            <el-radio-group  v-model="currentvisitor"  @change="handleData">
                                 <el-radio-button label="0" >全部</el-radio-button>
                                 <el-radio-button label="1" >新访客</el-radio-button>
                                 <el-radio-button label="2">老访客</el-radio-button>
@@ -57,7 +57,7 @@
                 <el-col :span="8">
                     <h3>性别比例</h3>
                     <div class="card-chart sexpercent" style="min-height: 400px; width: 99%">
-                        
+
                         <ul class="left-man">
                             <li v-for="(item,index) in blueman" :key="index" :class="item">
                                 <i class="fa fa-child" aria-hidden="true"></i>
@@ -69,7 +69,7 @@
                             </li>
                         </ul>
                         <p class="percent"><span class="man">{{manpercent}}</span><span class="woman">{{womanpercent}}</span></p>
-                        
+
                     </div>
                     <!-- <div  id="sexchart" style="min-height: 400px; width: 99%"></div> -->
                 </el-col>
@@ -78,7 +78,7 @@
                     <div class="card-chart">
                         <div  id="educationchart" style="min-height: 400px; width: 99%"></div>
                     </div>
-                    
+
                 </el-col>
                 <el-col :span="8">
                     <h3>年龄比例</h3>
@@ -102,7 +102,7 @@
                 </el-col>
             </el-row>
         </el-card>
-         
+
      </div>
 </template>
 <script>
@@ -162,7 +162,7 @@ export default {
         }
     },
     watch: {
-        
+
     },
     methods: {
         // 业务请求
@@ -183,7 +183,7 @@ export default {
                 if (manicons > 10) {
                     manicons = 10
                 }
-                
+
                 // 男性图表数量
                 let blueman = new Array(manicons)
                 for (let i = 0; i < blueman.length; i++) {
@@ -245,7 +245,7 @@ export default {
                     }
                 }
                 let jobData = [[]]
-                
+
                 for (let m = 0; m < this.jobData.length; m++) {
                     jobData[0][m] = []
                     jobData[0][m][0] = Math.ceil(Math.random() * jobmax)
@@ -303,7 +303,7 @@ export default {
                     }
                 }
                 let intrestdata = [[]]
-                
+
                 for (let i = 0; i < this.interestData.length; i++) {
                     intrestdata[0][i] = []
                     intrestdata[0][i][0] = Math.ceil(Math.random() * max)
@@ -415,7 +415,7 @@ export default {
             this.eddisabled = false
         },
         beginDate() {
-            
+
         },
         processDate() {
 
@@ -427,7 +427,7 @@ export default {
             } else {
                 this.doQueryProperties(range, this.currentvisitor, sd = '', ed = '')
             }
-            
+
         },
         // 点击选择自定义日期
         handleDateData(range, visitor, sd, ed) {
@@ -436,7 +436,7 @@ export default {
     },
     created() {
         this.setuppropertiesData()
-        
+
     },
     mounted() {
         this.__resizeHanlder = debounce(() => {
@@ -456,7 +456,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dashboard-container {
-    
+
     .left-man {
         float: left;
     }
@@ -474,7 +474,7 @@ export default {
         border: 1px solid #ebeff5;
         border-radius: 5px;
         &.sexpercent {padding-top: 3em;}
-        
+
         .percent {
             padding: 20px;
             font-size: 3em;

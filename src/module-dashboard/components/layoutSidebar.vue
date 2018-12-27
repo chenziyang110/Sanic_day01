@@ -2,11 +2,7 @@
   <scroll-bar>
 
     <div class="sidebarTop" v-if="!isCollapse">
-      <p class="hai">嗨，你好~</p>
-      <div class="headImg">
-        <img src="../../assets/head.jpg" />
-      </div>
-      <p class="userName">{{name}}</p>
+      <img src="./../assets/navToplogo.png" height="30px" alt="">
     </div>
 
     <el-menu mode="vertical" :default-active="$route.path" :collapse="isCollapse" text-color="#012989">
@@ -39,8 +35,9 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .sidebarTop {
-  margin-top: 20px;
-  height: 180px;
+  background: linear-gradient(#466ec9,#5c82db);
+  height: 50px;
+  padding: 10px;
   text-align: center;
   .headImg {
     width: 110px;

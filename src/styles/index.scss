@@ -39,6 +39,7 @@
 .home .el-table td {
   border: none;
   font-size: 15px;
+  padding: 10px 20px;
 }
 .home .el-table--enable-row-hover .el-table__body tr:hover>td {
   background: transparent;
@@ -261,7 +262,7 @@ code {
   font-size: 16px;
 }
 .el-table td, .el-table th.is-leaf {
-  padding: 15px 20px;
+  padding: 1px 20px;
 }
 .el-table th {
   background-color: #fbfbfb;
@@ -336,10 +337,11 @@ code {
     }
     .el-table td {
       padding-left: 15px;
+      padding:10px 15px;
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;
     }
-    
+
   }
   .el-card__body{
     padding: 0;
@@ -371,14 +373,14 @@ code {
   border-bottom: 2px solid transparent;
 }
 .el-radio-button__orig-radio:checked+.el-radio-button__inner {
-  color: #f75426;
+  color: #466ec9;
   background-color: transparent;
   border: 0;
-  border-bottom: 4px solid #f75426;
+  border-bottom: 4px solid #466ec9;
   box-shadow: none;
 }
 
-// el-select 
+// el-select
 .el-select .el-input.is-focus .el-input__inner,
 .el-select .el-input__inner:focus {
   border-color: #cecece;
@@ -418,7 +420,7 @@ code {
     // padding: 0
   }
 }
-// tool 
+// tool
 .radios {
   .el-radio-button {
     margin-right: 5px;
@@ -446,7 +448,7 @@ code {
     font-weight: normal;
     border-radius: 4px;
   }
-  
+
 }
 // form
 .formbody {
@@ -532,7 +534,7 @@ code {
   border-bottom: 0;
 }
 .pagefrom .el-radio-button__orig-radio:checked + .el-radio-button__inner {
-  border-top: 3px solid #f75426;
+  border-top: 3px solid #466ec9;
   border-bottom: 0;
   background: #fff;
 }
@@ -575,7 +577,7 @@ code {
   }
   .el-card__body {
       padding: 10px 20px;
-      background: #ebeff5;
+      background: #fff;
       box-shadow: 0 6px 5px -3px #f0f2f5;
   }
 }
@@ -673,7 +675,7 @@ code {
   padding-left: 20px;
 }
 .keywordstab .el-tabs__item.is-active {
-  border-bottom: 3px solid #f75426
+  border-bottom: 3px solid #466ec9
 }
 .keywordstab .card-tableitem .el-table--enable-row-hover .el-table__body tr.hiddencell:first-child:hover > td {
   border-top-color: transparent
@@ -691,7 +693,7 @@ code {
 .keywordstable  .el-table--enable-row-hover .el-table__body tr:hover > td {
   background-color: #f0f5ff;
 }
-// domain style 
+// domain style
 .pagefrom .el-radio-button:first-child:last-child .el-radio-button__inner {
   border-radius: 0
 }
@@ -702,7 +704,7 @@ code {
   padding: 0;
 }
 .rank .el-table th.is-leaf {
- padding: 6px 20px   
+ padding: 6px 20px
 }
 .rank .el-table--enable-row-hover .el-table__body tr:hover > td,
 .oldnewvisitor .el-table--enable-row-hover .el-table__body tr:hover > td {

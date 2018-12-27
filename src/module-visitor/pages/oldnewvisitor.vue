@@ -1,7 +1,7 @@
 <template>
      <div class="dashboard-container">
         <!-- 工具栏 -->
-        <el-card class="card-head">
+        <el-card class="card-head" style="width: 100%;position: relative;top:-3px;">
             <h2 class="title">新老访客（{{defaultdate}}）</h2>
             <div class="choose">
                 <el-form :inline="true" >
@@ -31,7 +31,7 @@
                     </el-form-item>
                     <el-form-item  class="subtitle" label="访客：">
                         <div class="radios">
-                            <el-radio-group  v-model="side"  @change="handleData">                             
+                            <el-radio-group  v-model="side"  @change="handleData">
                                 <el-radio-button label="0" >全部</el-radio-button>
                                 <el-radio-button label="1" >计算机</el-radio-button>
                                 <el-radio-button label="2">移动端</el-radio-button>
@@ -43,18 +43,18 @@
         </el-card>
         <el-card shadow="never"  class="card-total">
            <el-row>
-               <el-col :span="6" class="total-title">
+               <el-col :span="8" class="total-title" >
                    {{total0.title}}
                </el-col>
-               <el-col :span="6" class="total-item">
+               <el-col :span="8" class="total-item">
                    <i class="fa fa-users"></i>
                    <div class="text">
-                       <span class="percent">{{total0.newVisitor}}</span>
+                       <span class="percent">{{numberString(total0.newVisitor)}}</span>
                        <span class="name">新访客</span>
                    </div>
-                   
+
                </el-col>
-               <el-col :span="6" class="total-item">
+               <el-col :span="8" class="total-item">
                    <i class="fa fa-users"></i>
                    <div class="text">
                        <span class="percent">{{total0.oldVisitors}}</span>
@@ -114,7 +114,7 @@
                     <span class="olddata">{{total5.oldVisitors}}</span>
                 </el-col>
             </el-row>
-           
+
         </el-card>
         <!-- 图表 -->
         <el-card shadow="never"   class="card-module">
@@ -122,7 +122,7 @@
              <SelectMenu v-on:handleSelect = "handleSelect" ref="selectmenu"/>
              <div  id="chart" style="min-height: 400px; width: 99%"></div>
         </el-card>
-       
+
         <!-- 数据列表 -->
         <el-card shadow="never" class="card-module oldnewvisitor">
             <el-table
@@ -150,7 +150,7 @@
                 </el-table-column>
             </el-table>
         </el-card>
-         
+
      </div>
 </template>
 <script>
@@ -159,7 +159,7 @@ import {totals, targetDatas, chart} from '@/api/base/visitor'
 import echarts from 'echarts'
 import SelectMenu from '@/components/SelectMenu'
 // import resize from './../../components/Charts/mixins/resize'
-import { debounce } from '@/utils'
+import { debounce, numberString } from '@/utils'
 
 export default {
     components: {SelectMenu},
@@ -181,14 +181,14 @@ export default {
             total1: {},
             total2: {},
             total3: {},
-            total4: {}, 
+            total4: {},
             total5: {},
             target: '',
             pickerOptions: {
                 disabledDate(time) {
                     return time.getTime() > Date.now()
                 }
-            }     
+            }
         }
     },
     methods: {
@@ -302,6 +302,9 @@ export default {
                 }]
             })
         },
+        numberString(data) {
+          return numberString(data)
+        },
         // 交互操作
         handleOpenTime() {
           this.datedisabled = true
@@ -320,13 +323,13 @@ export default {
             this.$refs.selectmenu.targetName()
             this.doQueryTotal(this.range, this.date, this.side)
             this.doQueryChart(this.target, this.range, this.date, this.side)
-            this.doQueryTable(this.range, this.date) 
+            this.doQueryTable(this.range, this.date)
         },
         handleSelect(target) {
             this.doQueryChart(target, this.range, this.date, this.side)
         },
         //  图表
-       
+
         // 学历chart
         educationChart() {
             this.chart = echarts.init(document.getElementById('educationchart'))
@@ -380,7 +383,6 @@ export default {
         this.setuptotalData()
         this.setupchartData()
         this.setuptableData()
-        
     },
     mounted() {
         this.__resizeHanlder = debounce(() => {
@@ -398,11 +400,12 @@ export default {
 <style lang="scss" scoped>
 .dashboard-container {
     .card-total {
-        margin-top: 20px;
-        padding: 3em 5em 6em;
+        margin-top: 15px;
+        padding: 3em;
         background: #012989;
         .total-title {
             line-height: 2.5;
+            text-align: center;
             font-size: 24px;
             color: #4ed6fe
         }
@@ -411,7 +414,7 @@ export default {
                 float: left;
                 margin-right: 15px;
                 line-height: 1.8;
-                font-size: 40px;
+                font-size: 36px;
                 color: #0c40be;
             }
             .text {
@@ -440,13 +443,13 @@ export default {
     .card-newold {
         margin-left: 20px;
         margin-right: 20px;
-        margin-top: -50px;
+        margin-top: 10px;
         line-height: 2;
         font-size: 15px;
         .el-row {
             padding-bottom: 8px;
         }
-        .title { 
+        .title {
             font-size: 16px;
             color: #999;
         }

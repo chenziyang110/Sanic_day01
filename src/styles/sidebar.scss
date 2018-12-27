@@ -9,7 +9,7 @@
     // -webkit-box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
     // box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
     transition: width 0.28s;
-    background-color: #fff;
+    background-color: #020c16;
     // background: -webkit-linear-gradient(bottom, #3d6df8, #5b8cff);
     width: 180px !important;
     height: 100%;
@@ -33,11 +33,12 @@
         font-size: 16px;
         margin-right: 10px;
       }
-      
+
     }
     .svg-icon {
       margin-right: 16px;
     }
+
     .el-menu {
       border: none;
       width: 100%;
@@ -45,17 +46,17 @@
       a {
         li {
           .svg-icon {
-            color: #012989;
+            color: #fff;
           }
           span {
-            color: #012989;
+            color: #fff;
           }
           &:hover {
             .svg-icon {
-              color: #f75426;
+              color: #fff;
             }
             span {
-              color: #f75426;
+              color: #fff;
             }
           }
         }
@@ -105,7 +106,7 @@
           text-align: left;
           text-indent: 20px;
           top: 0px;
-          background-color: $subMenuBg !important;
+          background-color: linear-gradient(#466ec9, #5c82db) !important;
           opacity: 1;
         }
       }
@@ -116,6 +117,7 @@
         padding-left: 10px !important;
       }
     }
+
     .el-submenu {
       & > .el-submenu__title {
         padding-left: 10px !important;
@@ -136,21 +138,21 @@
       }
     }
     .sidebar-container .el-menu .el-submenu.is-active {
-      background-color: #fdf0ec !important;
+      background-color: linear-gradient(#466ec9,#5c82db) !important;
       .svg-icon {
-        color: #f75426;
+        color: #fff;
       }
       span {
-        color: #f75426;
+        color: #fff;
       }
     }
   }
   .nest-menu .el-submenu > .el-submenu__title,
   .el-submenu .el-menu-item {
     min-width: 180px !important;
-    background-color: $subMenuBg !important;
+    background-color: linear-gradient(#466ec9,#5c82db) !important;
     &:hover {
-      background-color: $menuHover !important;
+      background-color: linear-gradient(#466ec9,#5c82db) !important;
       span {
         color: #fff;
       }
@@ -199,41 +201,44 @@
     }
   }
   .sidebar-container .el-menu .el-menu-item.is-active {
-    // background-color: #fff!important;
-    background-color: #fdf0ec !important;
+    background: #041528 !important;
     &:hover {
-      background-color: #fdf0ec !important;
+      background: #041528 !important;
     }
     .svg-icon {
-      color: #f75426;
+      color: #fff;
     }
     span {
-      color: #f75426;
+      color: #fff;
     }
   }
   .el-submenu .el-submenu__title {
     .svg-icon {
-      color: #012989;
+      color: #fff;
     }
     span {
-      color: #012989;
+      color: #fff;
     }
     &:hover {
       .svg-icon {
-        color: #f75426;
+        color: #fff;
       }
       span {
-        color: #f75426;
+        color: #fff;
       }
     }
   }
   .el-submenu.is-active .el-submenu__title {
-    color: #f75426 !important;
+    color: #fff !important;
     .el-submenu__icon-arrow {
-      color: #f75426 !important;
+      color: #fff !important;
     }
   }
   .el-submenu__icon-arrow {
     font-weight: 600;
   }
 }
+.el-submenu__title:focus, .el-submenu__title:hover{
+  background: #041528
+}
+
