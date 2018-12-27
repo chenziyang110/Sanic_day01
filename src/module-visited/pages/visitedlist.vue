@@ -165,7 +165,7 @@ export default {
     }
     a {
         color: #3d8ddf;
-        font-size: 15px;
+        font-size: 14px;
         &.urlpage {
             &:hover { color: #012989}
         }

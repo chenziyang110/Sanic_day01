@@ -2,9 +2,9 @@
     <div class="dashboard-container">
         <div class="top-total">
             <el-row>
-                <el-col :span="7"><span class="number">{{hopmapdata.total}}</span>页面点击数</el-col>
-                <el-col :span="7"><span class="number">{{hopmapdata.timesOfBrowsing}}</span>浏览量</el-col>
-                <el-col :span="7"><span class="number">{{hopmapdata.independentVisitors}}</span>访客数</el-col>
+                <el-col :span="7"><span class="number">{{numberString(hopmapdata.total)}}</span>页面点击数</el-col>
+                <el-col :span="7"><span class="number">{{numberString(hopmapdata.timesOfBrowsing)}}</span>浏览量</el-col>
+                <el-col :span="7"><span class="number">{{numberString(hopmapdata.independentVisitors)}}</span>访客数</el-col>
             </el-row>
         </div>
         <div class="search">
@@ -43,7 +43,7 @@ import {visitedhotmap} from '@/api/base/visited'
 import echarts from 'echarts'
 import Heatmap from 'heatmap.js'
 import resize from './../../components/Charts/mixins/resize'
-
+import { numberString } from '@/utils'
 export default {
     name: 'visited-hotmap',
     data() {
@@ -111,6 +111,9 @@ export default {
         },
         handleData(id = this.hotmapID, range, date) {
             this.doQueryHotMap(id, range, date)
+        },
+        numberString(data) {
+        return numberString(data)
         }
     },
     mounted() {
@@ -124,12 +127,13 @@ export default {
   padding: 6px 20px;
   font-size: 20px;
   line-height: 2.5;
-  background: #04166c;
-  color: #5d8aec;
+  background: #fff;
+  text-align: center;
+  color: #999;
   .number {
     padding-right: 5px;
     font-size: 32px;
-    color: #fff;
+    color: #333;
   }
 }
 .search {
