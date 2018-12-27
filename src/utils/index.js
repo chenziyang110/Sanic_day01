@@ -302,23 +302,14 @@ export function debounce(func, wait, immediate) {
   }
 }
 export function numberString(data) {
-  data = String(data)
-  if (data.length > 3) {
-    let newStr = ''
-    let count = 0
-    for (let i = data.length - 1; i >= 0; i--) {
-      if (count % 3 === 0 && count !== 0) {
-        newStr = data.charAt(i) + ',' + newStr
-        console.log(888, newStr)
-      } else {
-        newStr = data.charAt(i) + newStr
-      }
-    }
-
-    return newStr
-  } else {
-    return data
+  console.log(data)
+  var b = parseInt(data).toString()
+  var len = b.length
+  if (len <= 3) {
+    return b
   }
+  var r = len % 3
+  return r > 0 ? b.slice(0, r) + ',' + b.slice(r, len).match(/\d{3}/g).join(',') : b.slice(r, len).match(/\d{3}/g).join(',')
 }
 export function deepClone(source) {
   if (!source && typeof source !== 'object') {

@@ -11,15 +11,15 @@
                 <div class="tabtotal">
                     <el-row>
                         <el-col :span="4" class="target">
-                            <h1>{{targettotal.timesOfBrowsing}}</h1>
+                            <h1>{{numberString(targettotal.timesOfBrowsing)}}</h1>
                             <p>浏览次数</p>
                         </el-col>
                         <el-col :span="4" class="target">
-                            <h1>{{targettotal.independentVisitors}}</h1>
+                            <h1>{{numberString(targettotal.independentVisitors)}}</h1>
                             <p>独立访客</p>
                         </el-col>
                         <el-col :span="4" class="target">
-                            <h1>{{targettotal.IP}}</h1>
+                            <h1>{{numberString(targettotal.IP)}}</h1>
                             <p>IP数量</p>
                         </el-col>
                         <el-col :span="4" class="target">
@@ -97,6 +97,7 @@
 <script>
 import {keywordstarget, keywordsse} from '@/api/base/source'
 import SelectRegion from '@/components/SelectRegion'
+import { numberString } from '@/utils'
 export default {
     components: { SelectRegion },
     data() {
@@ -182,6 +183,9 @@ export default {
                     dataObj: sourceID
                 }
             })
+        },
+        numberString(data) {
+        return numberString(data)
         }
         
     },

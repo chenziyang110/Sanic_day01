@@ -2,15 +2,15 @@
     <div class="total">
         <el-row>
             <el-col :span="4" class="target">
-                <h1>{{totalList.timesOfBrowsing}}</h1>
+                <h1>{{numberString(totalList.timesOfBrowsing)}}</h1>
                 <p>浏览次数</p>
             </el-col>
             <el-col :span="4" class="target">
-                <h1>{{totalList.independentVisitors}}</h1>
+                <h1>{{numberString(totalList.independentVisitors)}}</h1>
                 <p>独立访客</p>
             </el-col>
             <el-col :span="4" class="target">
-                <h1>{{totalList.IP}}</h1>
+                <h1>{{numberString(totalList.IP)}}</h1>
                 <p>IP数量</p>
             </el-col>
             <el-col :span="4" class="target">
@@ -29,11 +29,17 @@
     </div>
 </template>
 <script>
+import { numberString } from '@/utils'
 export default {
     name: 'TotalData',
     props: {
         totalList: Object,
         type: true
+    },
+    methods: {
+        numberString(data) {
+        return numberString(data)
+        }
     }
 }
 </script>

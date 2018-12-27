@@ -41,11 +41,11 @@
                     <h2 class="targetname">{{rankListtotal.targerName}}</h2>
                 </el-col>
                 <el-col :span="6" class="target">
-                    <h2>{{rankListtotal.date1}}</h2>
+                    <h2>{{numberString(rankListtotal.date1)}}</h2>
                     <p>{{date1}}</p>
                 </el-col>
                 <el-col :span="6" class="target">
-                    <h2>{{rankListtotal.date2}}</h2>
+                    <h2>{{numberString(rankListtotal.date2)}}</h2>
                     <p>{{date2}}</p>
                 </el-col>
                 <el-col :span="7" class="target">
@@ -84,6 +84,7 @@
 </template>
 <script>
 import { visitedranklist } from '@/api/base/visited'
+import { numberString } from '@/utils'
 export default {
     data() {
         return {
@@ -200,6 +201,9 @@ export default {
         handleOrderAll(date1, date2, targetID, order) {
             this.order = ''
             this.doQueryRankList(this.date1, this.date2, this.targetID, this.order)
+        },
+        numberString(data) {
+            return numberString(data)
         }
     },
     mounted() {},

@@ -5,15 +5,15 @@
             <el-col :span="24" class="target">
                <el-row>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{itemsData.timesOfBrowsing}}</h1>
+                      <h1 class="number">{{numberString(itemsData.timesOfBrowsing)}}</h1>
                       <p>浏览次数</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{itemsData.independentVisitors}}</h1>
+                      <h1 class="number">{{numberString(itemsData.independentVisitors)}}</h1>
                       <p>独立访客</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{itemsData.IP}}</h1>
+                      <h1 class="number">{{numberString(itemsData.IP)}}</h1>
                       <p>IP数量</p>
                   </el-col>
                   <el-col :span="4" class="target">
@@ -186,7 +186,7 @@ import {list, type, trend} from '@/api/base/home'
 import echarts from 'echarts'
 // import resize from './../../components/Charts/mixins/resize'
 import SelectMenu from '@/components/SelectMenu'
-import { debounce } from '@/utils'
+import { debounce, numberString } from '@/utils'
 
 export default {
   name: 'dashboard',
@@ -352,6 +352,9 @@ export default {
         this.icon = 'el-icon-d-arrow-right'
          this.paddingBottom = '-55px'
       }
+    },
+    numberString(data) {
+      return numberString(data)
     }
   },
   // 挂载结束
