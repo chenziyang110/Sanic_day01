@@ -241,9 +241,9 @@ export default {
     }
     .total {
         margin-top: 15px;
-        padding: 2.5em 0;
-        background: #012989;
-        color: #fff;  
+        padding: 3em 0;
+        background: #fff;
+        color: #333; 
         .target {
             margin-left: -15px;
             text-align: center;
@@ -260,7 +260,7 @@ export default {
             }
             p {
                 font-size: 1.6em;
-                color: #7b9de8;
+                color: #999;
             }
         }
     }
@@ -273,7 +273,7 @@ export default {
         float: right;
         line-height: 1.6;
         cursor: pointer;
-        color: #5784e7;
+        color: #3a6cd0;
     }
 }
 

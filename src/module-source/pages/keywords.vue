@@ -198,7 +198,7 @@ export default {
         float: right;
         line-height: 1.6;
         cursor: pointer;
-        color: #5784e7;
+        color: #3a6cd0;
     }
     .tabtotal {
         // margin-top: 10px;
