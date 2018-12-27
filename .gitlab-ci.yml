@@ -1,36 +1,20 @@
 stages:
-  - test
-  - build
-  - deploy
+  - package
+  # - build
 
-# sonar_analyze:
-#   stage: test
-#   script:
-#     - ci/sonar_analyze.sh
-#   tags:
-#     - saas-hrm-vue
+server-package:
+  stage: package
+  script:
+   - cnpm i
+   - npm run build
+   - docker build -t itcast/front-analytics-cmm .
+   - docker-compose up -d
+  tags:
+   - centos-137
 
-# sonar_preview:
-#   stage: test
-#   script:
-#     - ci/sonar_preview.sh
-#   tags:
-#     - saas-hrm-vue
-
-# build_image:
+# build:
 #   stage: build
-#   # services:
-#   #   - node:8
-#   script: 
-#     - ci/build.sh
+#   script:
+#    - docker-compose up -d
 #   tags:
-#     - saas-hrm-vue
-
-# deploy_image:
-#   stage: deploy
-#   # services:
-#   #   - node:8
-#   script: 
-#     - ci/deploy.sh
-#   tags:
-#     - saas-hrm-vue
+#    - centos-137
