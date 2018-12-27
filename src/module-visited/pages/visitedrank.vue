@@ -14,7 +14,7 @@
                         value-format="yyyy-MM-dd"
                         placeholder="选择日期">
                     </el-date-picker>                           
-                    <el-checkbox v-model="checked" disabled>对比</el-checkbox>
+                    <el-checkbox v-model="checked" style="margin-left:30px">对比</el-checkbox>
                     <el-date-picker
                         v-model="date2"
                         @change="handleRank"
@@ -24,7 +24,7 @@
                         placeholder="选择日期">
                     </el-date-picker>
                </el-form-item>
-                <el-form-item class="subtitle" label="指标：">
+                <el-form-item class="subtitle" label="指标：" style="margin-left:50px">
                     <el-radio-group v-model="targetID" @change="handleRank">
                         <el-radio  label="1">来访次数</el-radio>
                         <el-radio  label="2">独立访客数</el-radio>
@@ -214,7 +214,7 @@ export default {
     .yesterdaybtn {
         padding: 9px 20px;
         line-height: 32px;
-        color: #f75426;
+        color: #3a6cd0;
         background: #fff;
         border: 1px solid #cecece;
         cursor: pointer;
@@ -233,9 +233,9 @@ export default {
     }
     .total {
         margin-top: 15px;
-        padding: 2.5em 0;
-        background: #012989;
-        color: #fff;  
+        padding: 3em 0;
+        background: #fff;
+        color: #333;  
         .target {
             margin-left: -15px;
             text-align: center;
@@ -252,7 +252,7 @@ export default {
             }
             p {
                 font-size: 1.6em;
-                color: #7b9de8;
+                color: #999;
             }
         }
     }
@@ -262,7 +262,7 @@ export default {
         float: right;
         line-height: 1.6;
         cursor: pointer;
-        color: #5784e7;
+        color: #3a6cd0;
     }
 }
 

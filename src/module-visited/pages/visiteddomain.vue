@@ -356,7 +356,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-container {
     .chart {
-        margin-top: -4em;
+        margin-top: 15px;
         margin-left: 20px;
         margin-right: 20px;
         border-radius: 0;   
@@ -368,7 +368,7 @@ export default {
     }
     .card-search {
         .filter-item {
-            background: #f75426;
+            background: #3a6cd0;
             color: #fff
         }
     }
