@@ -33,7 +33,7 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
-        // const { roles } = data
+        const { roles } = data
         // let accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         // commit('SET_ROUTERS', accessedRouters)
         commit('SET_ROUTERS', asyncRouterMap) // 调试开启全部路由
