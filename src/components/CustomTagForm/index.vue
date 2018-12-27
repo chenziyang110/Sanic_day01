@@ -2,9 +2,9 @@
     <!-- 自定义指标 -->
     <el-card shadow="never"  class="card-item targets">
         <div slot="header" class="clearfix">
-            <el-button class="definetarget">自定义指标</el-button>
+            <el-button class="definetarget" @click="handleCollapse">自定义指标</el-button>
         </div>
-        <div class="formbody">
+        <div class="formbody" :class="{active:tableshow}">
             <span class="tip"><i class="el-icon-warning" ></i>最多可同时选择6项指标</span>
             <div class="checkbox">
                 <el-checkbox-group 
@@ -44,10 +44,14 @@ export default {
         return {
             // websitetargets: websitetargetsOption,
             // flowtargets: flowtargetsOption,
+            tableshow: true,
             currenttages: ['1', '4', '7', '8', '9', '10']
         }
     },
     methods: {
+        handleCollapse() {
+            this.tableshow = !this.tableshow
+        },
         handleSubmitTarget(currenttages) {
             // let targetLabel = []
             // for (let item in currenttages) {
@@ -78,7 +82,12 @@ export default {
         padding-right: 30px;
     }
     .formbody {
+        display: none;
         padding: 20px 20px 0;
+        &.active {
+            display: block;
+            padding-bottom: 20px;
+        }
         .tip {
             display: inline-block;
             margin-bottom: 15px;

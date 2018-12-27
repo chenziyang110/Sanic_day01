@@ -340,7 +340,7 @@ export default {
       this.tableshow = !this.tableshow
       if (this.tableshow === true) {
         this.icon = 'el-icon-d-arrow-left'
-        this.paddingBottom = '60px'
+        this.paddingBottom = '30px'
       } else {
         this.icon = 'el-icon-d-arrow-right'
          this.paddingBottom = '30px'
@@ -405,7 +405,7 @@ export default {
   .card-head {
     margin-left: 10px;
     margin-right: 10px;
-    margin-top: -50px;
+    margin-top: -42px;
     padding: 20px;
     background: #fff;
     border-radius: 7px;
@@ -472,8 +472,8 @@ export default {
     background: #fbfbfb;
     span {
       padding-left: 10px;
-      font-size: 22px;
-      color: #012989;
+      font-size: 20px;
+      color: #f75426;
       line-height: 1.5;
     }
   }

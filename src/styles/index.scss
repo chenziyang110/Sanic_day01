@@ -23,6 +23,10 @@
   color: #909399;
 }
 // 整体布局
+.el-menu-item,
+.el-submenu__title {
+  font-size: 15px;
+}
 .el-menu.el-menu--horizontal {
   border-bottom-color: transparent
 }
@@ -41,7 +45,7 @@
   border: none;
 }
 .tablecards .el-card__header {
-  padding: 14px 20px;
+  padding: 14px 20px 10px;
 }
 // 对齐
 
@@ -554,7 +558,7 @@ code {
 // 有搜索框的指标
 .targets .el-card__body {
   padding: 0;
-  padding-bottom: 20px;
+  // padding-bottom: 20px;
 }
 .targets .card-item {
   margin-left: 0 !important;
