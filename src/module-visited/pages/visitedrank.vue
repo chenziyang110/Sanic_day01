@@ -233,7 +233,7 @@ export default {
     }
     .total {
         margin-top: 15px;
-        padding: 3em 0;
+        padding: 2em 0;
         background: #fff;
         color: #333;  
         .target {
@@ -244,14 +244,14 @@ export default {
                 line-height: 3;
             }
             h2 {
-                font-size:40px;
+                font-size:36px;
                 line-height: 1;
                 margin-top: 0.2em;
                 margin-bottom: 0.2em;
                 font-weight: normal;
             }
             p {
-                font-size: 1.6em;
+                font-size: 20px;
                 color: #999;
             }
         }

@@ -202,21 +202,21 @@ export default {
     }
     .tabtotal {
         // margin-top: 10px;
-        padding: 3em 0;
+        padding: 2em 0;
         background: #fff;
         color: #333;
         .target {
             margin-left: -15px;
             text-align: center;
             h1 {
-                font-size: 3em;
+                font-size: 36px;
                 line-height: 1;
                 margin-top: 0.2em;
                 margin-bottom: 0.2em;
                 font-weight: normal;
             }
             p {
-                font-size: 1.2em;
+                font-size: 20px;
                 color: #999;
             }
         }

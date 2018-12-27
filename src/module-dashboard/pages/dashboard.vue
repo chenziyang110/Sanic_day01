@@ -400,7 +400,7 @@ export default {
         margin: 0.4em 0;
       }
       p {
-        font-size: 18px;
+        font-size: 20px;
         color: #87aaf5;
       }
     }
