@@ -1,4 +1,4 @@
-<template>
+// <template>
      <div class="dashboard-container">
         <!-- 工具栏 -->
         <el-card class="card-head" style="background: #fff;width:100%;">
@@ -7,21 +7,20 @@
                 <el-form :inline="true" >
                     <el-form-item class="subtitle" label="时间：">
                     <div class="radios">
-                         <el-button round   @click="handleOpenTime"  >打开</el-button>
+                         <!-- <el-button round   @click="handleOpenTime"  >打开</el-button> -->
                             <el-radio-group  v-model="currentrange" @change="handleData">
-                                <el-radio-button label="0" :disabled="timedisabled">最近1个月</el-radio-button>
-                                <el-radio-button label="1" :disabled="timedisabled">最近2个月</el-radio-button>
-                                <el-radio-button label="7" :disabled="timedisabled">最近3个月</el-radio-button>
-                                <el-radio-button label="30" :disabled="timedisabled">最近半年</el-radio-button>
+                                <el-radio-button label="0">最近1个月</el-radio-button>
+                                <el-radio-button label="1">最近2个月</el-radio-button>
+                                <el-radio-button label="7">最近3个月</el-radio-button>
+                                <el-radio-button label="30">最近半年</el-radio-button>
                             </el-radio-group>
                         </div>
                     </el-form-item>
-                    <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button>
+                    <!-- <el-button round class="definite-btn"  @click="handleDefiniteDate"  :disabled="definitedisable" >自定义日期：</el-button> -->
                     <el-form-item  class="subtitle" label="">
                         <el-date-picker
                             v-model="sd"
                             type="date"
-                            :disabled="sddisabled"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
                             :picker-options="startDatePicker"
@@ -32,14 +31,13 @@
                             v-model="ed"
                             @change="handleDateData"
                             type="date"
-                            :disabled="eddisabled"
                             format= "yyyy-MM-dd"
                             value-format="yyyy-MM-dd"
                             :picker-options="endDatePicker"
                             placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item  class="subtitle" label="访客：">
+                    <!-- <el-form-item  class="subtitle" label="访客：">
                         <div class="radios">
                             <el-radio-group  v-model="currentvisitor"  @change="handleData">
                                 <el-radio-button label="0" >全部</el-radio-button>
@@ -47,7 +45,7 @@
                                 <el-radio-button label="2">老访客</el-radio-button>
                             </el-radio-group>
                         </div>
-                    </el-form-item>
+                    </el-form-item> -->
                 </el-form>
             </div>
         </el-card>

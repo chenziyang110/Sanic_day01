@@ -209,14 +209,14 @@ export default {
             margin-left: -15px;
             text-align: center;
             h1 {
-                font-size: 36px;
+                font-size: 1.8em;
                 line-height: 1;
-                margin-top: 0.2em;
-                margin-bottom: 0.2em;
+                margin-top: 0.4em;
+                margin-bottom: 0.4em;
                 font-weight: normal;
             }
             p {
-                font-size: 20px;
+                font-size: 14px;
                 color: #999;
             }
         }
