@@ -34,7 +34,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" >
+          <el-table-column fixed="right" width="200px" label="操作" >
             <template slot-scope="scope">
               <el-button @click="handelPassword(scope.row)" type="text" size="small">重置密码</el-button>
               <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>

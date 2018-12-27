@@ -14,7 +14,7 @@
                         value-format="yyyy-MM-dd"
                         placeholder="选择日期">
                     </el-date-picker>                           
-                    <el-checkbox v-model="checked" disabled>对比</el-checkbox>
+                    <el-checkbox v-model="checked" style="margin-left:30px">对比</el-checkbox>
                     <el-date-picker
                         v-model="date2"
                         @change="handleRank"
@@ -229,7 +229,7 @@ export default {
     .yesterdaybtn {
         padding: 9px 20px;
         line-height: 32px;
-        color: #f75426;
+        color: #3a6cd0;
         background: #fff;
         border: 1px solid #cecece;
         cursor: pointer;
@@ -245,7 +245,7 @@ export default {
     }
     .total {
         margin-top: 15px;
-        padding: 2em 0;
+        padding: 20px 0 20px 80px;
         background: #fff;
         color: #333; 
         .target {
@@ -253,7 +253,7 @@ export default {
             text-align: center;
             .targetname {
                 font-size: 1.6em;
-                line-height: 3;
+                line-height: 40px;
             }
             h2 {
                 font-size:1.8em;

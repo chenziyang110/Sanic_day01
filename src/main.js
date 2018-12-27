@@ -34,7 +34,6 @@ Vue.prototype.$echarts = echarts
 Vue.use(echarts)
 Vue.use(tools)
 Vue.use(dashboard, store)
-Vue.use(base, store)
 // Vue.use(form, store)
 // Vue.use(details, store)
 // Vue.use(example, store)
@@ -42,7 +41,7 @@ Vue.use(flowanalyze, store)
 Vue.use(source, store)
 Vue.use(visited, store)
 Vue.use(visitor, store)
-
+Vue.use(base, store)
 /*
 * 注册 - 组件
 */

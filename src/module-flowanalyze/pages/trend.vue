@@ -215,6 +215,11 @@ export default {
                     boundaryGap: false,
                     data: xdata
                 },
+                grid: {
+                    left: '1%',
+                    right: '2%',
+                    containLabel: true
+                },
                 yAxis: {
                     type: 'value',
                     axisLabel: {

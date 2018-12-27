@@ -158,6 +158,11 @@ export default {
                     boundaryGap: false,
                     data: this.realxdata
                 },
+                grid: {
+                    left: '1%',
+                    right: '2%',
+                    containLabel: true
+                },
                 yAxis: {
                     type: 'value',
                     axisLabel: {

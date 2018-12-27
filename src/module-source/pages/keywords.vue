@@ -206,7 +206,7 @@ export default {
     }
     .tabtotal {
         // margin-top: 10px;
-        padding: 2em 0;
+        padding: 20px 0 20px 80px;
         background: #fff;
         color: #333;
         .target {

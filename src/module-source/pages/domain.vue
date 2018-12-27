@@ -342,6 +342,8 @@ export default {
         margin-right: 20px;
         margin-top: 20px;
         border-radius: 0;
+        background: #fff;
+        padding: 10px 0;
     }
     .card-search {
         .filter-item {

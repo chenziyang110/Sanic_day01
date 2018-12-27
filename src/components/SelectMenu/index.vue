@@ -30,8 +30,8 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item class="submit-box">
-                <el-button type="primary" size="small" class="btn-submit" @click="submitForm('form')">确定</el-button>
-                <el-button  size="small" class="btn-cancel" @click="handleDropBox">取消</el-button>
+                <el-button type="primary" size="small" class="btn-submit btn-sub" @click="submitForm('form')">确定</el-button>
+                <el-button  size="small" class="btn-cancel btn-can" @click="handleDropBox">取消</el-button>
             </el-form-item>
         </el-form>
     </div>

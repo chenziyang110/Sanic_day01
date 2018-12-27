@@ -259,7 +259,7 @@ code {
 }
 .el-table th>.cell {
   font-weight: normal;
-  font-size: 16px;
+  font-size: 14px;
 }
 .el-table td, .el-table th.is-leaf {
   padding: 10px 20px;
@@ -601,7 +601,7 @@ code {
   border-bottom: 1px solid #fff;
 }
 .el-card__header {
-  background: #fbfbfb;
+  background: #fff;
 }
 // trendtable
 .trendtable .el-table__body-wrapper tr:first-child{
@@ -753,3 +753,5 @@ code {
   font-size: 14px;
   color: #606266;
 }
+.btn-sub,.btn-sub:hover{ background: #ec4b47;border: 1px solid #ec4b47}
+.btn-can{background: #3a6cd0;border: 1px solid #3a6cd0}

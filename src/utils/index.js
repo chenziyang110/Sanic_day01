@@ -302,7 +302,7 @@ export function debounce(func, wait, immediate) {
   }
 }
 export function numberString(data) {
-  console.log(data)
+  // console.log(data)
   var b = parseInt(data).toString()
   var len = b.length
   if (len <= 3) {

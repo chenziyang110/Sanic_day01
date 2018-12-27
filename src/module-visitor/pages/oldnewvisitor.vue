@@ -119,7 +119,7 @@
         <el-card shadow="never"   class="card-module">
             <!-- 下拉框 -->
              <SelectMenu v-on:handleSelect = "handleSelect" ref="selectmenu"/>
-             <div  id="chart" style="min-height: 400px; width: 99%"></div>
+             <div  id="chart" style="min-height: 450px; width: 99%"></div>
         </el-card>
 
         <!-- 数据列表 -->
@@ -245,6 +245,13 @@ export default {
                     },
                     yAxis: {
                         type: 'value'
+                    },
+                    grid: {
+                    left: '1%',
+                    right: '2%',
+                    top: '5%',
+                    bottom: '3%',
+                    containLabel: true
                     },
                     series: [
                         {

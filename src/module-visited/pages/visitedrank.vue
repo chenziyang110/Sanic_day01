@@ -237,7 +237,7 @@ export default {
     }
     .total {
         margin-top: 15px;
-        padding: 2em 0;
+        padding: 20px 0 20px 80px;
         background: #fff;
         color: #333;  
         .target {

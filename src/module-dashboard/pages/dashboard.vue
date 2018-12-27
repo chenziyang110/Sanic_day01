@@ -88,7 +88,7 @@
               </el-option>
             </el-select> -->
 
-             <div id="trendchart" style="width: 100%;min-height:400px;"></div>
+             <div id="trendchart" style="width: 100%;min-height:450px;"></div>
 
         </div>
      </el-card>
@@ -108,17 +108,17 @@
                 <div class="tablestyle">
                   <!-- 访客表格 -->
                   <el-table :data="visitors" >
-                    <el-table-column prop="target" width="140px" label="指标名称">
+                    <el-table-column prop="target" width="180px" label="指标名称">
                       <template slot-scope="scope">
                         <span class="row-target">{{ scope.row.target }}</span>
                       </template>
                     </el-table-column>
                     <el-table-column prop="newVisitor" label="新访客">
                       <template slot-scope="scope">
-                        <span class="row-target" style="color:#ec4b47">{{ scope.row.newVisitor }}</span>
+                        <span class="row-target" min-width="100" align="center" style="color:#ec4b47">{{ scope.row.newVisitor }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="oldVisitors" style="color:#012989" label="老访客">
+                    <el-table-column prop="oldVisitors" min-width="100" align="center" style="color:#012989" label="老访客">
                       <template slot-scope="scope">
                         <span class="row-target" style="color:#012989">{{ scope.row.oldVisitors }}</span>
                       </template>
@@ -142,14 +142,14 @@
                 <!-- 搜索词表格 -->
                 <el-table :data="searchterm">
 
-                  <el-table-column prop="searchTerm" label="搜索词" width="150px">
+                  <el-table-column prop="searchTerm" label="搜索词" width="180px">
                     <template slot-scope="scope">
                       <i v-bind:class="(scope.$index == 0) || (scope.$index == 1) ||(scope.$index == 2)  ? 'top' : 'tableindex'">{{scope.$index+1}}</i>
                       <span style="margin-left: 10px">{{ scope.row.searchTerm }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
-                  <el-table-column prop="occupationRatio" label="占比"></el-table-column>
+                  <el-table-column prop="browsingVolume" min-width="100" align="center" label="浏览量"></el-table-column>
+                  <el-table-column prop="occupationRatio" min-width="100" align="center" label="占比"></el-table-column>
                 </el-table>
               </div>
             </el-card>
@@ -166,9 +166,9 @@
               <div class="tablestyle">
                 <!-- 受访表格 -->
                 <el-table :data="interviewing">
-                  <el-table-column prop="searchTerm" width="150" show-overflow-tooltip label="受访界面"></el-table-column>
-                  <el-table-column prop="browsingVolume" label="浏览量"></el-table-column>
-                  <el-table-column prop="occupationRatio" label="占比"></el-table-column>
+                  <el-table-column prop="searchTerm" width="220" show-overflow-tooltip label="受访界面"></el-table-column>
+                  <el-table-column prop="browsingVolume" min-width="100" align="center" label="浏览量"></el-table-column>
+                  <el-table-column prop="occupationRatio" min-width="100" align="center" label="占比"></el-table-column>
                 </el-table>
               </div>
 
@@ -309,6 +309,11 @@ export default {
             boundaryGap: false,
             data: xdata
           },
+          grid: {
+            left: '1%',
+            right: '2%',
+            containLabel: true
+          },
           yAxis: {
             type: 'value'
             // axisLabel: {
@@ -350,7 +355,7 @@ export default {
         this.paddingBottom = '0px'
       } else {
         this.icon = 'el-icon-d-arrow-right'
-         this.paddingBottom = '-55px'
+         this.paddingBottom = '-8px'
       }
     },
     numberString(data) {
@@ -409,7 +414,7 @@ export default {
       }
       p {
         font-size: 14px;
-        color: #87aaf5;
+        color: #999;
       }
     }
   }
@@ -424,12 +429,14 @@ export default {
   .home.active {
     height: 197px;
     transition: height 0.5s;
-    visibility: visible;
+    // visibility: visible;
+    display: block;
   }
   .home {
     height: 0;
     transition: height 1s;
-    visibility: hidden;
+    // visibility: hidden;
+    display: none;
   }
   .point {
     margin-top: -10px;
@@ -454,7 +461,7 @@ export default {
     color: #012989;
   }
   .tab-choose {
-    margin: 10px 10px;
+    margin: 10px 10px 20px;
     box-shadow:0 6px 5px -3px #dedee4;
   }
   .trend {
@@ -498,7 +505,7 @@ export default {
     color: #fff;
   }
   .top {
-    background: #f75426;
+    background: #3a6cd0;
     font-style: normal;
     padding: 2px 6px;
     border-radius: 2px;
@@ -511,7 +518,7 @@ export default {
     &:hover {
       span {
         i {
-          background: #f75426
+          background: #3a6cd0
         }
       }
     }
