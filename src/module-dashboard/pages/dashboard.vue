@@ -5,27 +5,27 @@
             <el-col :span="24" class="target">
                <el-row>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{items[0].timesOfBrowsing}}</h1>
+                      <h1 class="number">{{itemsData.timesOfBrowsing}}</h1>
                       <p>浏览次数</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{items[0].independentVisitors}}</h1>
+                      <h1 class="number">{{itemsData.independentVisitors}}</h1>
                       <p>独立访客</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{items[0].IP}}</h1>
+                      <h1 class="number">{{itemsData.IP}}</h1>
                       <p>IP数量</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{items[0].averageVisitorDepth}}</h1>
+                      <h1 class="number">{{itemsData.averageVisitorDepth}}</h1>
                       <p>平均访问深度</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{items[0].averageVisitorDuration}}</h1>
+                      <h1 class="number">{{itemsData.averageVisitorDuration}}</h1>
                       <p>平均访问长度</p>
                   </el-col>
                   <el-col :span="4" class="target">
-                      <h1 class="number">{{items[0].bounceRate}}</h1>
+                      <h1 class="number">{{itemsData.bounceRate}}</h1>
                       <p>跳出率</p>
                   </el-col>
                </el-row>
@@ -197,6 +197,7 @@ export default {
       loading: false,
       tab1: 0,
       items: [], // 昨日流量
+      itemsData: {},
       typesdata: [],
       visitors: [], // 新老访客
       searchterm: [], // 搜索词
@@ -240,6 +241,7 @@ export default {
     async reloadData() {
       await list({}).then(res => {
         this.items = res.data.items
+        this.itemsData = res.data.items[0]
       })
     },
     // tab分类数据请求
