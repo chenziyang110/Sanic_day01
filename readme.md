@@ -2,17 +2,29 @@
 
 ## 运行
 
-### 1. 安装 nodejs
+```sh
+- 1 安装 node
 
 https://nodejs.org/en/
-yarn 
-### 2. 安装包依赖
 
-```sh
-yarn
+- 2 安装 cnpm
+
+npm install -g cnpm --registry=https://registry.npm.taobao.org​
+
+- 3 Git 拉取
+
+git clone http://git.itcast.cn/development/project-analytics-cmm-vue
+
+- 4 安装依赖包
+
+cnpm i
+
+- 5 运行
+
+npm start
 ```
 
-### 3. 配置 API 地址
+## 配置 API 地址
 
 编辑文件 config/index.js
 
@@ -31,45 +43,29 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
-      },
-      '/upfile': {
-        target: 'http://172.17.0.65/system/upfile',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/upfile': ''
-        }
       }
     },
 ```
 
-### 4. 运行
-
-```sh
-npm start
-```
-
 ## 资源
 
-- 前端 vue
-  http://git.itcast.cn/development/project-saas-hrm-vue.git
+- UED 产品
+  http://research.itcast.cn/itcast-frontpage/大数据-盘析/start.html
 
-- 后端 java
-  http://git.itcast.cn/course/project-saas-hrm-java-api.git
+- API
+  https://mock.boxuegu.com/project/56/interface/api
 
-- 后端 java 配置中心
-  http://git.itcast.cn/development/project-saas-hrm-java-config.git
+- 前端 git
+  http://git.itcast.cn/development/project-analytics-cmm-vue
 
-- UED 产品业务原型
-  http://research.itcast.cn/itcast-frontpage/SaaS-HRM
+- 后端 git
+  http://git.itcast.cn/development/project-analytics-cmm-java
 
-- API 接口设计与 Mock
-  https://mock.boxuegu.com/project/29/interface/api
+- 域名
+  http://px.research.itcast.cn
 
-- 持续集成 外网域名
-  http://hrm.research.itcast.cn
-
-- 代码质量分析
-  http://sonar.itcast.cn/projects
+- BUG 管理
+  http://research.itcast.cn/zentaopms/www/index.php?m=bug&f=browse&productID=6
 
 ---
 
