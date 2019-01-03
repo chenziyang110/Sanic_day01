@@ -1,5 +1,9 @@
 # SAAS IRHM 系统
 
+## 公网地址
+
+http://px.research.itcast.cn
+
 ## 运行
 
 ```sh
